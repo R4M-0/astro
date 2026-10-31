@@ -14,6 +14,7 @@ const apiOrigin = (() => {
 })();
 const filesOrigin = process.env.NEXT_PUBLIC_FILES_ORIGIN ?? 'http://localhost:9000';
 const wsOrigin = apiOrigin.replace(/^http/, 'ws');
+const graphOrigin = process.env.NEXT_PUBLIC_GRAPH_URL ?? 'http://localhost:3012';
 const isDev = process.env.NODE_ENV !== 'production';
 
 const csp = [
@@ -30,7 +31,7 @@ const csp = [
   `img-src 'self' data: blob: ${filesOrigin}`,
   // in-app PDF preview (HACCP › Méthodologie) frames a presigned object-storage URL
   `frame-src 'self' ${filesOrigin}`,
-  `connect-src 'self' ${apiOrigin} ${wsOrigin} ${filesOrigin}`,
+  `connect-src 'self' ${apiOrigin} ${wsOrigin} ${filesOrigin} ${graphOrigin}`,
 ].join('; ');
 
 const securityHeaders = [

@@ -102,6 +102,28 @@ export async function api<T = unknown>(
   return (await res.json()) as T;
 }
 
+/** Workforce graph service (apps/graph) — same access token and tenant header as the API. */
+export const GRAPH_URL = process.env.NEXT_PUBLIC_GRAPH_URL ?? 'http://localhost:3012';
+export async function graphApi<T = unknown>(path: string, body?: unknown): Promise<T> {
+  const doFetch = () =>
+    fetch(`${GRAPH_URL}${path}`, {
+      method: body === undefined ? 'GET' : 'POST',
+      body: body === undefined ? undefined : JSON.stringify(body),
+      headers: {
+        'Content-Type': 'application/json',
+        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        ...(activeOrgId ? { 'X-Organization-Id': activeOrgId } : {}),
+      },
+    });
+  let res = await doFetch();
+  if (res.status === 401 && (await tryRefresh())) res = await doFetch();
+  if (!res.ok) {
+    const d = (await res.json().catch(() => ({}))) as { message?: string };
+    throw new ApiError(res.status, d.message ?? res.statusText);
+  }
+  return (await res.json()) as T;
+}
+
 export const apiGet = <T>(path: string) => api<T>(path);
 export const apiPost = <T>(path: string, body?: unknown) =>
   api<T>(path, { method: 'POST', body: body === undefined ? undefined : JSON.stringify(body) });
