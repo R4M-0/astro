@@ -23,7 +23,7 @@ export function TopicChip({ concept, label }: { concept: string; label: string }
 const SEV = { important: 'text-rose-300 border-rose-400/30 bg-rose-500/10', attention: 'text-amber-200 border-amber-300/30 bg-amber-400/10', info: 'text-sky-200 border-sky-300/30 bg-sky-400/10' };
 
 // ───────────────────────── employee file ─────────────────────────
-export function EmployeePanel({ refId, onClose, onFly, onAsk, onDrafted }: { refId: string; onClose: () => void; onFly: (ref: string) => void; onAsk: (ref: string) => void; onDrafted: () => void }) {
+export function EmployeePanel({ refId, onClose, onFly, onAsk, onDrafted, inGroup, onToggleGroup }: { refId: string; onClose: () => void; onFly: (ref: string) => void; onAsk: (ref: string) => void; onDrafted: () => void; inGroup: boolean; onToggleGroup: (ref: string) => void }) {
   const { data: e, isLoading } = useQuery({ queryKey: ['graph', 'employee', refId], queryFn: () => graphApi<EmployeeDetail>(`/employees/${refId}`) });
   const [open, setOpen] = useState<string | null>(null);
   const [intent, setIntent] = useState('');
@@ -71,6 +71,7 @@ export function EmployeePanel({ refId, onClose, onFly, onAsk, onDrafted }: { ref
           <div className="flex gap-2">
             <Link href={`/hr/employees/${e.id}`} className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-xs hover:bg-white/10"><ExternalLink className="size-3.5" />Astro record</Link>
             <button onClick={() => onAsk(e.ref)} className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-indigo-300/30 bg-indigo-500/15 px-2 py-1.5 text-xs text-indigo-100 hover:bg-indigo-500/25"><Sparkles className="size-3.5" />Ask about {e.name.split(' ')[0]}</button>
+            <button onClick={() => onToggleGroup(e.ref)} title="Add to the group (or shift-click stars)" className={cn('inline-flex items-center justify-center gap-1 rounded-lg border px-2 py-1.5 text-xs', inGroup ? 'border-amber-300/40 bg-amber-400/15 text-amber-100' : 'border-white/10 bg-white/5 hover:bg-white/10')}>{inGroup ? <Check className="size-3.5" /> : '+'} Group</button>
           </div>
 
           <div className="grid grid-cols-2 gap-2 text-xs">

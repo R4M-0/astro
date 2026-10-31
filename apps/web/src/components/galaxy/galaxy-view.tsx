@@ -98,6 +98,8 @@ export function GalaxyView() {
   const window3 = useMemo(() => (month === null ? null : new Set(months.slice(Math.max(0, month - 2), month + 1))), [month, months]);
   const linkVisible = useCallback((l: GEdge) => {
     if (lens === 'manager') return !!l.tree;
+    // topic / location lenses: the clusters are the message, beams only around the selected star
+    if (lens === 'topic' || lens === 'location') return false;
     if (l.tree) return false;
     if (!window3) return true;
     return Object.keys(l.months).some((m) => window3.has(m));
@@ -117,10 +119,11 @@ export function GalaxyView() {
 
   // ── interactions ──
   const fly = useCallback((ref: string) => { setSelected(ref); fg.current?.flyTo(ref); }, []);
+  const toggleGroup = useCallback((ref: string) => setGroup((g) => { const s = new Set(g); if (s.has(ref)) s.delete(ref); else s.add(ref); return s; }), []);
   const onNodeClick = useCallback((n: GNode, additive: boolean) => {
-    if (additive) setGroup((g) => { const s = new Set(g); if (s.has(n.ref)) s.delete(n.ref); else s.add(n.ref); return s; });
+    if (additive) toggleGroup(n.ref);
     else fly(n.ref);
-  }, [fly]);
+  }, [fly, toggleGroup]);
   const onSignal = (s: Signal) => {
     if (highlight?.id === s.id) return setHighlight(null);
     setHighlight({ refs: new Set(s.refs), label: s.title, id: s.id });
@@ -172,11 +175,13 @@ export function GalaxyView() {
   const nameOf = useCallback((r: string) => graph?.byRef.get(r)?.name ?? r, [graph]);
 
   const renderAnswer = (text: string) =>
-    text.split(/(\[m\d{5}\]|\[policy:[^\]]+\])/g).map((part, i) => {
-      const m = part.match(/^\[(m\d{5})\]$/);
-      if (m) {
-        const c = answer?.citations.find((x) => x.id === m[1]);
-        return <button key={i} title={c ? `${c.subject} — ${c.fromName}` : m[1]} onClick={() => c && fly(c.from)} className="mx-0.5 rounded bg-indigo-400/20 px-1 text-[10px] text-indigo-200 hover:bg-indigo-400/40">{m[1]}</button>;
+    // citations come as [m00123] or lists like [m00123, m00456]
+    text.split(/(\[m\d{5}(?:,\s*m\d{5})*\]|\[policy:[^\]]+\])/g).map((part, i) => {
+      if (/^\[m\d{5}/.test(part)) {
+        return part.match(/m\d{5}/g)!.map((id) => {
+          const c = answer?.citations.find((x) => x.id === id);
+          return <button key={`${i}-${id}`} title={c ? `${c.subject} — ${c.fromName}` : id} onClick={() => c && fly(c.from)} className="mx-0.5 rounded bg-indigo-400/20 px-1 text-[10px] text-indigo-200 hover:bg-indigo-400/40">{id}</button>;
+        });
       }
       const p = part.match(/^\[policy:([^\]]+)\]$/);
       if (p) return <span key={i} className="mx-0.5 rounded bg-emerald-400/15 px-1 text-[10px] text-emerald-200">📘 {p[1]}</span>;
@@ -186,7 +191,8 @@ export function GalaxyView() {
   if (error) return <div className="flex h-full items-center justify-center bg-[#03040b] p-6 text-sm text-slate-300">Galaxy service unavailable: {(error as Error).message}. Is apps/graph running on :3012?</div>;
 
   return (
-    <div ref={wrap} className="relative h-full w-full overflow-hidden bg-[#03040b]">
+    // overflow-clip (not hidden): focusing an input must never scroll the canvas sideways
+    <div ref={wrap} className="relative h-full w-full overflow-clip bg-[#03040b]">
       {graph && (
         <GalaxyCanvas
           ref={fg}
@@ -211,7 +217,7 @@ export function GalaxyView() {
       {isLoading && <div className="absolute inset-0 flex items-center justify-center text-slate-400"><Loader2 className="mr-2 size-5 animate-spin" />Mapping the workforce…</div>}
 
       {/* top toolbar */}
-      <div className="pointer-events-none absolute inset-x-3 top-3 flex items-start justify-between gap-3">
+      <div className="pointer-events-none absolute inset-x-3 top-3 flex flex-wrap items-start justify-between gap-2">
         <div className="pointer-events-auto flex items-center gap-2">
           <div className={cn(glass, 'relative w-72')}>
             <div className="flex items-center gap-2 px-3 py-2">
@@ -266,12 +272,19 @@ export function GalaxyView() {
       {/* right: employee file / approvals */}
       <div className="absolute bottom-40 right-3 top-16 flex gap-2">
         {showApprovals && <ApprovalsDrawer onClose={() => setShowApprovals(false)} nameOf={nameOf} />}
-        {selected && !showApprovals && <EmployeePanel key={selected} refId={selected} onClose={() => setSelected(null)} onFly={fly} onAsk={askAbout} onDrafted={() => setShowApprovals(true)} />}
+        {selected && !showApprovals && <EmployeePanel key={selected} refId={selected} onClose={() => setSelected(null)} onFly={fly} onAsk={askAbout} onDrafted={() => setShowApprovals(true)} inGroup={group.has(selected)} onToggleGroup={toggleGroup} />}
       </div>
 
       {/* answer card */}
       {answer && (
-        <div className={cn(glass, 'absolute bottom-40 left-1/2 max-h-[46%] w-[min(640px,calc(100%-720px))] min-w-[360px] -translate-x-1/2 overflow-y-auto p-4 text-sm')}>
+        <div
+          className={cn(
+            glass,
+            'absolute bottom-40 max-h-[46%] overflow-y-auto p-4 text-sm',
+            // with a panel open on the right, dock the answer on the left so they never overlap
+            selected || showApprovals ? 'left-3 w-[min(560px,calc(100%-450px))] min-w-[300px]' : 'left-1/2 w-[min(640px,calc(100%-24px))] -translate-x-1/2',
+          )}
+        >
           <div className="mb-2 flex items-center justify-between text-xs text-slate-400">
             <span className="flex items-center gap-1.5"><Sparkles className="size-3.5 text-indigo-300" />Answer · {answer.scope}</span>
             <button onClick={() => { setAnswer(null); setHighlight(null); }}><X className="size-3.5" /></button>
