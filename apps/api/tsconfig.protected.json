@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./build/tsc",
+    "rootDir": "./",
+    "sourceMap": false,
+    "incremental": false,
+    "removeComments": true
+  },
+  "include": ["src/**/*.ts", "prisma/seed.ts"],
+  "exclude": ["src/**/*.spec.ts", "src/**/*.check.spec.ts"]
+}

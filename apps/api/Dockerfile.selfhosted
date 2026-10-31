@@ -1,0 +1,53 @@
+# Self-hosted (protected) API image — ships V8 bytecode, never the Astro source.
+#
+#   docker build -f apps/api/Dockerfile.selfhosted \
+#     --build-arg LICENSE_PUBLIC_KEY="$(base64 -w0 license-public.pem)" \
+#     -t registry.example.com/astro/api:1.0.0 .
+#
+# Both stages MUST share the same Node image: bytecode only runs on the exact
+# Node version that compiled it (the loader refuses any other).
+ARG NODE_IMAGE=node:22-alpine
+
+# ── build stage ────────────────────────────────────────────────
+FROM ${NODE_IMAGE} AS build
+RUN corepack enable
+WORKDIR /repo
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+COPY packages/shared/package.json packages/shared/
+COPY apps/api/package.json apps/api/
+COPY apps/api/vendor apps/api/vendor
+RUN pnpm install --frozen-lockfile --filter @astro/api --filter @astro/shared
+COPY packages/shared packages/shared
+COPY apps/api apps/api
+ARG LICENSE_PUBLIC_KEY
+ARG BUILD_DATE=""
+RUN test -n "$LICENSE_PUBLIC_KEY" || { echo "--build-arg LICENSE_PUBLIC_KEY is required"; exit 1; }
+RUN pnpm --filter @astro/shared build \
+ && cd apps/api \
+ && pnpm prisma generate \
+ && LICENSE_PUBLIC_KEY="$LICENSE_PUBLIC_KEY" BUILD_DATE="$BUILD_DATE" node scripts/build-protected.mjs --out /protected
+# production dependencies only (no TypeScript, Nest CLI, jest, esbuild …), Prisma client generated in place;
+# the workspace package is bundled into the bytecode, so its copy is dropped
+RUN pnpm --filter @astro/api deploy --prod --legacy /out \
+ && mkdir -p /out/prisma && cp apps/api/prisma/schema.prisma /out/prisma/ \
+ && cd /out && ./node_modules/.bin/prisma generate --schema prisma/schema.prisma \
+ && rm -rf /out/node_modules/@astro /out/node_modules/.pnpm/node_modules/@astro /out/node_modules/.pnpm/@astro+*
+
+# ── runtime stage ──────────────────────────────────────────────
+FROM ${NODE_IMAGE}
+ENV NODE_ENV=production
+WORKDIR /app
+# no package managers in the shipped image
+RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack \
+      /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack /opt/yarn-* /usr/local/bin/yarn /usr/local/bin/yarnpkg
+COPY --from=build /out/node_modules ./node_modules
+COPY --from=build /repo/apps/api/prisma/schema.prisma ./prisma/schema.prisma
+COPY --from=build /repo/apps/api/prisma/migrations ./prisma/migrations
+COPY --from=build /protected ./dist
+RUN printf '{"name":"astro-api","private":true}\n' > package.json \
+ && mkdir -p /etc/astro && chown node:node /etc/astro
+USER node
+EXPOSE 3001
+# migrations: node node_modules/prisma/build/index.js migrate deploy
+# first run:  node dist/seed.js && node dist/cli.js setup --org … --email …
+CMD ["node", "dist/main.js"]
