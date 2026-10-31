@@ -25,6 +25,7 @@ a department or the whole company. Every answer cites its sources and explains *
 | F10 | Signals: recurring concerns per team, silent employees, missed onboarding check-ins, unanswered requests, trial ends, unused leave, blocked injections | `src/graph.ts` |
 | F11 | Bridges: betweenness centrality on work mail (HR excluded) and departments connected | `src/graph.ts` |
 | F12 | Search-to-fly: `/` to focus, Enter flies to the star | `galaxy-view.tsx` |
+| F13 | Live mail ingest: Mailpit acts as the company mail server. New mail is tagged by Gemini Flash Lite (topics, sentiment, summary, needs-a-reply, AI-instruction check), embedded into XQdrant, and shows up live as a beam and a toast. A composer in the galaxy sends demo mail through the same path | `src/ingest.ts` · `live-mail.tsx` · `GET /mail/events`, `POST /mail/send` |
 
 ## How explanations work (XQdrant)
 
@@ -38,7 +39,7 @@ per-dimension terms are computed locally, so the UI works with both. Recall come
 
 - **Auth**: verifies Astro access tokens (same `JWT_ACCESS_SECRET`) and checks the session and the membership in the `X-Organization-Id` tenant.
 - **RBAC** mirrors Astro: `org_admin`/`hr_manager` see everyone and mail bodies, `manager` sees their departments (subjects only), `employee` only themselves.
-- **Prompt injection**: mail is untrusted data. Bodies are delimited in prompts, and bodies matching injection patterns are flagged at ingest and never embedded or sent to the LLM (`src/guard.ts`). The dataset contains 3 planted attacks.
+- **Prompt injection**, in two layers. Mail is untrusted data and is always delimited in prompts. (1) Regex patterns flag obvious attacks before any model sees the body (`src/guard.ts`). (2) At live ingest, the tagging call also classifies whether the email gives instructions to an AI, which catches subtle attacks with no keywords. Flagged bodies are never embedded and are withheld from the assistant afterwards. The dataset contains 3 planted attacks, and the composer has an "Injection" preset.
 - **No sensitive inferences** in the taxonomy (health, religion, politics…). No scoring or ranking of people.
 - Per-user rate limit on LLM endpoints, payload size limits, parameterized SQL, CORS locked to the web origin, audit log of every view, question and decision (`GET /audit`).
 
@@ -60,8 +61,9 @@ pnpm --filter @astro/graph index                # embeds mail + handbook into Qd
 pnpm --filter @astro/graph dev                  # :3012
 ```
 
-To use XQdrant instead of upstream Qdrant: `docker build -t xqdrant:local ../XQdrant`, then start compose with `ASTRO_QDRANT_IMAGE=xqdrant:local`.
-`GET /health` reports `xqdrant: true` when native explanations are active.
+Live mail: the service polls Mailpit (`MAILPIT_URL`, default `http://localhost:8026`) every 4 s. Mail between employees of the demo org is ingested, and anything else is skipped. Send from the galaxy's composer, or with any SMTP client to `localhost:1026` using employee addresses (`@aurora-industries.example`, or the demo accounts' emails). Watch the raw mailbox at http://localhost:8026.
+
+Vector DB: the dev compose runs the XQdrant image (`golden5ragon/xqdrant`). The published image predates `dims_explained`, so reason bars are computed by this service. `GET /health` reports `xqdrant: true` once an image with native explanations is used.
 
 Stack: Express 5 + TypeScript (tsx), `pg`, Qdrant/XQdrant REST, Google AI Studio (`gemini-flash-lite-latest`, `gemini-embedding-001`).
 Web: `react-force-graph-3d` + three.js (UnrealBloom), inside the Astro Next.js app.

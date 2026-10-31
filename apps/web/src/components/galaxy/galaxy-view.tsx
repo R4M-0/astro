@@ -1,11 +1,12 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
-import { Activity, GitBranch, Home, Inbox, Loader2, Pause, Play, Search, Send, ShieldAlert, Sparkles, Users, X } from 'lucide-react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Activity, GitBranch, Home, Inbox, MailPlus, Loader2, Pause, Play, Search, Send, ShieldAlert, Sparkles, Users, X } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { graphApi } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { GalaxyCanvas, type GalaxyHandle } from './galaxy-canvas';
+import { ComposeMail, MailToasts, useLiveMail, type MailEvent } from './live-mail';
 import { ApprovalsDrawer, EmployeePanel, InsightsPanel, TopicChip, glass } from './panels';
 import { TOPIC_COLOR, type AskResult, type GEdge, type GNode, type GalaxyData, type Lens, type Signal } from './types';
 
@@ -16,6 +17,7 @@ const LENSES: { key: Lens; label: string }[] = [
   { key: 'location', label: 'Locations' },
 ];
 const LOC_COLOR: Record<string, string> = { Lyon: '#5b8cff', Paris: '#ff6fa8', Remote: '#2fd6c3' };
+const refOf = (x: string | GNode) => (typeof x === 'string' ? x : x.ref);
 const hexA = (hex: string, a: number) => `rgba(${parseInt(hex.slice(1, 3), 16)},${parseInt(hex.slice(3, 5), 16)},${parseInt(hex.slice(5, 7), 16)},${a})`;
 const monthLabel = (m: string) => new Date(m + '-01').toLocaleDateString('en-GB', { month: 'short', year: '2-digit' });
 
@@ -55,6 +57,27 @@ export function GalaxyView() {
     const tree: GEdge[] = nodes.filter((n) => n.managerRef && known.has(n.managerRef)).map((n) => ({ source: n.managerRef!, target: n.ref, weight: 1, months: {}, topic: 'project_collab', hr: false, tree: true }));
     return { nodes, links: [...mail, ...tree], byRef: new Map(nodes.map((n) => [n.ref, n])) };
   }, [data]);
+
+  // ── live mail: new beams are added in place (same node objects, so the layout doesn't jump) ──
+  const qc = useQueryClient();
+  const [linksVersion, setLinksVersion] = useState(0);
+  const links = useMemo(() => (graph ? [...graph.links] : []), [graph, linksVersion]); // eslint-disable-line react-hooks/exhaustive-deps
+  const [toasts, setToasts] = useState<MailEvent[]>([]);
+  const [composing, setComposing] = useState(false);
+  useLiveMail((e) => {
+    if (!graph) return;
+    const month = e.at.slice(0, 7);
+    for (const t of e.to) {
+      const l = graph.links.find((x) => !x.tree && ((refOf(x.source) === e.from && refOf(x.target) === t) || (refOf(x.source) === t && refOf(x.target) === e.from)));
+      if (l) { l.weight++; l.months[month] = (l.months[month] ?? 0) + 1; l.hr ||= e.kind.startsWith('hr'); }
+      else graph.links.push({ source: e.from, target: t, weight: 2, months: { [month]: 1 }, topic: e.topics[0]?.concept ?? 'project_collab', hr: e.kind.startsWith('hr') });
+    }
+    setLinksVersion((v) => v + 1);
+    setToasts((ts) => [e, ...ts].slice(0, 3));
+    setHighlight({ refs: new Set([e.from, ...e.to]), label: `New mail: ${e.subject}` });
+    void qc.invalidateQueries({ queryKey: ['graph', 'signals'] });
+    void qc.invalidateQueries({ queryKey: ['graph', 'employee'] });
+  });
   const deptColor = useMemo(() => new Map(data?.departments.map((d) => [d.name, d.color])), [data]);
   const bridgeSet = useMemo(() => new Set(showBridges && graph ? [...graph.nodes].sort((a, b) => b.bridge - a.bridge).slice(0, 10).map((n) => n.ref) : []), [showBridges, graph]);
 
@@ -197,7 +220,7 @@ export function GalaxyView() {
         <GalaxyCanvas
           ref={fg}
           nodes={graph.nodes}
-          links={graph.links}
+          links={links}
           clusterOf={clusterOf}
           clusterColor={clusterColor}
           colorOf={colorOf}
@@ -219,7 +242,7 @@ export function GalaxyView() {
       {/* top toolbar */}
       <div className="pointer-events-none absolute inset-x-3 top-3 flex flex-wrap items-start justify-between gap-2">
         <div className="pointer-events-auto flex items-center gap-2">
-          <div className={cn(glass, 'relative w-72')}>
+          <div className={cn(glass, 'relative w-56 2xl:w-72')}>
             <div className="flex items-center gap-2 px-3 py-2">
               <Search className="size-4 text-slate-400" />
               <input ref={searchRef} value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter' && matches[0]) { fly(matches[0].ref); setQ(''); } }} placeholder="Fly to an employee…  ( / )" className="w-full bg-transparent text-sm outline-none placeholder:text-slate-500" />
@@ -240,21 +263,26 @@ export function GalaxyView() {
               <button key={l.key} onClick={() => setLens(l.key)} className={cn('rounded-lg px-2.5 py-1 text-xs', lens === l.key ? 'bg-white/15 text-white' : 'text-slate-400 hover:text-white')}>{l.label}</button>
             ))}
           </div>
-          <button onClick={() => setShowBridges((b) => !b)} className={cn(glass, 'flex items-center gap-1.5 px-3 py-2 text-xs', showBridges && 'border-violet-300/40 text-violet-200')}><GitBranch className="size-3.5" />Bridges</button>
+          <button title="Bridges" onClick={() => setShowBridges((b) => !b)} className={cn(glass, 'flex items-center gap-1.5 px-3 py-2 text-xs', showBridges && 'border-violet-300/40 text-violet-200')}><GitBranch className="size-3.5" /><span className="hidden 2xl:inline">Bridges</span></button>
           <button onClick={() => { fg.current?.home(); setSelected(null); }} className={cn(glass, 'p-2')} title="Home"><Home className="size-4" /></button>
         </div>
         <div className="pointer-events-auto flex items-center gap-2">
-          {highlight && (
-            <div className={cn(glass, 'flex items-center gap-2 px-3 py-2 text-xs')}>
-              <span className="size-2 animate-pulse rounded-full bg-amber-300" /><span className="max-w-64 truncate">{highlight.label}</span><span className="text-slate-500">{highlight.refs.size}</span>
-              <button onClick={() => setHighlight(null)}><X className="size-3.5 text-slate-400" /></button>
-            </div>
-          )}
-          {group.size > 0 && (
-            <div className={cn(glass, 'flex items-center gap-2 px-3 py-2 text-xs')}><Users className="size-3.5 text-amber-300" />{group.size} selected<button onClick={() => { setGroup(new Set()); setScope({ kind: 'company' }); }}><X className="size-3.5 text-slate-400" /></button></div>
-          )}
-          <button onClick={() => setShowApprovals((v) => !v)} className={cn(glass, 'flex items-center gap-1.5 px-3 py-2 text-xs')}><Inbox className="size-3.5" />Approvals</button>
+          <button title="Send a company email" onClick={() => setComposing((v) => !v)} className={cn(glass, 'flex items-center gap-1.5 px-3 py-2 text-xs', composing && 'border-indigo-300/40')}><MailPlus className="size-3.5" /><span className="hidden 2xl:inline">Send mail</span></button>
+          <button title="Approval queue" onClick={() => setShowApprovals((v) => !v)} className={cn(glass, 'flex items-center gap-1.5 px-3 py-2 text-xs')}><Inbox className="size-3.5" /><span className="hidden 2xl:inline">Approvals</span></button>
         </div>
+      </div>
+
+      {/* status chips: what is lit up and who is in the group (own row, centered, so the toolbar never wraps) */}
+      <div className="pointer-events-none absolute left-1/2 top-16 z-10 flex -translate-x-1/2 items-center gap-2">
+        {highlight && (
+          <div className={cn(glass, 'pointer-events-auto flex items-center gap-2 px-3 py-1.5 text-xs')}>
+            <span className="size-2 animate-pulse rounded-full bg-amber-300" /><span className="max-w-64 truncate">{highlight.label}</span><span className="text-slate-500">{highlight.refs.size}</span>
+            <button onClick={() => setHighlight(null)}><X className="size-3.5 text-slate-400" /></button>
+          </div>
+        )}
+        {group.size > 0 && (
+          <div className={cn(glass, 'pointer-events-auto flex items-center gap-2 px-3 py-1.5 text-xs')}><Users className="size-3.5 text-amber-300" />{group.size} selected<button onClick={() => { setGroup(new Set()); setScope({ kind: 'company' }); }}><X className="size-3.5 text-slate-400" /></button></div>
+        )}
       </div>
 
       {/* left: signals & bridges */}
@@ -311,6 +339,12 @@ export function GalaxyView() {
           {answer.queryConcepts.length > 0 && <div className="mt-2 flex flex-wrap items-center gap-1 text-[10px] text-slate-500">Question understood as {answer.queryConcepts.slice(0, 4).map((c) => <TopicChip key={c.concept} concept={c.concept} label={c.label} />)}</div>}
         </div>
       )}
+
+      {/* live mail: composer + incoming toasts (above the right panels) */}
+      <div className="pointer-events-none absolute right-3 top-16 z-20 flex flex-col items-end gap-2">
+        {composing && graph && <ComposeMail nodes={graph.nodes} onClose={() => setComposing(false)} />}
+        <MailToasts items={toasts} nameOf={nameOf} onOpen={(e) => { fly(e.from); setToasts((ts) => ts.filter((x) => x.seq !== e.seq)); }} onDismiss={(s) => setToasts((ts) => ts.filter((x) => x.seq !== s))} />
+      </div>
 
       {/* bottom: ask + timeline */}
       <div className="absolute inset-x-3 bottom-3 flex flex-col items-center gap-2">
