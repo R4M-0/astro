@@ -8,7 +8,10 @@ import { Input } from '@/components/ui/input';
 import { graphApi } from '@/lib/api';
 import type { AskResult } from './types';
 
-const EXAMPLES = ['How many leave days do I have left?', 'Can I work remotely?', 'How is overtime paid?'];
+/** Handbook sections the answer actually cites. */
+const cited = (answer: string) => [...new Set([...answer.matchAll(/\[policy:([^\]]+)\]/g)].map((m) => m[1]))];
+
+const EXAMPLES =['How many leave days do I have left?', 'Can I work remotely?', 'How is overtime paid?'];
 
 /** Employee questions (« Mon espace »): answers from the handbook + the member's own file only. */
 export function AskHr() {
@@ -43,8 +46,8 @@ export function AskHr() {
         {res && (
           <div className="rounded-lg bg-muted/50 p-3 text-sm">
             <div className="mb-1 text-xs text-muted-foreground">{res.q}</div>
-            <div className="whitespace-pre-wrap">{res.a.answer.replace(/\[m\d{5}\]/g, '')}</div>
-            {res.a.policies.length > 0 && <div className="mt-2 text-xs text-muted-foreground">Sources: handbook — {res.a.policies.join(', ')}</div>}
+            <div className="whitespace-pre-wrap">{res.a.answer.replace(/\s*\[m\d{5}(?:,\s*m\d{5})*\]/g, '').replace(/\s*\[policy:[^\]]+\]/g, '').replace(/\s*\[EMP-\d+\]/g, '')}</div>
+            {cited(res.a.answer).length > 0 && <div className="mt-2 text-xs text-muted-foreground">Source: handbook — {cited(res.a.answer).join(', ')}</div>}
           </div>
         )}
         <p className="text-xs text-muted-foreground">Answers come from the company handbook and your own HR file. For anything about a decision, HR will answer you directly.</p>

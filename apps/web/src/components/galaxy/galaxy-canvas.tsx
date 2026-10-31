@@ -62,8 +62,9 @@ function textSprite(text: string, color: string) {
   g.globalAlpha = 0.85;
   g.textBaseline = 'middle';
   g.fillText(text, 20, 34);
-  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), transparent: true, depthWrite: false }));
-  s.scale.set(c.width / 3.2, c.height / 3.2, 1);
+  // constant on-screen size: world-sized labels turn huge (and bloom) when the camera flies in
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), transparent: true, depthWrite: false, sizeAttenuation: false, opacity: 0.8 }));
+  s.scale.set((c.width / c.height) * 0.03, 0.03, 1);
   return s;
 }
 
@@ -93,7 +94,11 @@ export const GalaxyCanvas = forwardRef<GalaxyHandle, Props>(function GalaxyCanva
       if (!n || n.x === undefined || !fg.current) return;
       const d = 170;
       const ratio = 1 + d / Math.max(1, Math.hypot(n.x, n.y!, n.z!));
-      fg.current.cameraPosition({ x: n.x * ratio, y: n.y! * ratio + 20, z: n.z! * ratio }, { x: n.x, y: n.y, z: n.z }, 1400);
+      const cam = new THREE.Vector3(n.x * ratio, n.y! * ratio + 20, n.z! * ratio);
+      // look slightly to the star's right so it sits left of center, clear of the employee panel
+      const right = new THREE.Vector3(n.x, n.y, n.z).sub(cam).normalize().cross(new THREE.Vector3(0, 1, 0)).normalize();
+      const look = new THREE.Vector3(n.x, n.y, n.z).addScaledVector(right, 55);
+      fg.current.cameraPosition({ x: cam.x, y: cam.y, z: cam.z }, { x: look.x, y: look.y, z: look.z }, 1400);
     },
     home() {
       fg.current?.cameraPosition({ x: 0, y: 380, z: 1750 }, { x: 0, y: 0, z: 0 }, 1400);
@@ -130,11 +135,11 @@ export const GalaxyCanvas = forwardRef<GalaxyHandle, Props>(function GalaxyCanva
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // stop the idle rotation once the user interacts
+  // idle rotation until the first interaction, then never again (it would move stars under the cursor)
   useEffect(() => {
     const controls = fg.current?.controls();
-    if (controls) controls.autoRotate = !p.selected && p.highlight.size === 0;
-  }, [p.selected, p.highlight]);
+    if (controls && (p.selected || p.highlight.size || p.group.size)) controls.autoRotate = false;
+  }, [p.selected, p.highlight, p.group]);
 
   // cluster forces + labels for the current lens
   useEffect(() => {
@@ -217,8 +222,8 @@ export const GalaxyCanvas = forwardRef<GalaxyHandle, Props>(function GalaxyCanva
       const s = n.ref === p.selected ? base * 1.9 : p.highlight.has(n.ref) ? base * 1.35 : base;
       n.__glow.scale.set(s, s, 1);
       if (n.__ring) {
-        n.__ring.visible = p.group.has(n.ref) || n.ref === p.selected;
-        (n.__ring.material as THREE.MeshBasicMaterial).color.set(n.ref === p.selected ? '#ffffff' : '#ffd166');
+        n.__ring.visible = p.group.has(n.ref) || n.ref === p.selected || p.bridges.has(n.ref);
+        (n.__ring.material as THREE.MeshBasicMaterial).color.set(n.ref === p.selected ? '#ffffff' : p.group.has(n.ref) ? '#ffd166' : '#c4a1ff');
       }
     }
   };
@@ -245,8 +250,12 @@ export const GalaxyCanvas = forwardRef<GalaxyHandle, Props>(function GalaxyCanva
         if (!cam) return;
         for (const n of p.nodes as (GNode & { __ring?: THREE.Mesh })[]) if (n.__ring?.visible) n.__ring.quaternion.copy(cam.quaternion);
       }}
-      linkVisibility={(l: GEdge) => p.linkVisible(l) && (l.weight >= 2 || !!l.tree || linkTouches(l, p.selected))}
-      linkColor={(l: GEdge) => (linkTouches(l, p.selected) ? '#ffe9a8' : p.linkColor(l))}
+      linkVisibility={(l: GEdge) => (p.linkVisible(l) && (l.weight >= 2 || !!l.tree)) || (!l.tree && linkTouches(l, p.selected))}
+      linkColor={(l: GEdge) =>
+        linkTouches(l, p.selected) ? '#ffe9a8'
+          // with a highlight active, beams that don't touch it fade out
+          : p.highlight.size && !p.highlight.has(refOf(l.source)) && !p.highlight.has(refOf(l.target)) ? 'rgba(120,130,200,0.03)'
+          : p.linkColor(l)}
       linkOpacity={0.35}
       linkWidth={(l: GEdge) => (linkTouches(l, p.selected) ? 0.9 : 0)}
       linkDirectionalParticles={(l: GEdge) => (linkTouches(l, p.selected) ? Math.min(6, 1 + Math.round(Math.log2(l.weight + 1))) : 0)}

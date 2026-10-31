@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { CONCEPTS, CONCEPT_LABEL } from "./concepts.js";
 import { type Ctx, canReadMail, visibleTo } from "./auth.js";
 import { DATA_DIR, type Dataset, type Employee } from "./data.js";
+import { analyse, topTopics } from "./graph.js";
 import { asData } from "./guard.js";
 import { embed, generateJson, normalize } from "./llm.js";
 import { COL, explainSearch, query } from "./vectors.js";
@@ -19,8 +20,14 @@ function conceptQuery(q: number[]) {
 }
 
 const num = (s: string) => parseInt(s.replace(/\D/g, ""), 10);
-const facts = (e: Employee, ds: Dataset) =>
-  `${e.ref} | ${e.name} | ${e.title ?? "?"} | ${e.department} / ${e.team} | manager: ${e.managerRef ? ds.byRef.get(e.managerRef)?.name : "-"} | hired ${e.hireDate}${e.exitDate ? ` | left ${e.exitDate}` : ""} | ${e.contract} | ${e.location} | leave left ${e.leave.remaining}/${e.leave.annual} days | sick days ${e.sickDays}${e.trialEndDate ? ` | trial ends ${e.trialEndDate}` : ""}`;
+const facts = (e: Employee, ds: Dataset) => {
+  const { bc, deptLinks, topics } = analyse(ds);
+  const links = [...(deptLinks.get(e.ref) ?? [])];
+  const hrTopics = topTopics(topics.get(e.ref), 3, true).map(t => t.label).join(", ");
+  return `${e.ref} | ${e.name} | ${e.title ?? "?"} | ${e.department} / ${e.team} | manager: ${e.managerRef ? ds.byRef.get(e.managerRef)?.name : "-"} | hired ${e.hireDate}${e.exitDate ? ` | left ${e.exitDate}` : ""} | ${e.contract} | ${e.location} | leave left ${e.leave.remaining}/${e.leave.annual} days | sick days ${e.sickDays}${e.trialEndDate ? ` | trial ends ${e.trialEndDate}` : ""}`
+    + (hrTopics ? ` | main HR topics: ${hrTopics}` : "")
+    + (links.length ? ` | works across departments: ${links.join(", ")} (bridge score ${Math.round((bc.get(e.ref) ?? 0) * 100)}/100)` : "");
+};
 
 const SYSTEM = `You are the HR assistant of Aurora Industries (fictional company), inside the Astro HR app.
 Rules:
@@ -91,7 +98,8 @@ export async function ask(ds: Dataset, ctx: Ctx, input: AskInput) {
   } catch (e: any) {
     answer = `The AI model is unavailable right now (${e?.message ?? "error"}). Here are the most relevant people and emails found.`;
   }
-  const ids = new Set([...cited, ...answer.matchAll(/\[(m\d{5})\]/g)].map(x => (typeof x === "string" ? x : x[1]).replace(/[[\]]/g, "")));
+  // the model cites [m00123] or lists like [m00123, m00456]
+  const ids = new Set([...cited, ...(answer.match(/m\d{5}/g) ?? [])].flatMap(x => x.match(/m\d{5}/g) ?? []));
   return {
     answer,
     citations: [...ids].map(id => ds.emailById.get(id)).filter(Boolean).map(m => ({ id: m!.id, date: m!.date, subject: m!.subject, from: m!.from, fromName: ds.byRef.get(m!.from)?.name })),
