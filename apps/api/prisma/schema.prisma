@@ -1,0 +1,965 @@
+// Astro — HR management data model.
+// Conventions: tenant models carry organizationId (+ optional siteId/departmentId),
+// audit fields (createdAt/updatedAt/createdById/updatedById) and soft delete (deletedAt).
+
+generator client {
+  provider        = "prisma-client-js"
+  // Loads includes/_count with per-row LATERAL joins. Without it, `_count`
+  // compiles to `SELECT fk, COUNT(*) FROM child GROUP BY fk` over the WHOLE
+  // table (every tenant) — list latency grew with total platform size.
+  previewFeatures = ["relationJoins"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────── Core: tenancy, identity, RBAC ───────────────────────────
+
+model Organization {
+  id           String    @id @default(cuid())
+  name         String
+  slug         String    @unique
+  logoUrl      String?
+  // org-level settings: risk matrix bounds, terminology mode (2015/2026/dual), locale default
+  settings     Json      @default("{}")
+  // platform (SaaS) operational status — controlled by Super Admin, enforced by TenantGuard
+  status       OrgStatus @default(TRIAL)
+  statusReason String?
+  suspendedAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  sites        Site[]
+  memberships  Membership[]
+  roles        Role[]
+  subscription Subscription?
+  invoices     Invoice[]
+
+  @@index([status])
+}
+
+model Site {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  name           String
+  address        String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  deletedAt      DateTime?
+  departments    Department[]
+
+  @@index([organizationId])
+}
+
+model Department {
+  id        String    @id @default(cuid())
+  siteId    String
+  site      Site      @relation(fields: [siteId], references: [id])
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+
+  @@index([siteId])
+}
+
+model User {
+  id               String    @id @default(cuid())
+  email            String    @unique
+  passwordHash     String
+  firstName        String
+  lastName         String
+  avatarUrl        String?
+  locale           String    @default("fr")
+  emailVerifiedAt  DateTime?
+  twoFactorSecret  String? // encrypted TOTP secret
+  twoFactorEnabled Boolean   @default(false)
+  recoveryCodes    String[] // hashed
+  lastLoginAt      DateTime?
+  // platform-level flag — Astro staff who operate the SaaS itself (not an org role)
+  isSuperAdmin     Boolean   @default(false)
+  /// last accepted TOTP time step — a code is never accepted twice (replay guard)
+  lastTotpStep     Int?
+  /// self-registration: when the user accepted the terms + privacy policy, and which version
+  termsAcceptedAt  DateTime?
+  termsVersion     String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  deletedAt        DateTime?
+
+  memberships   Membership[]
+  sessions      Session[]
+  tokens        VerificationToken[]
+  notifications Notification[]
+}
+
+model Membership {
+  id                 String       @id @default(cuid())
+  organizationId     String
+  organization       Organization @relation(fields: [organizationId], references: [id])
+  userId             String
+  user               User         @relation(fields: [userId], references: [id])
+  roleId             String
+  role               Role         @relation(fields: [roleId], references: [id])
+  siteId             String? // optional site scoping
+  departmentId       String? // main department
+  /// Extra departments granted by an admin — their records are visible too.
+  extraDepartmentIds String[]     @default([])
+  jobTitle           String?
+  isDefault          Boolean      @default(false)
+  // an active membership = one occupied seat / a user account able to access this org
+  isActive           Boolean      @default(true)
+  deactivatedAt      DateTime?
+  invitedAt          DateTime?
+  /// null = invitation not accepted yet: the membership grants no access (TenantGuard, assertMembers)
+  acceptedAt         DateTime?    @default(now())
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  deletedAt          DateTime?
+
+  @@unique([organizationId, userId])
+  @@index([userId])
+  @@index([organizationId, isActive, deletedAt])
+}
+
+model Role {
+  id                    String        @id @default(cuid())
+  organizationId        String? // null = platform-level template role
+  /// Members with this role only see their department(s)' records (+ involved / shared ones).
+  departmentScoped      Boolean       @default(false)
+  organization          Organization? @relation(fields: [organizationId], references: [id])
+  key                   String // e.g. quality_manager
+  name                  String
+  description           String?
+  isSystem              Boolean       @default(false)
+  /// default grants already offered to this system role by the seed sync — never re-granted once removed
+  permissionsSyncedKeys String[]      @default([])
+  permissionsSyncedAt   DateTime?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+  deletedAt             DateTime?
+
+  permissions RolePermission[]
+  memberships Membership[]
+
+  @@unique([organizationId, key])
+}
+
+model Permission {
+  id       String           @id @default(cuid())
+  resource String // e.g. "risks"
+  action   String // read|create|update|delete|approve|export|admin
+  roles    RolePermission[]
+
+  @@unique([resource, action])
+}
+
+model RolePermission {
+  roleId       String
+  role         Role       @relation(fields: [roleId], references: [id])
+  permissionId String
+  permission   Permission @relation(fields: [permissionId], references: [id])
+
+  @@id([roleId, permissionId])
+}
+
+model Session {
+  id               String    @id @default(cuid())
+  userId           String
+  user             User      @relation(fields: [userId], references: [id])
+  refreshTokenHash String
+  userAgent        String?
+  ip               String?
+  // set when a Super Admin is impersonating this user for support
+  impersonatedById String?
+  expiresAt        DateTime
+  revokedAt        DateTime?
+  createdAt        DateTime  @default(now())
+  lastUsedAt       DateTime  @default(now())
+
+  @@index([userId])
+}
+
+enum TokenType {
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
+  INVITATION
+}
+
+model VerificationToken {
+  id           String    @id @default(cuid())
+  userId       String
+  user         User      @relation(fields: [userId], references: [id])
+  type         TokenType
+  tokenHash    String
+  /// invitation flows: the pending membership this token accepts
+  membershipId String?
+  expiresAt    DateTime
+  usedAt       DateTime?
+  createdAt    DateTime  @default(now())
+
+  @@index([userId, type])
+}
+
+model Notification {
+  id             String    @id @default(cuid())
+  organizationId String
+  userId         String
+  user           User      @relation(fields: [userId], references: [id])
+  type           String // action_due, document_to_approve, mention, audit_scheduled…
+  title          String
+  body           String?
+  entityType     String?
+  entityId       String?
+  link           String?
+  readAt         DateTime?
+  createdAt      DateTime  @default(now())
+
+  @@index([userId, readAt])
+  @@index([organizationId])
+}
+
+model Comment {
+  id             String    @id @default(cuid())
+  organizationId String
+  entityType     String
+  entityId       String
+  authorId       String
+  body           String // markdown, mentions as @[userId]
+  mentions       String[]
+  parentId       String?
+  resolvedAt     DateTime? // threaded discussions can be resolved
+  resolvedById   String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
+
+  @@index([organizationId, entityType, entityId])
+}
+
+model Attachment {
+  id             String    @id @default(cuid())
+  organizationId String
+  entityType     String
+  entityId       String
+  fileName       String
+  mimeType       String
+  size           Int
+  storageKey     String // MinIO object key
+  uploadedById   String
+  createdAt      DateTime  @default(now())
+  deletedAt      DateTime?
+
+  @@index([organizationId, entityType, entityId])
+}
+
+model ActivityEntry {
+  id             String   @id @default(cuid())
+  organizationId String
+  entityType     String
+  entityId       String
+  actorId        String?
+  verb           String // created, updated, approved, closed, commented…
+  data           Json     @default("{}")
+  createdAt      DateTime @default(now())
+
+  @@index([organizationId, entityType, entityId, createdAt])
+  @@index([organizationId, createdAt])
+}
+
+model AuditLogEntry {
+  id               String   @id @default(cuid())
+  organizationId   String?
+  actorId          String?
+  action           String // http method + route or domain action
+  entityType       String?
+  entityId         String?
+  ip               String?
+  userAgent        String?
+  before           Json?
+  after            Json?
+  /// super admin acting through impersonation (« via support »)
+  impersonatedById String?
+  createdAt        DateTime @default(now())
+
+  @@index([organizationId, createdAt])
+}
+
+model HistoryEntry {
+  id               String   @id @default(cuid())
+  organizationId   String?
+  entityType       String // Prisma model name, e.g. "Action"
+  entityId         String
+  actorId          String? // user who made the change (null = system/cron)
+  operation        String // create | update | delete | restore
+  changes          Json     @default("{}") // { field: { from, to } }
+  snapshot         Json? // full after-state on create, before-state on delete
+  /// super admin acting through impersonation (« via support »)
+  impersonatedById String?
+  createdAt        DateTime @default(now())
+
+  @@index([organizationId, entityType, entityId, createdAt])
+  @@index([organizationId, createdAt])
+}
+
+enum TrainingStatus {
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum SkillType {
+  TECHNICAL
+  BEHAVIORAL
+}
+
+enum HrTrainingType {
+  INTERNE
+  INTRA
+  EXTERNE
+  PRESTATAIRE
+}
+
+enum TrainingEvalType {
+  HOT // à chaud
+  COLD // à froid
+}
+
+model Employee {
+  id             String                @id @default(cuid())
+  organizationId String
+  reference      String // EMP-0001
+  firstName      String
+  lastName       String
+  contact        String? // phone / other contact
+  email          String?
+  cin            String? // national ID card number
+  jobTitle       String?
+  departmentId   String?
+  managerId      String? // hierarchical superior (org chart) — self relation
+  userId         String? // optional link to an app User account
+  active         Boolean               @default(true)
+  hireDate       DateTime? // date d'embauche
+  contractType   EmployeeContractType?
+  trialEndDate   DateTime? // fin de période d'essai
+  exitDate       DateTime? // date de sortie (offboarding)
+  exitReason     String?
+  createdById    String?
+  updatedById    String?
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+  deletedAt      DateTime?
+
+  manager      Employee?              @relation("EmployeeManager", fields: [managerId], references: [id])
+  reports      Employee[]             @relation("EmployeeManager")
+  evaluations  CompetencyEvaluation[]
+  assignments  JobAssignment[]
+  participants TrainingParticipant[]
+  journeys     EmployeeJourney[]      @relation("JourneyEmployee")
+  buddyOf      EmployeeJourney[]      @relation("JourneyBuddy")
+
+  @@unique([organizationId, reference])
+  @@index([organizationId, deletedAt])
+  @@index([organizationId, departmentId])
+  @@index([managerId])
+}
+
+model Skill {
+  id             String    @id @default(cuid())
+  organizationId String
+  name           String
+  description    String?
+  type           SkillType @default(TECHNICAL)
+  createdById    String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
+
+  requirements JobSkillRequirement[]
+  evaluations  CompetencyEvaluation[]
+
+  @@index([organizationId, deletedAt])
+  @@index([organizationId, type])
+}
+
+model JobDescription {
+  id                  String    @id @default(cuid())
+  organizationId      String
+  reference           String // required
+  version             String // required
+  applicationDate     DateTime? // date d'application
+  jobTitle            String // intitulé du poste
+  departmentId        String? // département / service
+  managerId           String? // supérieur hiérarchique (Employee id)
+  replacementId       String? // remplaçant en cas d'absence (Employee id)
+  mainMission         String? // mission principale
+  hierarchicalLink    String? // rattachement hiérarchique
+  functionalLink      String? // rattachement fonctionnel
+  jobPurpose          String? // finalité du poste
+  authority           String? // autorité (pouvoirs de décision / délégations — 5.3)
+  minExperienceMonths Int? // expérience minimale (mois)
+  experienceDomain    String? // domaine d'expérience
+  requiredTraining    Json      @default("[]") // [{ formation, level }]
+  qualityAwareness    Json      @default("{}") // { policy, objectives, risks, customerReqs, procedures, productImpact, improvement }
+  status              String    @default("DRAFT") // DRAFT | PUBLISHED | ARCHIVED
+  createdById         String?
+  updatedById         String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  deletedAt           DateTime?
+
+  trialPeriodDays Int? // durée de la période d'essai (jours) — defaults the onboarding sign-off date
+
+  activities        JobActivity[]
+  skillRequirements JobSkillRequirement[]
+  assignments       JobAssignment[]
+  onboardingItems   OnboardingTemplateItem[]
+
+  @@unique([organizationId, reference, version])
+  @@index([organizationId, deletedAt])
+}
+
+model JobActivity {
+  id               String         @id @default(cuid())
+  jobDescriptionId String
+  jobDescription   JobDescription @relation(fields: [jobDescriptionId], references: [id], onDelete: Cascade)
+  description      String
+  frequency        String? // quotidienne / hebdomadaire / mensuelle / ponctuelle …
+  sortOrder        Int            @default(0)
+
+  @@index([jobDescriptionId])
+}
+
+model JobSkillRequirement {
+  id               String         @id @default(cuid())
+  jobDescriptionId String
+  jobDescription   JobDescription @relation(fields: [jobDescriptionId], references: [id], onDelete: Cascade)
+  skillId          String
+  skill            Skill          @relation(fields: [skillId], references: [id])
+  requiredLevel    Int            @default(3) // 1..5
+
+  @@unique([jobDescriptionId, skillId])
+  @@index([skillId])
+}
+
+model JobAssignment {
+  id               String         @id @default(cuid())
+  organizationId   String
+  employeeId       String
+  employee         Employee       @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  jobDescriptionId String
+  jobDescription   JobDescription @relation(fields: [jobDescriptionId], references: [id])
+  assignedAt       DateTime       @default(now())
+
+  @@unique([employeeId])
+  @@index([organizationId])
+  @@index([jobDescriptionId])
+}
+
+model CompetencyEvaluation {
+  id               String   @id @default(cuid())
+  organizationId   String
+  employeeId       String
+  employee         Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  skillId          String
+  skill            Skill    @relation(fields: [skillId], references: [id])
+  expectedLevel    Int? // niveau attendu (from job description, snapshot-editable)
+  evaluatedLevel   Int // niveau évalué 1..5
+  gap              Int      @default(0) // evaluatedLevel - expectedLevel
+  evaluationMethod String? // méthode d'évaluation
+  requiredAction   String? // action nécessaire
+  evaluatedById    String?
+  evaluatedAt      DateTime @default(now())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@unique([employeeId, skillId])
+  @@index([organizationId])
+  @@index([skillId])
+}
+
+model HrTraining {
+  id             String         @id @default(cuid())
+  organizationId String
+  departmentId   String? // owning department (department-scoped visibility)
+  code           String // code formation
+  theme          String // thème de formation
+  type           HrTrainingType @default(INTERNE)
+  startDate      DateTime?
+  endDate        DateTime?
+  status         TrainingStatus @default(PLANNED) // état de réalisation
+  observation    String?
+  hotToken       String         @unique // à chaud share link
+  coldToken      String         @unique // à froid share link
+  createdById    String?
+  updatedById    String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  deletedAt      DateTime?
+
+  participants TrainingParticipant[]
+  feedback     TrainingFeedback[]
+
+  @@index([organizationId, deletedAt])
+  @@index([organizationId, status])
+  @@index([organizationId, departmentId])
+}
+
+model TrainingParticipant {
+  id         String     @id @default(cuid())
+  trainingId String
+  training   HrTraining @relation(fields: [trainingId], references: [id], onDelete: Cascade)
+  employeeId String
+  employee   Employee   @relation(fields: [employeeId], references: [id])
+  present    Boolean    @default(true)
+  createdAt  DateTime   @default(now())
+
+  @@unique([trainingId, employeeId])
+  @@index([employeeId])
+}
+
+model TrainingFeedback {
+  id                String           @id @default(cuid())
+  organizationId    String
+  trainingId        String
+  training          HrTraining       @relation(fields: [trainingId], references: [id], onDelete: Cascade)
+  evaluationType    TrainingEvalType
+  satisfactionScore Int // overall 1..5
+  answers           Json             @default("{}")
+  respondentName    String?
+  createdAt         DateTime         @default(now())
+
+  @@index([trainingId, evaluationType])
+  @@index([organizationId])
+}
+
+enum HrSurveyStatus {
+  DRAFT // Brouillon — questions éditables, pas de lien
+  PUBLISHED // Publiée — lien public actif
+  CLOSED // Clôturée — plus de réponses acceptées
+}
+
+enum HrSurveyQuestionType {
+  SHORT_TEXT
+  LONG_TEXT
+  SINGLE_CHOICE
+  MULTIPLE_CHOICE
+  YES_NO
+  RATING
+}
+
+enum SurveyScope {
+  HR
+}
+
+model HrSurvey {
+  id                     String         @id @default(cuid())
+  organizationId         String
+  scope                  SurveyScope    @default(HR)
+  reference              String // ENQ-0001
+  title                  String
+  description            String?
+  status                 HrSurveyStatus @default(DRAFT)
+  anonymous              Boolean        @default(true) // identity never collected nor shown
+  allowMultipleResponses Boolean        @default(false) // false = one response per respondent
+  publicToken            String?        @unique // generated on first publish
+  closesAt               DateTime? // optional auto-close date
+  publishedAt            DateTime?
+  closedAt               DateTime?
+  createdById            String?
+  updatedById            String?
+  createdAt              DateTime       @default(now())
+  updatedAt              DateTime       @updatedAt
+  deletedAt              DateTime?
+
+  questions HrSurveyQuestion[]
+  responses HrSurveyResponse[]
+
+  @@unique([organizationId, reference])
+  @@index([organizationId, scope, deletedAt])
+}
+
+model HrSurveyQuestion {
+  id            String               @id @default(cuid())
+  surveyId      String
+  survey        HrSurvey             @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+  type          HrSurveyQuestionType
+  label         String
+  helpText      String?
+  required      Boolean              @default(false)
+  sortOrder     Int                  @default(0)
+  scaleMin      Int                  @default(1) // RATING only
+  scaleMax      Int                  @default(5)
+  scaleMinLabel String?
+  scaleMaxLabel String?
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+
+  options HrSurveyOption[]
+  answers HrSurveyAnswer[]
+
+  @@index([surveyId, sortOrder])
+}
+
+model HrSurveyOption {
+  id         String           @id @default(cuid())
+  questionId String
+  question   HrSurveyQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  label      String
+  sortOrder  Int              @default(0)
+
+  @@index([questionId, sortOrder])
+}
+
+model HrSurveyResponse {
+  id              String   @id @default(cuid())
+  organizationId  String
+  surveyId        String
+  survey          HrSurvey @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+  respondentName  String? // non-anonymous surveys only
+  respondentEmail String?
+  employeeId      String? // set only for authenticated (verified) answers on non-anonymous surveys
+  respondentKey   String? // sha256 of a per-browser token (or HMAC of the member) — duplicate guard, not identity
+  verified        Boolean  @default(false) // true = answered while signed in; public name/e-mail are only claims
+  submittedAt     DateTime @default(now())
+
+  answers HrSurveyAnswer[]
+
+  @@unique([surveyId, respondentKey])
+  @@index([surveyId, submittedAt])
+  @@index([organizationId])
+}
+
+model HrSurveyAnswer {
+  id          String           @id @default(cuid())
+  responseId  String
+  response    HrSurveyResponse @relation(fields: [responseId], references: [id], onDelete: Cascade)
+  questionId  String
+  question    HrSurveyQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  textValue   String?
+  numberValue Int? // RATING
+  boolValue   Boolean? // YES_NO
+  optionIds   String[] // SINGLE_CHOICE / MULTIPLE_CHOICE
+
+  @@unique([responseId, questionId])
+  @@index([questionId])
+}
+
+enum OrgStatus {
+  TRIAL
+  ACTIVE
+  SUSPENDED // access blocked by TenantGuard until reactivated
+}
+
+enum BillingCycle {
+  MONTHLY
+  YEARLY
+}
+
+enum SubscriptionStatus {
+  TRIALING
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  SUSPENDED
+}
+
+enum InvoiceStatus {
+  DRAFT
+  OPEN
+  PAID
+  VOID
+  UNCOLLECTIBLE
+}
+
+model Plan {
+  id             String   @id @default(cuid())
+  key            String   @unique // starter | professional | enterprise | …
+  name           String
+  description    String?
+  seatLimit      Int? // null = custom (Enterprise)
+  /// attachment storage cap in MB (null = unlimited)
+  storageLimitMb Int?
+  priceMonthly   Decimal? @db.Decimal(10, 2)
+  priceYearly    Decimal? @db.Decimal(10, 2)
+  currency       String   @default("EUR")
+  features       Json     @default("[]") // string[] shown on pricing/marketing
+  isActive       Boolean  @default(true)
+  isPublic       Boolean  @default(true) // shown on the public pricing page
+  sortOrder      Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  subscriptions Subscription[]
+
+  @@index([isActive, sortOrder])
+}
+
+model Subscription {
+  id                     String             @id @default(cuid())
+  organizationId         String             @unique
+  organization           Organization       @relation(fields: [organizationId], references: [id])
+  planId                 String
+  plan                   Plan               @relation(fields: [planId], references: [id])
+  status                 SubscriptionStatus @default(TRIALING)
+  billingCycle           BillingCycle       @default(MONTHLY)
+  seatLimit              Int // effective enforceable seat cap
+  /// per-org override of Plan.storageLimitMb (null = plan value)
+  storageLimitMb         Int?
+  /// paid add-on modules (shared ADDON_KEYS: environment | health-safety); their RBAC resources are stripped otherwise
+  addons                 String[]           @default([])
+  trialEndsAt            DateTime?
+  currentPeriodStart     DateTime?
+  currentPeriodEnd       DateTime? // renewal date
+  cancelAtPeriodEnd      Boolean            @default(false)
+  canceledAt             DateTime?
+  // payment-provider anchors (Stripe etc.) — nullable until a provider is wired
+  provider               String             @default("manual")
+  providerCustomerId     String?
+  providerSubscriptionId String?
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @updatedAt
+
+  @@index([status])
+}
+
+model Invoice {
+  id                String        @id @default(cuid())
+  organizationId    String
+  organization      Organization  @relation(fields: [organizationId], references: [id])
+  number            String        @unique // INV-2026-0001
+  status            InvoiceStatus @default(OPEN)
+  amount            Decimal       @db.Decimal(10, 2)
+  currency          String        @default("EUR")
+  lineItems         Json          @default("[]")
+  issuedAt          DateTime      @default(now())
+  dueAt             DateTime?
+  paidAt            DateTime?
+  provider          String        @default("manual")
+  providerInvoiceId String?
+  createdAt         DateTime      @default(now())
+
+  @@index([organizationId, issuedAt])
+}
+
+model PlatformAuditLog {
+  id             String   @id @default(cuid())
+  actorId        String? // the Super Admin user
+  actorEmail     String?
+  action         String // organization.suspended | subscription.changed | seat.limit_changed | impersonation.start | …
+  organizationId String?
+  targetUserId   String?
+  ip             String?
+  userAgent      String?
+  before         Json?
+  after          Json?
+  metadata       Json?
+  createdAt      DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([organizationId, createdAt])
+  @@index([actorId, createdAt])
+}
+
+model InstallState {
+  id                   String    @id @default("install")
+  /// random id generated at first boot; a license may be bound to it
+  instanceId           String    @unique
+  /// QLIC1.… tokens installed in the app, newest first (current + renewals installed ahead
+  /// of their start date); with LICENSE_FILE / LICENSE_KEY, the valid one expiring last wins
+  licenseTokens        String[]  @default([])
+  licenseInstalledAt   DateTime?
+  licenseInstalledById String?
+  /// latest server time seen + HMAC (APP_ENCRYPTION_KEY) — a clock moved back is refused
+  lastSeenAt           DateTime?
+  lastSeenMac          String?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+}
+
+model IssuedLicense {
+  id             String    @id @default(cuid())
+  /// LIC-2026-0001
+  reference      String    @unique
+  customer       String
+  /// optional link to the customer's SaaS organization
+  organizationId String?
+  plan           String
+  seatLimit      Int
+  orgLimit       Int
+  addons         String[]  @default([])
+  storageLimitMb Int?
+  startsAt       DateTime
+  expiresAt      DateTime
+  graceDays      Int
+  instanceId     String?
+  updatesUntil   DateTime?
+  /// the signed QLIC1.… token handed to the customer
+  token          String
+  notes          String?
+  /// renewal chain: the license this one replaces
+  supersedesId   String?
+  issuedById     String?
+  issuedByEmail  String?
+  createdAt      DateTime  @default(now())
+
+  @@index([customer])
+  @@index([expiresAt])
+}
+
+model RecordShare {
+  id             String   @id @default(cuid())
+  organizationId String
+  entityType     String // Prisma model name, e.g. "Action"
+  entityId       String
+  /// shared with one person…
+  userId         String?
+  /// …or with every member of a group
+  groupId        String?
+  /// `u:<userId>` or `g:<groupId>` — non-null so one share per person / group is enforced by a plain
+  /// unique index (uniques over the nullable userId / groupId never collide on the NULL side).
+  shareKey       String
+  grantedById    String?
+  createdAt      DateTime @default(now())
+
+  @@unique([entityType, entityId, shareKey])
+  @@index([organizationId, userId])
+  @@index([organizationId, groupId])
+}
+
+model UserGroup {
+  id             String            @id @default(cuid())
+  organizationId String
+  name           String
+  description    String?
+  color          String?
+  /// processes' departments granted to every member of the group
+  departmentIds  String[]          @default([])
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  deletedAt      DateTime?
+  members        UserGroupMember[]
+
+  @@index([organizationId, deletedAt])
+}
+
+model UserGroupMember {
+  id        String    @id @default(cuid())
+  groupId   String
+  group     UserGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  userId    String
+  createdAt DateTime  @default(now())
+
+  @@unique([groupId, userId])
+  @@index([userId])
+}
+
+enum EmployeeContractType {
+  CDI
+  CDD
+  INTERIM
+  APPRENTICESHIP
+  INTERNSHIP
+  FREELANCE
+  OTHER
+}
+
+enum JourneyKind {
+  ONBOARDING
+  OFFBOARDING
+}
+
+enum JourneyStatus {
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+/// TRAINING is checked against the real attendance list; TASK is ticked by hand.
+enum JourneyItemKind {
+  TRAINING
+  TASK
+}
+
+enum TrialDecision {
+  CONFIRMED
+  EXTENDED
+  TERMINATED
+}
+
+model OnboardingTemplateItem {
+  id               String          @id @default(cuid())
+  organizationId   String
+  jobDescriptionId String
+  jobDescription   JobDescription  @relation(fields: [jobDescriptionId], references: [id], onDelete: Cascade)
+  kind             JourneyItemKind
+  label            String
+  dueDays          Int             @default(30) // days after the start date
+  sortOrder        Int             @default(0)
+  createdAt        DateTime        @default(now())
+
+  @@index([jobDescriptionId])
+}
+
+model EmployeeJourney {
+  id                   String         @id @default(cuid())
+  organizationId       String
+  reference            String
+  kind                 JourneyKind
+  employeeId           String
+  employee             Employee       @relation("JourneyEmployee", fields: [employeeId], references: [id], onDelete: Cascade)
+  status               JourneyStatus  @default(IN_PROGRESS)
+  startDate            DateTime
+  targetDate           DateTime? // onboarding: end of trial period · offboarding: exit date
+  ownerId              String? // HR / manager user following the plan
+  buddyId              String? // onboarding buddy (Employee)
+  buddy                Employee?      @relation("JourneyBuddy", fields: [buddyId], references: [id], onDelete: SetNull)
+  notes                String?
+  // end of trial period sign-off (onboarding, e-signed)
+  trialDecision        TrialDecision?
+  trialComment         String?
+  trialSignedAt        DateTime?
+  trialSignedById      String?
+  trialSignature       String?
+  // offboarding
+  exitReason           String?
+  handoverToUserId     String?
+  handoverAt           DateTime?
+  handoverSummary      Json? // { category: count } reassigned
+  accountDeactivatedAt DateTime?
+  completedAt          DateTime?
+  createdById          String?
+  updatedById          String?
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+  deletedAt            DateTime?
+
+  items EmployeeJourneyItem[]
+
+  @@unique([organizationId, reference])
+  @@index([organizationId, kind, status])
+  @@index([employeeId])
+}
+
+model EmployeeJourneyItem {
+  id              String          @id @default(cuid())
+  journeyId       String
+  journey         EmployeeJourney @relation(fields: [journeyId], references: [id], onDelete: Cascade)
+  kind            JourneyItemKind
+  label           String
+  trainingId      String?
+  dueDate         DateTime?
+  doneAt          DateTime? // manual tick (TASK, or override of a checked item)
+  doneById        String?
+  sortOrder       Int             @default(0)
+  createdAt       DateTime        @default(now())
+
+  @@index([journeyId])
+}
+

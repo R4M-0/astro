@@ -1,0 +1,274 @@
+/* eslint-disable no-console */
+import { PrismaClient } from '@prisma/client';
+import * as argon2 from 'argon2';
+import { randomBytes } from 'crypto';
+import {
+  DEFAULT_ROLE_PERMISSIONS,
+  DEPARTMENT_SCOPED_ROLE_KEYS,
+  SYSTEM_ROLES,
+} from '@astro/shared';
+import { syncPermissionCatalog, syncSystemRolePermissions as syncRolePermissions } from '../src/core/rbac/sync-role-permissions';
+import { SELF_HOSTED } from '../src/core/license/deployment-mode';
+
+const prisma = new PrismaClient();
+
+async function seedPermissionsCatalog() {
+  // only keys some guard enforces; stale keys (and their role grants) are removed
+  const { created, removed, total } = await syncPermissionCatalog(prisma);
+  console.log(`Permissions catalog: ${total} entries (+${created} created, -${removed} unused removed)`);
+}
+
+async function seedDemoOrg() {
+  const email = 'admin@demo.astro.app';
+  const existing = await prisma.user.findUnique({ where: { email } });
+  if (existing) {
+    console.log('Demo org already seeded');
+    return;
+  }
+
+  const org = await prisma.organization.create({
+    data: { name: 'Aurora Industries', slug: 'aurora-industries', settings: {} },
+  });
+  const site = await prisma.site.create({
+    data: { organizationId: org.id, name: 'Site de Lyon', address: '12 rue des Usines, Lyon' },
+  });
+  const dept = async (name: string) => prisma.department.create({ data: { siteId: site.id, name } });
+  const direction = await dept('Direction');
+  const rh = await dept('Ressources humaines');
+  const production = await dept('Production');
+  const maintenance = await dept('Maintenance');
+
+  // roles with default grants
+  const permissions = await prisma.permission.findMany();
+  const byKey = new Map(permissions.map((p) => [`${p.resource}:${p.action}`, p.id]));
+  const rolesByKey = new Map<string, string>();
+  for (const def of SYSTEM_ROLES) {
+    const role = await prisma.role.create({
+      data: { organizationId: org.id, key: def.key, name: def.name, isSystem: true, departmentScoped: DEPARTMENT_SCOPED_ROLE_KEYS.includes(def.key) },
+    });
+    rolesByKey.set(def.key, role.id);
+    const grants = (DEFAULT_ROLE_PERMISSIONS[def.key] ?? [])
+      .map((k) => byKey.get(k))
+      .filter((id): id is string => Boolean(id))
+      .map((permissionId) => ({ roleId: role.id, permissionId }));
+    await prisma.rolePermission.createMany({ data: grants, skipDuplicates: true });
+  }
+
+  const password = await argon2.hash('Demo-Astro-2026!');
+  const mkUser = (emailAddr: string, firstName: string, lastName: string) =>
+    prisma.user.create({
+      data: { email: emailAddr, passwordHash: password, firstName, lastName, emailVerifiedAt: new Date() },
+    });
+
+  const admin = await mkUser(email, 'Awa', 'Diallo');
+  const hr = await mkUser('hr@demo.astro.app', 'Lucas', 'Martin');
+  const manager = await mkUser('manager@demo.astro.app', 'Sofia', 'Rossi');
+  const employee = await mkUser('employee@demo.astro.app', 'Yanis', 'Benali');
+
+  await prisma.membership.createMany({
+    data: [
+      { organizationId: org.id, userId: admin.id, roleId: rolesByKey.get('org_admin')!, isDefault: true, jobTitle: 'Directrice Générale', departmentId: direction.id },
+      { organizationId: org.id, userId: hr.id, roleId: rolesByKey.get('hr_manager')!, isDefault: true, jobTitle: 'Responsable RH', departmentId: rh.id },
+      { organizationId: org.id, userId: manager.id, roleId: rolesByKey.get('manager')!, isDefault: true, jobTitle: 'Responsable Production', siteId: site.id, departmentId: production.id },
+      { organizationId: org.id, userId: employee.id, roleId: rolesByKey.get('employee')!, isDefault: true, jobTitle: 'Technicien', siteId: site.id, departmentId: maintenance.id },
+    ],
+  });
+
+  // ── HR demo data ──
+  const skill = (name: string, type: 'TECHNICAL' | 'BEHAVIORAL') =>
+    prisma.skill.create({ data: { organizationId: org.id, name, type, createdById: hr.id } });
+  const [welding, maintenanceSkill, safety, teamwork, communication] = await Promise.all([
+    skill('Soudure', 'TECHNICAL'),
+    skill('Maintenance préventive', 'TECHNICAL'),
+    skill('Règles de sécurité', 'TECHNICAL'),
+    skill("Travail d'équipe", 'BEHAVIORAL'),
+    skill('Communication', 'BEHAVIORAL'),
+  ]);
+
+  let n = 0;
+  const mkEmployee = (firstName: string, lastName: string, jobTitle: string, departmentId: string, managerId: string | null, userId: string | null = null) =>
+    prisma.employee.create({
+      data: {
+        organizationId: org.id,
+        reference: `EMP-${String(++n).padStart(4, '0')}`,
+        firstName,
+        lastName,
+        jobTitle,
+        departmentId,
+        managerId,
+        userId,
+        email: null,
+        hireDate: new Date(Date.UTC(2024, n % 12, 1)),
+        contractType: 'CDI',
+        createdById: hr.id,
+      },
+    });
+  const ceo = await mkEmployee('Awa', 'Diallo', 'Directrice Générale', direction.id, null, admin.id);
+  const hrEmp = await mkEmployee('Lucas', 'Martin', 'Responsable RH', rh.id, ceo.id, hr.id);
+  const prodManager = await mkEmployee('Sofia', 'Rossi', 'Responsable Production', production.id, ceo.id, manager.id);
+  const tech = await mkEmployee('Yanis', 'Benali', 'Technicien de maintenance', maintenance.id, prodManager.id, employee.id);
+  const operator1 = await mkEmployee('Inès', 'Moreau', 'Opératrice', production.id, prodManager.id);
+  const operator2 = await mkEmployee('Karim', 'Haddad', 'Opérateur', production.id, prodManager.id);
+  void hrEmp;
+
+  const jd = await prisma.jobDescription.create({
+    data: {
+      organizationId: org.id,
+      reference: 'FP-TECH-01',
+      version: '1',
+      jobTitle: 'Technicien de maintenance',
+      departmentId: maintenance.id,
+      managerId: prodManager.id,
+      mainMission: 'Assurer la disponibilité des équipements de production.',
+      minExperienceMonths: 24,
+      status: 'PUBLISHED',
+      trialPeriodDays: 90,
+      createdById: hr.id,
+      activities: {
+        create: [
+          { description: 'Réaliser la maintenance préventive planifiée', frequency: 'hebdomadaire', sortOrder: 0 },
+          { description: 'Diagnostiquer et réparer les pannes', frequency: 'ponctuelle', sortOrder: 1 },
+        ],
+      },
+      skillRequirements: {
+        create: [
+          { skillId: maintenanceSkill.id, requiredLevel: 4 },
+          { skillId: safety.id, requiredLevel: 4 },
+          { skillId: teamwork.id, requiredLevel: 3 },
+        ],
+      },
+      onboardingItems: {
+        create: [
+          { organizationId: org.id, kind: 'TASK', label: 'Visite du site et présentation de l’équipe', dueDays: 1, sortOrder: 0 },
+          { organizationId: org.id, kind: 'TASK', label: 'Remise des EPI', dueDays: 1, sortOrder: 1 },
+          { organizationId: org.id, kind: 'TASK', label: 'Point d’étape avec le manager', dueDays: 30, sortOrder: 2 },
+        ],
+      },
+    },
+  });
+  await prisma.jobAssignment.create({ data: { organizationId: org.id, employeeId: tech.id, jobDescriptionId: jd.id } });
+
+  const evaluate = (employeeId: string, skillId: string, expectedLevel: number | null, evaluatedLevel: number) =>
+    prisma.competencyEvaluation.create({
+      data: {
+        organizationId: org.id,
+        employeeId,
+        skillId,
+        expectedLevel,
+        evaluatedLevel,
+        gap: expectedLevel == null ? 0 : evaluatedLevel - expectedLevel,
+        evaluationMethod: 'Observation au poste',
+        evaluatedById: hr.id,
+      },
+    });
+  await evaluate(tech.id, maintenanceSkill.id, 4, 3);
+  await evaluate(tech.id, safety.id, 4, 4);
+  await evaluate(tech.id, teamwork.id, 3, 4);
+  await evaluate(operator1.id, welding.id, null, 3);
+  await evaluate(operator1.id, communication.id, null, 4);
+  await evaluate(operator2.id, welding.id, null, 2);
+  await evaluate(operator2.id, safety.id, null, 3);
+
+  await prisma.hrTraining.create({
+    data: {
+      organizationId: org.id,
+      departmentId: production.id,
+      code: 'FOR-2026-01',
+      theme: 'Sécurité au poste de travail',
+      type: 'INTERNE',
+      startDate: new Date(Date.UTC(2026, 10, 12)),
+      endDate: new Date(Date.UTC(2026, 10, 12)),
+      status: 'PLANNED',
+      hotToken: randomBytes(16).toString('base64url'),
+      coldToken: randomBytes(16).toString('base64url'),
+      createdById: hr.id,
+      participants: { create: [{ employeeId: operator1.id, present: false }, { employeeId: operator2.id, present: false }, { employeeId: tech.id, present: false }] },
+    },
+  });
+
+  console.log('Demo org "Aurora Industries" seeded (admin@demo.astro.app — password documented in the README)');
+}
+
+/**
+ * Backfill newly-introduced default role grants for already-seeded orgs. Grants an admin
+ * removed are never re-added (see src/core/rbac/sync-role-permissions.ts).
+ */
+async function syncSystemRolePermissions() {
+  const added = await syncRolePermissions(prisma, (m) => console.log(m));
+  console.log(`Role permission sync: ${added} grants added`);
+}
+
+// ── Platform / SaaS: plans, subscriptions, super admin ──────────────────────────
+const PLANS = [
+  { key: 'starter', name: 'Starter', description: 'Pour les petites équipes qui structurent leur gestion RH.', seatLimit: 10, priceMonthly: 29, priceYearly: 290, sortOrder: 1, features: ['Collaborateurs & organigramme', 'Fiches de poste', 'Support par e-mail'] },
+  { key: 'professional', name: 'Professional', description: 'Pour les organisations qui pilotent compétences et formations.', seatLimit: 50, priceMonthly: 99, priceYearly: 990, sortOrder: 2, features: ['Tout Starter', 'Matrice de compétences & polyvalence', 'Plan de formation & évaluations', 'Intégration / départ', 'Enquêtes collaborateurs'] },
+  { key: 'enterprise', name: 'Enterprise', description: 'Pour les grandes organisations et groupes multi-sites.', seatLimit: null, priceMonthly: null, priceYearly: null, sortOrder: 3, features: ['Comptes sur mesure', 'Accompagnement dédié', 'Imports & exports avancés', 'SLA prioritaire'] },
+];
+
+async function seedPlans() {
+  for (const p of PLANS) {
+    await prisma.plan.upsert({
+      where: { key: p.key },
+      create: { key: p.key, name: p.name, description: p.description, seatLimit: p.seatLimit, priceMonthly: p.priceMonthly ?? undefined, priceYearly: p.priceYearly ?? undefined, features: p.features, sortOrder: p.sortOrder },
+      update: { name: p.name, description: p.description, seatLimit: p.seatLimit, priceMonthly: p.priceMonthly ?? null, priceYearly: p.priceYearly ?? null, features: p.features, sortOrder: p.sortOrder },
+    });
+  }
+  console.log(`Plans: ${PLANS.length}`);
+}
+
+// a public deployment (production mode OR https) never gets the documented dev credentials
+const IS_PROD = process.env.NODE_ENV === 'production' || (process.env.APP_URL ?? '').startsWith('https://');
+
+async function seedSuperAdmin() {
+  const email = process.env.SUPER_ADMIN_EMAIL ?? 'superadmin@astro.app';
+  const existing = await prisma.user.findUnique({ where: { email } });
+  if (existing) {
+    if (!existing.isSuperAdmin) await prisma.user.update({ where: { email }, data: { isSuperAdmin: true } });
+    console.log(`Super admin present (${email})`);
+    return;
+  }
+  // the password is only needed to create the account — it can be removed from .env afterwards
+  let password = process.env.SUPER_ADMIN_PASSWORD;
+  if (!password) {
+    if (IS_PROD) throw new Error('SUPER_ADMIN_PASSWORD is required to create the super admin on a public (production / https) deployment');
+    password = 'Astro-Super-2026!'; // dev-only default
+  }
+  await prisma.user.create({
+    data: { email, firstName: 'Astro', lastName: 'Platform', isSuperAdmin: true, emailVerifiedAt: new Date(), passwordHash: await argon2.hash(password) },
+  });
+  console.log(`Super admin created (${email})`);
+}
+
+/** Give every existing org a subscription so seat limits apply everywhere. */
+async function backfillSubscriptions() {
+  const pro = await prisma.plan.findUnique({ where: { key: 'professional' } });
+  if (!pro) return;
+  const orgs = await prisma.organization.findMany({ where: { subscription: null }, select: { id: true } });
+  for (const o of orgs) {
+    await prisma.subscription.create({
+      data: { organizationId: o.id, planId: pro.id, status: 'ACTIVE', seatLimit: pro.seatLimit ?? 50, currentPeriodStart: new Date(), currentPeriodEnd: new Date(Date.now() + 365 * 86400000) },
+    });
+    await prisma.organization.update({ where: { id: o.id }, data: { status: 'ACTIVE' } });
+  }
+  if (orgs.length) console.log(`Subscriptions backfilled for ${orgs.length} org(s)`);
+}
+
+async function main() {
+  await seedPermissionsCatalog();
+  await seedPlans();
+  // a self-hosted install has no platform staff area — its admins come from `cli.js setup`
+  if (SELF_HOSTED) console.log('Super admin skipped (self-hosted)');
+  else await seedSuperAdmin();
+  // Demo org ships well-known credentials: never in production unless forced.
+  if (!IS_PROD || process.env.SEED_DEMO === 'true') await seedDemoOrg();
+  else console.log('Demo org skipped (production; set SEED_DEMO=true to force)');
+  await backfillSubscriptions();
+  await syncSystemRolePermissions();
+}
+
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(() => prisma.$disconnect());
