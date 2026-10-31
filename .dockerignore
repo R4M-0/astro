@@ -1,0 +1,10 @@
+# never ship local secrets or build residue into the image build context
+**/.env
+**/.env.*
+!**/.env.example
+.git
+**/node_modules
+**/dist
+**/.next
+**/coverage
+apps/api/build

@@ -1,0 +1,263 @@
+# Production stack for one server (sized for 8 cores / 16 GB — see
+# docs/scalability-audit-2026-09.md §4). Secrets come from `.env` next to this
+# file: `cp .env.prod.example .env` and fill it in.
+#
+# Only Caddy is published (80/443). Everything else is reachable on the internal
+# Docker network only.
+x-logging: &node-logging
+  logging:
+    driver: json-file
+    options: { max-size: "20m", max-file: "5" }
+
+# Container hardening shared by the Node services (api/worker/web): no privilege
+# escalation, no Linux capabilities, read-only root FS (writes go to tmpfs only).
+x-hardening: &hardening
+  security_opt: ["no-new-privileges:true"]
+  cap_drop: [ALL]
+  read_only: true
+  tmpfs: ["/tmp:size=256m"]
+
+x-api-env: &api-env
+  # 5 api replicas × 15 + worker 15 = 90, below max_connections=120
+  DATABASE_URL: postgresql://${POSTGRES_USER:-astro}:${POSTGRES_PASSWORD}@postgres:5432/astro?connection_limit=${DB_POOL_PER_REPLICA:-15}&pool_timeout=10
+  REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379
+  JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:?set JWT_ACCESS_SECRET}
+  APP_ENCRYPTION_KEY: ${APP_ENCRYPTION_KEY:?set APP_ENCRYPTION_KEY (openssl rand -hex 32)}
+  # Caddy is the one hop in front; use 2 if a Cloudflare tunnel/CDN also sits before Caddy
+  TRUST_PROXY: ${TRUST_PROXY:-1}
+  S3_ENDPOINT: http://minio:9000
+  S3_PUBLIC_ENDPOINT: https://${FILES_DOMAIN}
+  # bucket-scoped application user created by `minio-init` — never the MinIO root keys
+  S3_ACCESS_KEY: ${MINIO_APP_ACCESS_KEY:?set MINIO_APP_ACCESS_KEY}
+  S3_SECRET_KEY: ${MINIO_APP_SECRET_KEY:?set MINIO_APP_SECRET_KEY}
+  SMTP_HOST: ${SMTP_HOST:?set SMTP_HOST}
+  SMTP_PORT: ${SMTP_PORT:-587}
+  SMTP_USER: ${SMTP_USER:-}
+  SMTP_PASS: ${SMTP_PASS:-}
+  SMTP_FROM: ${SMTP_FROM:-noreply@astro.app}
+  APP_URL: https://${APP_DOMAIN}
+  # Ed25519 private key that signs self-hosted licenses at /platform/licenses (docs/selfhosting.md)
+  LICENSE_SIGNING_KEY: ${LICENSE_SIGNING_KEY:-}
+  # read by `prisma:seed` (run inside the api container) — no default in production
+  SUPER_ADMIN_EMAIL: ${SUPER_ADMIN_EMAIL:-}
+  SUPER_ADMIN_PASSWORD: ${SUPER_ADMIN_PASSWORD:-}
+  NODE_ENV: production
+  NODE_OPTIONS: --max-old-space-size=512
+
+services:
+  caddy:
+    image: caddy:2.11-alpine
+    restart: unless-stopped
+    <<: *node-logging
+    depends_on: [api, web, minio]
+    ports: ["80:80", "443:443", "443:443/udp"]
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN:?set APP_DOMAIN (e.g. app.example.com)}
+      FILES_DOMAIN: ${FILES_DOMAIN:?set FILES_DOMAIN (e.g. files.example.com)}
+      ACME_EMAIL: ${ACME_EMAIL:?set ACME_EMAIL}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddydata:/data
+      - caddyconfig:/config
+    deploy:
+      resources:
+        # load test: ~0.4 MiB per concurrent connection (WebSockets + keep-alives);
+        # 256M thrashed into swap at ~1k, 1G reached ~870M at ~2k connections
+        limits: { cpus: "2", memory: 1536M }
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    <<: *node-logging
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-astro}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+      POSTGRES_DB: astro
+    # tuned for NVMe + a 6 GB slice of a 16 GB shared box
+    command:
+      - postgres
+      - -c
+      - shared_buffers=3GB
+      - -c
+      - effective_cache_size=8GB
+      - -c
+      - work_mem=16MB
+      - -c
+      - maintenance_work_mem=512MB
+      - -c
+      - max_connections=120
+      - -c
+      - random_page_cost=1.1
+      - -c
+      - effective_io_concurrency=200
+      - -c
+      - wal_compression=on
+      - -c
+      - max_wal_size=4GB
+      - -c
+      - checkpoint_completion_target=0.9
+      - -c
+      - shared_preload_libraries=pg_stat_statements
+      - -c
+      - log_min_duration_statement=2s
+      - -c
+      # never write bound parameter values (personal data, tokens) into the server log
+      - log_parameter_max_length=0
+      - -c
+      - log_parameter_max_length_on_error=0
+    shm_size: 1g # parallel query workers use /dev/shm (Docker default is 64 MB)
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-astro} -d astro"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    deploy:
+      resources:
+        limits: { memory: 5G }
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    <<: *node-logging
+    # noeviction: rate-limit counters, cron claims and (later) BullMQ jobs must never be silently dropped
+    command: redis-server --appendonly yes --maxmemory 384mb --maxmemory-policy noeviction --requirepass ${REDIS_PASSWORD:?set REDIS_PASSWORD (openssl rand -hex 32)}
+    environment:
+      REDISCLI_AUTH: ${REDIS_PASSWORD}
+    volumes: [redisdata:/data]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+    deploy:
+      resources:
+        limits: { cpus: "0.5", memory: 512M }
+
+  minio:
+    # MinIO no longer publishes community images on Docker Hub — pinned to a known release.
+    image: ${MINIO_IMAGE:-minio/minio:RELEASE.2025-09-07T16-13-09Z}
+    restart: unless-stopped
+    <<: *node-logging
+    command: server /data
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-astro}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?set MINIO_ROOT_PASSWORD}
+    # move to Local Block Storage before files pass ~150 GB: set MINIO_DATA_DIR=/mnt/volume/minio
+    volumes: ["${MINIO_DATA_DIR:-miniodata}:/data"]
+    deploy:
+      resources:
+        limits: { cpus: "1", memory: 1G }
+
+  minio-init:
+    # one-shot: bucket + bucket-scoped app user (deploy/minio/init.sh), then exits
+    image: minio/mc@sha256:a7fe349ef4bd8521fb8497f55c6042871b2ae640607cf99d9bede5e9bdf11727
+    restart: "no"
+    <<: *node-logging
+    depends_on: [minio]
+    entrypoint: ["/bin/sh", "/init.sh"]
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-astro}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_APP_ACCESS_KEY: ${MINIO_APP_ACCESS_KEY}
+      MINIO_APP_SECRET_KEY: ${MINIO_APP_SECRET_KEY}
+    volumes: ["./deploy/minio/init.sh:/init.sh:ro"]
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    restart: unless-stopped
+    <<: [*node-logging, *hardening]
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+      minio-init: { condition: service_completed_successfully }
+    environment:
+      <<: *api-env
+      APP_ROLE: api
+    deploy:
+      # safe to raise: api replicas are stateless (schedules/jobs run in `worker`, WS + rate limits via Redis)
+      # load test: the Node tier is the bottleneck while Postgres has headroom → 5 by default
+      replicas: ${API_REPLICAS:-5}
+      resources:
+        limits: { cpus: "1.5", memory: 700M }
+
+  worker:
+    # same image as the api: daily schedules + queue consumers (mail, exports). Run exactly one.
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    restart: unless-stopped
+    <<: [*node-logging, *hardening]
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+      minio-init: { condition: service_completed_successfully }
+    environment:
+      <<: *api-env
+      APP_ROLE: worker
+      DATABASE_URL: postgresql://${POSTGRES_USER:-astro}:${POSTGRES_PASSWORD}@postgres:5432/astro?connection_limit=15&pool_timeout=10
+      NODE_OPTIONS: --max-old-space-size=768
+    deploy:
+      resources:
+        limits: { cpus: "1.5", memory: 1G }
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: https://${APP_DOMAIN}/api/v1
+        NEXT_PUBLIC_FILES_ORIGIN: https://${FILES_DOMAIN}
+    restart: unless-stopped
+    <<: [*node-logging, *hardening]
+    # Next writes its image/fetch cache under .next/cache — keep it on tmpfs
+    tmpfs: ["/tmp:size=128m", "/app/apps/web/.next/cache:size=256m,uid=1000,gid=1000"]
+    depends_on: [api]
+    environment:
+      NEXT_PUBLIC_API_URL: https://${APP_DOMAIN}/api/v1
+      NEXT_PUBLIC_FILES_ORIGIN: https://${FILES_DOMAIN}
+      NODE_OPTIONS: --max-old-space-size=384
+    deploy:
+      replicas: ${WEB_REPLICAS:-1}
+      resources:
+        limits: { cpus: "1", memory: 512M }
+
+  backup:
+    build: ./deploy/backup
+    restart: unless-stopped
+    <<: *node-logging
+    depends_on:
+      postgres: { condition: service_healthy }
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-astro}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-astro}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      BACKUP_AT: ${BACKUP_AT:-02:30}
+      BACKUP_KEEP_DAYS: ${BACKUP_KEEP_DAYS:-7}
+      BACKUP_S3_ENDPOINT: ${BACKUP_S3_ENDPOINT:-}
+      BACKUP_S3_ACCESS_KEY: ${BACKUP_S3_ACCESS_KEY:-}
+      BACKUP_S3_SECRET_KEY: ${BACKUP_S3_SECRET_KEY:-}
+      BACKUP_S3_BUCKET: ${BACKUP_S3_BUCKET:-}
+      BACKUP_REMOTE_KEEP_DAYS: ${BACKUP_REMOTE_KEEP_DAYS:-30}
+      BACKUP_FILES_MODE: ${BACKUP_FILES_MODE:-sse-c}
+      # mandatory: local dumps and every off-box copy are encrypted with it
+      BACKUP_ENCRYPTION_PASSPHRASE: ${BACKUP_ENCRYPTION_PASSPHRASE:?set BACKUP_ENCRYPTION_PASSPHRASE (store it outside this server)}
+    volumes: ["${BACKUP_DIR:-./backups}:/backups"]
+    healthcheck:
+      # unhealthy when the last successful backup is older than 26 h
+      test: ["CMD-SHELL", "find /backups/last-success -mmin -1560 | grep -q ."]
+      interval: 1h
+      start_period: 26h
+    deploy:
+      resources:
+        limits: { cpus: "1", memory: 512M }
+
+volumes:
+  pgdata:
+  redisdata:
+  miniodata:
+  caddydata:
+  caddyconfig:

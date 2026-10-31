@@ -1,0 +1,60 @@
+# Astro edge proxy — TLS (automatic Let's Encrypt), HTTP/2+3, compression,
+# WebSocket pass-through, and load balancing across API replicas.
+{
+	email {$ACME_EMAIL}
+	servers {
+		# client IPs from Cloudflare/other proxies in front are only trusted from these ranges
+		trusted_proxies static private_ranges
+	}
+}
+
+{$APP_DOMAIN} {
+	encode zstd gzip
+
+	# REST API + socket.io (the /ws namespace rides on /socket.io/*)
+	@api path /api/* /socket.io/*
+	handle @api {
+		# largest legit body is a workbook/methodology import (≤ 25 MB); file uploads go
+		# straight to MinIO via presigned URLs. Rate limits (incl. /api/v1/auth/*) are
+		# enforced by the API's Redis-backed throttler — stock Caddy has no rate_limit
+		# directive (it needs the third-party caddy-ratelimit module).
+		request_body {
+			max_size 60MB
+		}
+		reverse_proxy {
+			# resolve every `api` replica through Docker DNS; new ones join within 10s
+			dynamic a {
+				name api
+				port 3001
+				refresh 10s
+			}
+			# round_robin, not least_conn: each idle WebSocket counts as an in-flight
+			# request for its whole life, so least_conn starves whichever replica holds
+			# a few more sockets of all HTTP traffic (measured in the load test).
+			lb_policy round_robin
+			# retry another replica while one restarts during a deploy
+			lb_try_duration 10s
+			fail_duration 30s
+		}
+	}
+
+	handle {
+		reverse_proxy {
+			dynamic a {
+				name web
+				port 3000
+				refresh 10s
+			}
+			lb_policy round_robin
+			lb_try_duration 10s
+		}
+	}
+}
+
+# Object storage for presigned uploads/downloads (browser ↔ MinIO direct).
+# The Host header is passed through unchanged, which the S3 signature covers.
+{$FILES_DOMAIN} {
+	reverse_proxy minio:9000 {
+		flush_interval -1
+	}
+}

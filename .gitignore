@@ -1,0 +1,18 @@
+node_modules/
+dist/
+.next/
+.env
+.env.local
+*.log
+.turbo/
+coverage/
+generated/
+
+# Tunnel-specific env files (machine/domain specific)
+.env.tunnel
+.env.local.tunnel
+backups/
+
+# Generated launch-video renders
+brag-output/
+apps/api/build/
