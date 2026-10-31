@@ -191,7 +191,7 @@ export function signals(ds: Dataset, visible: (e: Employee) => boolean): Signal[
   // 7. Security: prompt-injection attempts caught in mail
   const flagged = ds.emails.filter(m => m.flagged && visible(ds.byRef.get(m.from)!));
   if (flagged.length) out.push({ id: "injection", kind: "security", severity: "important", title: `${flagged.length} emails contained AI instructions (blocked)`,
-    reason: "These emails try to give orders to the AI assistant. Their content is never sent to the model.", refs: [...new Set(flagged.map(m => m.from))], evidence: flagged.map(m => m.id) });
+    reason: "These emails try to give orders to the AI assistant. Their content is withheld from the assistant and never used in answers.", refs: [...new Set(flagged.map(m => m.from))], evidence: flagged.map(m => m.id) });
 
   const rank = { important: 0, attention: 1, info: 2 };
   return out.sort((a, b) => rank[a.severity] - rank[b.severity]);

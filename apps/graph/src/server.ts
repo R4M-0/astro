@@ -6,7 +6,8 @@ import express from "express";
 import cors from "cors";
 import { ask, draft } from "./ask.js";
 import { auth, canAct, canReadMail, canSeeGalaxy, limit, visibleTo, type Ctx } from "./auth.js";
-import { DATA_DIR, type Email, getDataset, isHrMail, participants, saveEmail } from "./data.js";
+import { DATA_DIR, type Email, type Employee, getDataset, isHrMail, participants, saveEmail } from "./data.js";
+import { events, sendViaMailpit, startMailPoller } from "./ingest.js";
 import { analyse, bridges, galaxy, signals, topTopics } from "./graph.js";
 import { isXQdrant, ready } from "./vectors.js";
 
@@ -109,6 +110,27 @@ api.post("/actions/:id/:decision", need(canAct), async (req, res) => {
   res.json(a);
 });
 
+// ---------- Live mail: events feed + demo compose (goes through Mailpit like any real mail) ----------
+api.get("/mail/events", need(canSeeGalaxy), async (req, res) => {
+  const after = Number(req.query.after ?? 0);
+  const ds = await getDataset(req.ctx.orgId);
+  const visible = visibleTo(req.ctx);
+  const seen = (r: string) => { const e = ds.byRef.get(r); return !!e && visible(e); };
+  res.json({ last: events.at(-1)?.seq ?? 0, events: events.filter(e => e.seq > after && (seen(e.from) || e.to.some(seen))) });
+});
+api.post("/mail/send", need(canAct), limit(20), async (req, res) => {
+  const { from, to, subject, body } = req.body ?? {};
+  const ds = await getDataset(req.ctx.orgId);
+  const sender = ds.byRef.get(from), recipients = (Array.isArray(to) ? to : []).slice(0, 10).map((r: string) => ds.byRef.get(r)).filter(Boolean);
+  if (!sender?.email || !recipients.length || typeof subject !== "string" || typeof body !== "string" || subject.length > 200 || body.length > 5000)
+    return res.status(400).json({ message: "Invalid email" });
+  try {
+    const sent = await sendViaMailpit(sender, recipients as Employee[], subject, body);
+    audit(req.ctx, "mail.simulate", sender.ref, { to: (recipients as Employee[]).map(r => r.ref) });
+    res.json(sent);
+  } catch (e: any) { res.status(502).json({ message: e?.message ?? "Send failed" }); }
+});
+
 api.get("/audit", need(canAct), (req, res) => {
   const lines = existsSync(AUDIT) ? readFileSync(AUDIT, "utf8").trim().split("\n").filter(Boolean).map(l => JSON.parse(l)) : [];
   res.json(lines.filter(l => l.orgId === req.ctx.orgId).slice(-200).reverse());
@@ -117,3 +139,4 @@ api.get("/audit", need(canAct), (req, res) => {
 app.use(api);
 const port = Number(process.env.GRAPH_PORT ?? 3012);
 app.listen(port, () => console.log(`graph service on :${port}`));
+startMailPoller();

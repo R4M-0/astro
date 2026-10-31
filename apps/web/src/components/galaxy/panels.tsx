@@ -133,7 +133,7 @@ export function EmployeePanel({ refId, onClose, onFly, onAsk, onDrafted, inGroup
                   {open === m.id && (
                     <div className="mx-2 mb-2 rounded-lg bg-black/30 p-2.5 text-xs">
                       {m.flagged ? (
-                        <div className="flex gap-1.5 text-rose-300"><AlertTriangle className="size-3.5 shrink-0" />Blocked: {m.flagged}. This content is never sent to the AI.</div>
+                        <div className="flex gap-1.5 text-rose-300"><AlertTriangle className="size-3.5 shrink-0" />Blocked: {m.flagged}. This content is withheld from the AI assistant.</div>
                       ) : m.body ? (
                         <div className="whitespace-pre-wrap text-slate-300">{m.body}</div>
                       ) : (
