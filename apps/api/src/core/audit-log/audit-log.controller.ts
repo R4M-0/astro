@@ -12,9 +12,9 @@ class AuditLogQuery extends PaginationQuery {
   @IsString()
   actorId?: string;
 
-  @ApiPropertyOptional({ enum: ['create', 'update', 'delete', 'workflow', 'export'] })
+  @ApiPropertyOptional({ enum: ['create', 'update', 'delete', 'workflow', 'export', 'access', 'compliance'] })
   @IsOptional()
-  @IsIn(['create', 'update', 'delete', 'workflow', 'export'])
+  @IsIn(['create', 'update', 'delete', 'workflow', 'export', 'access', 'compliance'])
   category?: AuditCategory;
 
   @ApiPropertyOptional({ enum: ['fr', 'en'] })

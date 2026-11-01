@@ -34,6 +34,13 @@ export const NOUNS: Record<string, Noun> = {
   'surveys/questions': n("question d'enquête", 'f', 'survey question', 'HrSurveyQuestion'),
   'surveys/responses': n("réponse à l'enquête", 'f', 'survey response', 'HrSurveyResponse'),
   'trainings/participants': n('participant', 'm', 'participant', 'TrainingParticipant'),
+  // recruiting
+  'recruiting/candidates': n('candidat', 'm', 'candidate', 'Candidate'),
+  'recruiting/openings': n('offre d’emploi', 'f', 'job opening', 'JobOpening'),
+  // compliance (docs/compliance)
+  'compliance/requests': n('demande RGPD', 'f', 'data subject request', 'DataSubjectRequest'),
+  'compliance/legal-holds': n('gel juridique', 'm', 'legal hold', 'LegalHold'),
+  'compliance/retention': n('politique de conservation', 'f', 'retention policy', 'RetentionPolicy'),
   // organisation & admin
   organizations: n('organisation', 'f', 'organization', 'Organization'),
   'organizations/current': n('organisation', 'f', 'organization', 'Organization'),
