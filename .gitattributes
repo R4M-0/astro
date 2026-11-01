@@ -1,0 +1,5 @@
+
+# demo data: generated PDFs have no NUL byte, so git would otherwise treat them as text
+*.pdf binary
+# iCalendar requires CRLF line endings
+*.ics text eol=crlf

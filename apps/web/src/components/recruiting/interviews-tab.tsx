@@ -15,6 +15,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { ApiError, apiDelete, apiGet, apiPost } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { useHasPermission } from '@/stores/session';
+import { IcsImport } from './ics-import';
 import { DECISION_TONE, INVITE_TONE, formatSlot, type CandidateRow, type InterviewSlot } from './recruiting-meta';
 
 const EMPTY = { startsAt: '', durationMinutes: 45, location: '', interviewer: '' };
@@ -95,6 +96,7 @@ export function InterviewsTab({ openingId, candidates, onDrafted }: { openingId:
               </Button>
             </form>
           )}
+          {canEdit && <IcsImport openingId={openingId} existing={slots} onAdded={refresh} />}
           {!slots.length ? (
             <p className="py-4 text-center text-sm text-muted-foreground">{t('noSlots')}</p>
           ) : (
