@@ -16,3 +16,6 @@ backups/
 # Generated launch-video renders
 brag-output/
 apps/api/build/
+
+# Recruiting eval reports (apps/api: pnpm eval:live / eval:online)
+eval-report-*.json
