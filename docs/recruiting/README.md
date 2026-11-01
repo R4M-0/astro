@@ -3,18 +3,20 @@
 Functional axes: **resume screening & ranking**, **automatic replies**, **candidate follow-ups & interview scheduling**.
 Golden rule from the brief: *the agent executes, the human decides about people*.
 
-| Diagram | File |
+| Diagram | Explained |
 |---|---|
-| Pipeline 1: screening & ranking (two-tower retrieval) | `pipeline1-screening-ranking.excalidraw` |
-| Pipeline 2: approval, scheduling, replies, follow-ups | `pipeline2-scheduling-followups.excalidraw` |
-| Evaluation overview (5 levels) | `eval-0-overview.excalidraw` |
-| Level 1: Pipeline 1 components | `eval-1-pipeline1-components.excalidraw` |
-| Level 2: Pipeline 2 components | `eval-2-pipeline2-components.excalidraw` |
-| Level 3: security & fairness | `eval-3-security-fairness.excalidraw` |
-| Level 4: end to end & system | `eval-4-end-to-end.excalidraw` |
-| Level 5: human & release | `eval-5-human-release.excalidraw` |
-
-Open them at <https://excalidraw.com> (Menu → Open) or with the VS Code Excalidraw extension.
+| Pipeline 1: screening & ranking (two-tower retrieval) | [`pipeline1-screening-ranking.md`](pipeline1-screening-ranking.md) |
+| Pipeline 2: approval, scheduling, replies, follow-ups | [`pipeline2-scheduling-followups.md`](pipeline2-scheduling-followups.md) |
+| Evaluation overview (5 levels) | [`eval-0-overview.md`](eval-0-overview.md) |
+| Level 1: Pipeline 1 components | [`eval-1-pipeline1-components.md`](eval-1-pipeline1-components.md) |
+| Level 2: Pipeline 2 components | [`eval-2-pipeline2-components.md`](eval-2-pipeline2-components.md) |
+| Level 3: security & fairness | [`eval-3-security-fairness.md`](eval-3-security-fairness.md) |
+| Level 4: end to end & system | [`eval-4-end-to-end.md`](eval-4-end-to-end.md) |
+| Level 5: human & release | [`eval-5-human-release.md`](eval-5-human-release.md) |
+| XQdrant: what a per-dimension term means | [`xqdrant-1-geometry.md`](xqdrant-1-geometry.md) |
+| XQdrant: the score as a walk (`dims_explained`) | [`xqdrant-2-decomposition.md`](xqdrant-2-decomposition.md) |
+| XQdrant: focus search on a sub-space | [`xqdrant-3-focus.md`](xqdrant-3-focus.md) |
+| XQdrant: where explainability runs in the query path | [`xqdrant-4-pipeline.md`](xqdrant-4-pipeline.md) |
 
 ![Pipeline 1](pipeline1-screening-ranking.png)
 

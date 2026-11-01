@@ -2,14 +2,14 @@
 
 An HR platform holds the most sensitive personal data a company has: identity numbers, contracts, exit reasons, competency gaps, CVs. Astro inherited a solid platform layer (tenancy, RBAC, department scope, field-level history, an audit log), but a review on 1 Nov 2026 showed it could not *prove* anything to an auditor, a regulator or an employee. This folder records what was missing and how the compliance layer fixes it.
 
-| Diagram | File |
+| Diagram | Explained |
 |---|---|
-| Gap analysis: what we found → what ships | `compliance-0-gaps.excalidraw` |
-| Architecture of the compliance layer | `compliance-1-architecture.excalidraw` |
-| Tamper-evident audit trail (hash chain, seals, verification) | `compliance-2-audit-chain.excalidraw` |
-| Personal data lifecycle: retention and data subject requests | `compliance-3-data-lifecycle.excalidraw` |
+| Gap analysis: what we found → what ships | [`compliance-0-gaps.md`](compliance-0-gaps.md) |
+| Architecture of the compliance layer | [`compliance-1-architecture.md`](compliance-1-architecture.md) |
+| Tamper-evident audit trail (hash chain, seals, verification) | [`compliance-2-audit-chain.md`](compliance-2-audit-chain.md) |
+| Personal data lifecycle: retention and data subject requests | [`compliance-3-data-lifecycle.md`](compliance-3-data-lifecycle.md) |
 
-Open them at <https://excalidraw.com> (Menu → Open) or with the VS Code Excalidraw extension. Legend: red = security / tamper evidence, green = logic, blue = data / UI, orange = human decision, grey = gap.
+Legend: red = security / tamper evidence, green = logic, blue = data / UI, orange = human decision, grey = gap.
 
 ![Gap analysis](compliance-0-gaps.png)
 

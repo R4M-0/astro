@@ -233,7 +233,7 @@ flowchart LR
 ├── packages/shared/         permissions, roles, enums (built TS package)
 ├── docs/
 │   ├── compliance/          data, compliance & audit: gap analysis and design
-│   ├── graph/               Workforce Galaxy diagrams (.excalidraw + .png)
+│   ├── graph/               Workforce Galaxy diagrams (.png + .md)
 │   └── recruiting/          recruiting, XQdrant and evaluation diagrams
 ├── pitch/                   three.js pitch deck (static, no build)
 ├── deploy/                  self-hosted bundle
@@ -612,7 +612,7 @@ pnpm --filter @astro/web build
 | | |
 |---|---|
 | **Deck** | 57 slides around one live three.js particle scene that reshapes itself for each part of the story: the problem in sourced numbers, the architecture, the Workforce Galaxy, the recruiting agent, explainability, trust, measured results and the business model. Keys: `←` `→` navigate · `S` sources · `F` fullscreen. The source is in [`pitch/`](pitch/index.html). |
-| **Diagrams** | [`docs/graph`](docs/graph) (Workforce Galaxy) · [`docs/recruiting`](docs/recruiting/README.md) (pipelines, XQdrant, evaluation) · [`docs/compliance`](docs/compliance/README.md) (data, compliance & audit). Every `.png` has an editable `.excalidraw` next to it. |
+| **Diagrams** | [`docs/graph`](docs/graph) (Workforce Galaxy) · [`docs/recruiting`](docs/recruiting/README.md) (pipelines, XQdrant, evaluation) · [`docs/compliance`](docs/compliance/README.md) (data, compliance & audit). Every `.png` has a short `.md` explainer next to it. |
 
 ---
 
