@@ -142,6 +142,8 @@ export class RbacService {
     }
     const permissions = await this.prisma.permission.findMany();
     const byKey = new Map(permissions.map((p) => [`${p.resource}:${p.action}`, p.id]));
+    const unknown = [...wanted].filter((k) => !byKey.has(k));
+    if (unknown.length) throw new BadRequestException(`Permissions inconnues : ${unknown.join(', ')}`);
     const ids = [...wanted]
       .map((k) => byKey.get(k))
       .filter((id): id is string => Boolean(id));
