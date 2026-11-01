@@ -2093,5 +2093,43 @@
     "error": "Please try again in a moment.",
     "tooMany": "Too many attempts, try again in a minute.",
     "retry": "Retry"
+  },
+  "hrInbox": {
+    "title": "HR inbox digest",
+    "desc": "Every email sent to HR, grouped by type and urgency. Emails that need a human answer come first.",
+    "today": "Today",
+    "last7": "Last 7 days",
+    "tiles": {
+      "received": "Received",
+      "last24h": "last 24 hours",
+      "last7": "last 7 days",
+      "toAnswer": "To answer",
+      "toAnswerHint": "incl. older unanswered requests",
+      "urgent": "Urgent",
+      "urgentHint": "to handle first",
+      "blocked": "Blocked",
+      "blockedHint": "AI instructions, withheld"
+    },
+    "summary": "AI summary",
+    "regenerate": "Regenerate",
+    "summaryUnavailable": "Summary unavailable right now ({reason}). The lists below are complete.",
+    "summaryFooter": "Written by Gemini Flash Lite from the emails below. Email content is treated as data, never as instructions.",
+    "needsAnswer": "Needs a human answer ({count})",
+    "inboxZero": "Inbox zero: every request has an answer.",
+    "byType": "By type",
+    "noEmail": "No email received in this period.",
+    "blockedSubject": "Blocked: {subject}",
+    "waiting": "waiting {days} d",
+    "draftReply": "Draft reply",
+    "draftHint": "AI draft. Edit it, then approve. Nothing is sent before.",
+    "draftSubject": "Reply subject",
+    "draftBody": "Reply body",
+    "reject": "Reject",
+    "approveSend": "Approve & send",
+    "urgency": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    }
   }
 }
