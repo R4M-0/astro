@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/gus.gif" alt="Gus, Constella's pixel shop foreman, walking his floor tape: he waves, thinks, jumps, delivers mail, laughs, does the daily round with his clipboard and naps on the job" width="360">
+  <img src="docs/assets/gus.gif" alt="Gus, Constella's pixel shop foreman, walking his floor tape: he waves, thinks, jumps, delivers mail, laughs, does the daily round with his clipboard and naps on the job" width="336">
 </p>
 
 <p align="center">
