@@ -570,7 +570,7 @@ export class AuditLogService {
       summary = p.route.startsWith('compliance/audit')
         ? fr ? "a exporté le journal d'audit (avec son sceau d'intégrité)" : 'exported the audit trail (with its integrity seal)'
         : p.route.startsWith('compliance/requests')
-          ? fr ? `a exporté toutes les données personnelles de la demande ${label ?? ''}`.trim() : `exported every personal data of the request ${label ?? ''}`.trim()
+          ? fr ? `a exporté toutes les données personnelles de la demande ${label ?? ''}`.trim() : `exported all personal data for the request ${label ?? ''}`.trim()
           : fr ? `a exporté ${what}` : `exported ${what}`;
     } else if (p.method === 'GALAXY') {
       category = 'workflow';

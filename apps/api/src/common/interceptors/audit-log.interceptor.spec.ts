@@ -1,4 +1,4 @@
-import { shouldCaptureBody } from './audit-log.interceptor';
+import { AuditLogInterceptor, maskIdentifier, shouldCaptureBody } from './audit-log.interceptor';
 
 describe('audit-log body capture', () => {
   const user = { id: 'u1' };
@@ -24,5 +24,26 @@ describe('audit-log body capture', () => {
 
   it('never stores bodies of unauthenticated requests', () => {
     expect(shouldCaptureBody({ url: '/api/v1/risks/r1' })).toBe(false);
+  });
+});
+
+describe('audit-log personal identifiers', () => {
+  const interceptor = new AuditLogInterceptor({} as never, {} as never);
+
+  it('masks national identifiers at any depth, keeps the last two characters', () => {
+    const out = interceptor.sanitize({ firstName: 'Awa', cin: '12345678', nested: { iban: 'FR7612345' } }) as Record<string, any>;
+    expect(out.firstName).toBe('Awa');
+    expect(out.cin).toBe('••••••78');
+    expect(out.nested.iban).toBe('•••••••45');
+  });
+
+  it('still redacts secrets', () => {
+    expect((interceptor.sanitize({ password: 'x', token: 'y' }) as Record<string, unknown>)).toEqual({ password: '[redacted]', token: '[redacted]' });
+  });
+
+  it('leaves empty and short identifiers unreadable', () => {
+    expect(maskIdentifier('')).toBe('');
+    expect(maskIdentifier('12')).toBe('••');
+    expect(maskIdentifier(null)).toBe(null);
   });
 });

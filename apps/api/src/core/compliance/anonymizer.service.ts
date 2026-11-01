@@ -174,8 +174,9 @@ export class AnonymizerService {
     if (!ids.length) return 0;
     const keys = PII_FIELDS[model] ?? [];
     return tx.$executeRaw`
-      UPDATE "HistoryEntry" SET snapshot = CASE WHEN snapshot IS NULL THEN NULL ELSE snapshot - ${keys}::text[] END,
-             changes = changes - ${keys}::text[]
+      UPDATE "HistoryEntry"
+         SET snapshot = CASE WHEN jsonb_typeof(snapshot) = 'object' THEN snapshot - ${keys}::text[] ELSE snapshot END,
+             changes = CASE WHEN jsonb_typeof(changes) = 'object' THEN changes - ${keys}::text[] ELSE changes END
        WHERE "organizationId" = ${orgId} AND "entityType" = ${model} AND "entityId" = ANY(${ids})`;
   }
 
