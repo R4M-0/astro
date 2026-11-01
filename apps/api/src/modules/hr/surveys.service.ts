@@ -729,6 +729,46 @@ export class SurveysService {
     return survey;
   }
 
+  /** Published, still-open surveys a signed-in member can answer (any member — no survey permission needed). */
+  async memberOpenList(scope: SurveyScope, orgId: string, userId: string) {
+    const now = new Date();
+    const surveys = await this.prisma.hrSurvey.findMany({
+      where: {
+        organizationId: orgId,
+        scope,
+        deletedAt: null,
+        status: 'PUBLISHED',
+        OR: [{ closesAt: null }, { closesAt: { gt: now } }],
+      },
+      select: {
+        id: true,
+        reference: true,
+        title: true,
+        description: true,
+        anonymous: true,
+        allowMultipleResponses: true,
+        closesAt: true,
+        publishedAt: true,
+        _count: { select: { questions: true } },
+      },
+      orderBy: { publishedAt: 'desc' },
+      take: 100,
+    });
+    const keys = surveys.map((s) => this.memberKey(s.id, userId));
+    const answered = keys.length
+      ? await this.prisma.hrSurveyResponse.findMany({
+          where: { surveyId: { in: surveys.map((s) => s.id) }, respondentKey: { in: keys } },
+          select: { surveyId: true },
+        })
+      : [];
+    const done = new Set(answered.map((a) => a.surveyId));
+    return surveys.map(({ _count, ...s }) => ({
+      ...s,
+      questionCount: _count.questions,
+      alreadyAnswered: !s.allowMultipleResponses && done.has(s.id),
+    }));
+  }
+
   /** The answering form for a signed-in member (any member — no survey permission needed). */
   async memberForm(scope: SurveyScope, orgId: string, userId: string, surveyId: string) {
     const survey = await this.findOpenForMember(scope, orgId, surveyId);

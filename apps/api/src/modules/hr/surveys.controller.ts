@@ -40,6 +40,13 @@ export class SurveysController {
 
   // ── surveys ──
   @ApiBearerAuth()
+  /** Open surveys the signed-in member can answer — declared before `:id` so it is not captured by it. */
+  @ApiBearerAuth()
+  @Get('mine')
+  mine(@OrgId() orgId: string, @CurrentUser() user: AuthUser) {
+    return this.surveys.memberOpenList('HR', orgId, user.id);
+  }
+
   @Get()
   @RequirePermissions('hr-surveys:read')
   list(@OrgId() orgId: string, @Query() q: HrSurveyQuery, @Granted() granted: Set<string>) {
