@@ -130,7 +130,7 @@ export function AdminDepartments() {
   });
 
   const modelLabel = (model: string) => (t.has(`models.${model}`) ? t(`models.${model}` as never) : model);
-  const departments = overview.data?.departments ?? [];
+  const departments = useMemo(() => overview.data?.departments ?? [], [overview.data]);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();

@@ -111,7 +111,7 @@ export function GalaxyView() {
   }, [lens, data, deptColor, graph]);
 
   // ── timeline ──
-  const months = data?.months ?? [];
+  const months = useMemo(() => data?.months ?? [], [data]);
   const cur = month === null ? null : months[month];
   const nodeVisible = useCallback((n: GNode) => {
     if (!cur) return true;
@@ -176,7 +176,12 @@ export function GalaxyView() {
   const [asking, setAsking] = useState(false);
   const [answer, setAnswer] = useState<AskResult | null>(null);
   const [askError, setAskError] = useState<string | null>(null);
-  useEffect(() => { if (group.size) setScope({ kind: 'refs', refs: [...group], label: `${group.size} selected` }); }, [group]);
+  // a new selection becomes the ask scope (adjusted while rendering, not in an effect)
+  const [scopedGroup, setScopedGroup] = useState(group);
+  if (group !== scopedGroup) {
+    setScopedGroup(group);
+    if (group.size) setScope({ kind: 'refs', refs: [...group], label: `${group.size} selected` });
+  }
   const askAbout = (ref: string) => { setScope({ kind: 'refs', refs: [ref], label: graph?.byRef.get(ref)?.name ?? ref }); document.getElementById('galaxy-ask')?.focus(); };
   const submit = async () => {
     if (!question.trim() || asking) return;
