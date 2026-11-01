@@ -1,61 +1,27 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
 import { Award, CalendarClock, GraduationCap, LogIn, MessageSquareText, Smile, UserPlus, Users } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { DistributionBars, EmptyLine, ListRow } from '@/components/dashboards/widgets';
 import { useDepartments } from '@/components/hr/use-hr';
-import { AttentionBoard, type AttentionItem } from '@/components/dashboards/signage';
+import { AttentionBoard } from '@/components/dashboards/signage';
 import { Panel, StatTile } from '@/components/layout/stat';
-import { WorkshopMascot, type MascotTip } from '@/components/mascot/workshop-mascot';
+import { useWorkshopBoard } from '@/components/mascot/use-workshop-board';
 import { Skeleton } from '@/components/ui/skeleton';
-import { apiGet } from '@/lib/api';
 import { useSession } from '@/stores/session';
-
-interface HrDashboard {
-  people: {
-    active: number;
-    inactive: number;
-    hiresLast90Days: number;
-    byDepartment: { departmentId: string | null; count: number }[];
-    byContract: { contractType: string | null; count: number }[];
-  } | null;
-  journeys: {
-    onboarding: number;
-    offboarding: number;
-    trialsSoon: { id: string; reference: string; targetDate: string | null; employee: { id: string; firstName: string; lastName: string; jobTitle: string | null } }[];
-  } | null;
-  competencies: {
-    evaluations: number;
-    belowExpected: number;
-    coveragePct: number | null;
-    topGaps: { skillId: string; name: string; count: number }[];
-  } | null;
-  trainings: {
-    planned: number;
-    completedThisYear: number;
-    upcoming: { id: string; code: string; theme: string; startDate: string | null; status: string; participants: number }[];
-    satisfactionAvg: number | null;
-    feedbackCount: number;
-  } | null;
-  surveys: { published: number; responses: number } | null;
-}
-
-const DAY = 86_400_000;
 
 /** Constella home: what needs action today first, then the organization's HR at a glance — each block only for registers the user can read. */
 export default function DashboardPage() {
   const t = useTranslations('dashboard');
-  const tm = useTranslations('mascot');
   const te = useTranslations('hr.employees');
   const locale = useLocale();
   const router = useRouter();
   const user = useSession((s) => s.user);
   const { nameOf } = useDepartments();
-  const { data, isLoading, dataUpdatedAt } = useQuery({ queryKey: ['hr', 'dashboard'], queryFn: () => apiGet<HrDashboard>('/hr/dashboard') });
+  const { data, isLoading, dataUpdatedAt, items } = useWorkshopBoard();
   const fmt = (d: string | null) => (d ? new Date(d).toLocaleDateString(locale, { day: 'numeric', month: 'short' }) : '—');
 
   const empty = data && !data.people && !data.journeys && !data.competencies && !data.trainings && !data.surveys;
@@ -64,103 +30,6 @@ export default function DashboardPage() {
     if (empty) router.replace('/hr/me');
   }, [empty, router]);
 
-  // ---- one source of truth for the attention board and Gus's tips -------------------------
-  const { items, tips } = useMemo(() => {
-    const items: AttentionItem[] = [];
-    const tips: MascotTip[] = [];
-    if (!data) return { items, tips };
-    // severities are judged at fetch time, so a re-render never reclassifies a row
-    const now = dataUpdatedAt;
-    const { people, journeys, competencies, trainings, surveys } = data;
-    const short = (d: string | null) => (d ? new Date(d).toLocaleDateString(locale, { day: 'numeric', month: 'short' }) : '—');
-    const long = (d: string | null) => (d ? new Date(d).toLocaleDateString(locale, { day: 'numeric', month: 'long' }) : '—');
-
-    for (const j of journeys?.trialsSoon ?? []) {
-      const name = `${j.employee.firstName} ${j.employee.lastName}`;
-      const overdue = !!j.targetDate && new Date(j.targetDate).getTime() < now;
-      items.push({
-        id: `trial:${j.id}:${j.targetDate}`,
-        severity: overdue ? 'alert' : 'warn',
-        title: t(overdue ? 'trialOverdue' : 'trialEnds', { name }),
-        detail: [j.reference, j.employee.jobTitle].filter(Boolean).join(' · '),
-        meta: short(j.targetDate),
-        href: `/hr/journeys/${j.id}`,
-      });
-      tips.push({
-        id: `trial:${j.id}`,
-        tone: overdue ? 'alert' : 'warn',
-        text: tm(overdue ? 'trialOverdue' : 'trialSoon', { name: j.employee.firstName, date: long(j.targetDate) }),
-        href: `/hr/journeys/${j.id}`,
-      });
-    }
-    if (competencies && competencies.belowExpected > 0) {
-      const top = competencies.topGaps[0];
-      items.push({
-        id: `gaps:${competencies.belowExpected}`,
-        severity: 'warn',
-        title: t('gapsTitle', { count: competencies.belowExpected }),
-        detail: top ? t('gapsMeta', { skill: top.name }) : undefined,
-        href: '/hr/competency-evaluation',
-      });
-      tips.push({
-        id: 'gaps',
-        tone: 'warn',
-        text: tm('gaps', { count: competencies.belowExpected, skill: top?.name ?? '—' }),
-        href: '/hr/competency-evaluation',
-      });
-    }
-    for (const x of trainings?.upcoming ?? []) {
-      if (!x.startDate || new Date(x.startDate).getTime() - now > 21 * DAY) continue;
-      items.push({
-        id: `training:${x.id}`,
-        severity: 'todo',
-        title: t('trainingSoon', { theme: x.theme }),
-        detail: [x.code, t('participants', { count: x.participants })].join(' · '),
-        meta: short(x.startDate),
-        href: `/hr/trainings/${x.id}`,
-      });
-    }
-    const nextTraining = trainings?.upcoming[0];
-    if (nextTraining) {
-      tips.push({
-        id: `training:${nextTraining.id}`,
-        tone: 'todo',
-        text: tm('training', { theme: nextTraining.theme, date: long(nextTraining.startDate), count: nextTraining.participants }),
-        href: `/hr/trainings/${nextTraining.id}`,
-      });
-    }
-    if (journeys && journeys.onboarding > 0) {
-      items.push({ id: 'onboarding', severity: 'info', title: t('onboardingRow', { count: journeys.onboarding }), href: '/hr/journeys' });
-      tips.push({ id: 'onboarding', tone: 'info', text: tm('onboarding', { count: journeys.onboarding }), href: '/hr/journeys' });
-    }
-    if (journeys && journeys.offboarding > 0) {
-      items.push({ id: 'offboarding', severity: 'info', title: t('offboardingRow', { count: journeys.offboarding }), href: '/hr/journeys' });
-    }
-    if (competencies?.coveragePct != null) {
-      tips.push({
-        id: 'coverage',
-        tone: competencies.coveragePct >= 90 ? 'ok' : 'info',
-        text: tm('coverage', { pct: competencies.coveragePct }),
-        href: '/hr/competency-evaluation/polyvalence',
-      });
-    }
-    if (people && people.hiresLast90Days > 0) {
-      tips.push({ id: 'hires', tone: 'ok', text: tm('hires', { count: people.hiresLast90Days }), href: '/hr/employees' });
-    }
-    if (surveys && surveys.published > 0) {
-      tips.push({ id: 'surveys', tone: 'info', text: tm('surveys', { count: surveys.published, responses: surveys.responses }), href: '/hr/surveys' });
-    }
-    if (!items.some((i) => i.severity === 'alert' || i.severity === 'warn')) {
-      tips.unshift({ id: 'clear', tone: 'ok', text: tm('allClear') });
-    }
-    const rank = { alert: 0, warn: 1, todo: 2, info: 3, ok: 4 } as const;
-    items.sort((a, b) => rank[a.severity] - rank[b.severity]);
-    tips.sort((a, b) => rank[a.tone] - rank[b.tone]);
-    return { items: items.slice(0, 7), tips };
-  }, [data, dataUpdatedAt, locale, t, tm]);
-
-  const hour = new Date(dataUpdatedAt).getHours();
-  const greeting = tm(hour < 12 ? 'greetMorning' : hour < 18 ? 'greetAfternoon' : 'greetEvening', { name: user?.firstName ?? '' });
 
   if (isLoading || !data || empty) {
     return (
@@ -181,7 +50,7 @@ export default function DashboardPage() {
   const today = new Date(dataUpdatedAt).toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
   return (
-    <div className="mx-auto flex max-w-[1400px] flex-col gap-5 p-4 pb-64 sm:p-6 sm:pb-64">
+    <div className="mx-auto flex max-w-[1400px] flex-col gap-5 p-4 sm:p-6">
       <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2 border-b-2 border-keyline pb-4">
         <div className="min-w-0">
           <h1 className="text-[clamp(1.9rem,3.2vw,2.75rem)] leading-[1.02] font-extrabold tracking-[-0.03em] text-balance [font-stretch:92%]">
@@ -320,7 +189,6 @@ export default function DashboardPage() {
         )}
       </div>
 
-      <WorkshopMascot tips={tips} greeting={greeting} />
     </div>
   );
 }

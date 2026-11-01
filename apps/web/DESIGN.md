@@ -23,10 +23,15 @@ Constella's UI is built on the visual language of a factory wall: ISO 7010 safet
 - Buttons have a squared shape, semibold labels and an inset under-edge on primary. Inputs sit on the card ground.
 
 ## Mascot — Gus (`components/mascot/`)
-- 16×24 pixel art composed from parts in `sprite.ts` (hat with Constella star, "bleu de travail" jacket with reflective stripe). Always shown at an integer scale (×4) with `image-rendering: pixelated`. All pixels are authored in code; there is no raster asset.
-- Patrols a floor-tape strip in the bottom-right of the dashboard. Modes: walk, idle/blink, wave (hover), jump (click → next tip), surprised (overdue alert), think (before an unprompted tip), talk, laugh (triple-click), celebrate (good news), sleep (after 70s idle; click to wake).
-- Tips come from the same data as the attention board, most severe first. The bubble has an action link, prev/next and close, and stays open while hovered or focused. "Ranger Gus" hides him; a hard-hat button brings him back (localStorage `astro.mascot.hidden`).
-- `prefers-reduced-motion`: no walking or jumping; poses and bubbles still work.
+- 16×24 pixel art composed from parts in `sprite.ts` (hat with Constella star, "bleu de travail" jacket with reflective stripe, plus a clipboard or envelope when he's working). Shown at ×5 (80×120) with `image-rendering: pixelated`. All pixels are authored in code; there is no raster asset.
+- He's mounted once in `app/(app)/layout.tsx`, so he patrols a floor-tape strip in the bottom-right of **every** app page. The layout adds `h-36` of floor space while he's out (except on full-height pages such as the galaxy view).
+- **Real work** (all data comes from `useWorkshopBoard()`, the same source as the dashboard's attention board):
+  1. **Daily round:** "Faire la tournée" snapshots today's attention items and walks you to each page in turn, with Handled / Skip / Pause, progress pips and a "Tournée n/N" plate on the tape. Handled items stop glowing on the board. The round's state persists for the day (localStorage `astro.mascot.round`).
+  2. **Postman:** a new unread notification arriving in realtime makes him jump in surprise with an envelope. The bubble offers Open (which marks it read and navigates) or Later.
+  3. **Page inspector:** on the first visit to a page family that has pending items (e.g. `/hr/journeys`), he thinks, then says how many items need handling there, with a link to the first one.
+- **Personality:** walk, blink, wave (hover), jump (click: next report), surprised, think, talk, laugh (triple-click), celebrate (good news, round finished), sleep (after 70s idle; click to wake). The greeting plays once per browser session.
+- "Ranger Gus" hides him; a hard-hat button brings him back (`astro.mascot.hidden`). Under `prefers-reduced-motion` he doesn't walk or jump.
+- The README GIF (`docs/assets/gus.gif`) is rendered from the same sprite code by `apps/web/scripts/render-gus-gif.mjs`.
 
 ## Motion
 Exponential ease-out (`--ease-out`). Bubble motion runs on whole-pixel `steps()` timing to match the sprite. No bounce or elastic easing.

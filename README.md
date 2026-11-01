@@ -1,5 +1,9 @@
 <p align="center">
-  <img src="docs/assets/banner.svg" alt="Constella: see the shape of your company before it breaks" width="100%">
+  <img src="docs/assets/gus.gif" alt="Gus, Constella's pixel shop foreman, walking his floor tape: he waves, thinks, jumps, delivers mail, laughs, does the daily round with his clipboard and naps on the job" width="100%">
+</p>
+
+<p align="center">
+  <i>Meet Gus. He checks every trial period, every skills gap and every training date, and still can't figure out who keeps stealing his stapler.</i>
 </p>
 
 <p align="center">

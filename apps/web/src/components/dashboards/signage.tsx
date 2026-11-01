@@ -75,7 +75,7 @@ function readSeen(): string {
   }
   return seenCache;
 }
-function markSeen(id: string) {
+export function markSeen(id: string) {
   const list: string[] = JSON.parse(readSeen());
   if (list.includes(id)) return;
   // keep the list bounded: oldest ids fall off

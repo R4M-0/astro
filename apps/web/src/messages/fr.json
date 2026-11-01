@@ -2156,7 +2156,7 @@
   "mascot": {
     "name": "Gus",
     "role": "chef d’atelier RH",
-    "label": "Gus, votre chef d’atelier RH. Activer pour le conseil suivant.",
+    "label": "Gus, votre chef d’atelier RH. Activer pour son rapport.",
     "next": "Conseil suivant",
     "prev": "Conseil précédent",
     "close": "Fermer la bulle",
@@ -2183,6 +2183,23 @@
       "Une fiche de poste à jour, c’est une équipe qui respire.",
       "Je compte les compétences, pas les moutons.",
       "Une matrice de polyvalence bien remplie, c’est beau."
-    ]
+    ],
+    "roundStart": "Faire la tournée ({count})",
+    "roundResume": "Reprendre la tournée ({index}/{total})",
+    "roundTitle": "Tournée du jour · {index}/{total}",
+    "roundPlate": "Tournée {index}/{total}",
+    "roundDoneBtn": "Traité",
+    "roundSkip": "Passer",
+    "roundStop": "Pause",
+    "roundPaused": "Pause café. La tournée vous attend, cliquez sur moi pour reprendre.",
+    "roundIntro": "C’est parti ! {count, plural, one {Un point} other {# points}} à voir. Je vous emmène.",
+    "roundFinished": "Tournée terminée ! {done, plural, =0 {Rien traité} one {# point traité} other {# points traités}}{skipped, plural, =0 {} one {, # passé} other {, # passés}}. Vous méritez un café.",
+    "roundAlreadyDone": "La tournée du jour est déjà faite. Bravo !",
+    "mailTitle": "Courrier !",
+    "mailOpen": "Ouvrir",
+    "mailLater": "Plus tard",
+    "pageHint": "Sur cette page : {count, plural, one {# point à traiter} other {# points à traiter}}. Le premier : {title}.",
+    "pageHintNone": "Rien à signaler ici.",
+    "jobs": "Mes tâches : je fais la tournée des points à traiter, je distribue le courrier et j’inspecte chaque page."
   }
 }

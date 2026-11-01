@@ -42,6 +42,8 @@ export interface Pose {
   /** horizontal gaze offset (-1 | 0 | 1) */
   look?: number;
   cheeks?: boolean;
+  /** something held in front of the jacket: the round's clipboard, or a notification envelope */
+  holding?: 'clipboard' | 'envelope';
 }
 
 type Put = (x: number, y: number, c: Ink) => void;
@@ -268,6 +270,29 @@ function drawLegs(put: Put, dy: number, legs: Legs) {
   }
 }
 
+function drawHeld(put: Put, dy: number, item: NonNullable<Pose['holding']>) {
+  if (item === 'clipboard') {
+    rect(put, 4, 13 + dy, 7, 6, 'k');
+    rect(put, 5, 14 + dy, 5, 4, 'w');
+    rect(put, 6, 13 + dy, 3, 1, 'r'); // the clip
+    rect(put, 6, 15 + dy, 3, 1, 'B'); // ruled lines
+    rect(put, 6, 17 + dy, 2, 1, 'B');
+    put(4, 16 + dy, 's');
+    put(10, 16 + dy, 's');
+  } else {
+    rect(put, 4, 14 + dy, 8, 5, 'k');
+    rect(put, 5, 15 + dy, 6, 3, 'w');
+    put(5, 15 + dy, 'k'); // the flap's V
+    put(6, 16 + dy, 'k');
+    put(7, 17 + dy, 'y'); // yellow seal
+    put(8, 17 + dy, 'y');
+    put(9, 16 + dy, 'k');
+    put(10, 15 + dy, 'k');
+    put(4, 16 + dy, 's');
+    put(11, 16 + dy, 's');
+  }
+}
+
 /** Paint one frame onto a 2D context sized SPRITE_W × SPRITE_H (scale with CSS / setTransform). */
 export function paintFrame(ctx: CanvasRenderingContext2D, pose: Pose, facing: 1 | -1) {
   ctx.clearRect(0, 0, SPRITE_W, SPRITE_H);
@@ -282,6 +307,7 @@ export function paintFrame(ctx: CanvasRenderingContext2D, pose: Pose, facing: 1 
   drawLegs(put, 0, pose.legs);
   drawBody(put, dy);
   drawArms(put, dy, pose.arms);
+  if (pose.holding) drawHeld(put, dy, pose.holding);
   drawHat(put, dy);
   drawFace(put, dy, pose);
 }

@@ -2156,7 +2156,7 @@
   "mascot": {
     "name": "Gus",
     "role": "HR shop foreman",
-    "label": "Gus, your HR shop foreman. Activate for the next tip.",
+    "label": "Gus, your HR shop foreman. Activate for his report.",
     "next": "Next tip",
     "prev": "Previous tip",
     "close": "Close bubble",
@@ -2183,6 +2183,23 @@
       "An up-to-date job description keeps a team breathing.",
       "I count skills, not sheep.",
       "A well-filled skills matrix is a thing of beauty."
-    ]
+    ],
+    "roundStart": "Do the rounds ({count})",
+    "roundResume": "Resume the rounds ({index}/{total})",
+    "roundTitle": "Daily rounds · {index}/{total}",
+    "roundPlate": "Rounds {index}/{total}",
+    "roundDoneBtn": "Handled",
+    "roundSkip": "Skip",
+    "roundStop": "Pause",
+    "roundPaused": "Coffee break. The rounds will wait — click me to resume.",
+    "roundIntro": "Off we go! {count, plural, one {One item} other {# items}} to check. Follow me.",
+    "roundFinished": "Rounds done! {done, plural, =0 {Nothing handled} one {# item handled} other {# items handled}}{skipped, plural, =0 {} other {, # skipped}}. You’ve earned a coffee.",
+    "roundAlreadyDone": "Today’s rounds are already done. Nice work!",
+    "mailTitle": "Mail’s here!",
+    "mailOpen": "Open",
+    "mailLater": "Later",
+    "pageHint": "On this page: {count, plural, one {# item to handle} other {# items to handle}}. First up: {title}.",
+    "pageHintNone": "Nothing to report here.",
+    "jobs": "My jobs: I run the daily rounds of what needs attention, deliver your mail, and inspect every page."
   }
 }
