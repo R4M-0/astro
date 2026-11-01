@@ -1608,6 +1608,15 @@
     },
     "answer": {
       "unavailable": "This survey is not open for answers."
+    },
+    "mine": {
+      "title": "Surveys to answer",
+      "questions": "{count, plural, =1 {1 question} other {# questions}}",
+      "anonymous": "anonymous",
+      "closesOn": "closes {date}",
+      "answered": "Answered",
+      "toAnswer": "To answer",
+      "back": "My space"
     }
   },
   "departments": {

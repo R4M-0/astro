@@ -16,7 +16,7 @@ export interface SurveyScopeConfig {
   listHref: string;
   /** React Query key prefix */
   queryKey: readonly string[];
-  perms: { create: string; update: string; delete: string };
+  perms: { read: string; create: string; update: string; delete: string };
   /** entity type for history / linked actions (registry slug) */
   entityType: string;
 }
@@ -27,7 +27,7 @@ export const HR_SURVEY_SCOPE: SurveyScopeConfig = {
   route: (id) => `/hr/surveys/${id}`,
   listHref: '/hr/surveys',
   queryKey: ['hr', 'surveys'],
-  perms: { create: 'hr-surveys:create', update: 'hr-surveys:update', delete: 'hr-surveys:delete' },
+  perms: { read: 'hr-surveys:read', create: 'hr-surveys:create', update: 'hr-surveys:update', delete: 'hr-surveys:delete' },
   entityType: 'hr-survey',
 };
 

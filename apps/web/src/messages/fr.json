@@ -1608,6 +1608,15 @@
     },
     "answer": {
       "unavailable": "Cette enquête n'est pas ouverte aux réponses."
+    },
+    "mine": {
+      "title": "Enquêtes à remplir",
+      "questions": "{count, plural, =1 {1 question} other {# questions}}",
+      "anonymous": "anonyme",
+      "closesOn": "clôture le {date}",
+      "answered": "Répondu",
+      "toAnswer": "À remplir",
+      "back": "Mon espace"
     }
   },
   "departments": {
