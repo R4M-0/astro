@@ -2047,6 +2047,21 @@
         "BOOKED": "Réservé",
         "DECLINED": "Désisté",
         "NO_RESPONSE": "Sans réponse"
+      },
+      "ics": {
+        "import": "Importer un agenda (.ics)",
+        "hint": "Vos occupations restent sur cet ordinateur : seuls les créneaux choisis sont publiés.",
+        "proposed": "{count, plural, =0 {Aucun créneau libre trouvé} one {# créneau proposé} other {# créneaux proposés}}",
+        "summary": "D’après votre agenda : {busy} événements dans les 3 prochaines semaines. Les créneaux libres sont proposés en semaine, 9 h–17 h 30, avec 15 min autour de chaque réunion.",
+        "none": "Votre agenda est complet sur les 10 prochains jours ouvrés.",
+        "fromCalendar": "de votre agenda",
+        "interviewer": "Recruteur",
+        "location": "Lieu",
+        "locationHint": "Salle, adresse ou lien visio",
+        "add": "{count, plural, one {Ajouter # créneau} other {Ajouter # créneaux}}",
+        "added": "{count, plural, one {# créneau ajouté} other {# créneaux ajoutés}}",
+        "tooBig": "Fichier trop volumineux (2 Mo max.)",
+        "invalid": "Ce fichier n’est pas un agenda valide (.ics)"
       }
     },
     "messages": {

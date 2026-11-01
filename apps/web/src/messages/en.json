@@ -2047,6 +2047,21 @@
         "BOOKED": "Booked",
         "DECLINED": "Withdrew",
         "NO_RESPONSE": "No response"
+      },
+      "ics": {
+        "import": "Import a calendar (.ics)",
+        "hint": "Your busy times stay on this computer: only the slots you pick are published.",
+        "proposed": "{count, plural, =0 {No free slot found} one {# slot proposed} other {# slots proposed}}",
+        "summary": "From your calendar: {busy} busy events in the next 3 weeks. Free slots are proposed on weekdays, 9:00–17:30, with 15 min around each meeting.",
+        "none": "Your calendar is full in the next 10 working days.",
+        "fromCalendar": "from your calendar",
+        "interviewer": "Interviewer",
+        "location": "Location",
+        "locationHint": "Room, address or video link",
+        "add": "{count, plural, one {Add # slot} other {Add # slots}}",
+        "added": "{count, plural, one {# slot added} other {# slots added}}",
+        "tooBig": "Calendar file too large (2 MB max)",
+        "invalid": "This file is not a valid calendar (.ics)"
       }
     },
     "messages": {
