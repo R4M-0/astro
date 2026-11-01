@@ -14,6 +14,11 @@ const INJECTION: RegExp[] = [
   /\b(give|assign|award)\b.{0,30}\b(highest|maximum|max|perfect|full|top)\b.{0,15}\b(score|rating|marks?)\b/i,
   /\b(new|updated|additional) instructions?\s*:/i,
   /<\/?(system|instructions?|prompt|cv)>/i,
+  // addressed to the model: "note to the AI…", "instructions pour l'IA…"
+  /\b(note|message|instructions?|consignes?)\s+(to|for|pour)\s+(the\s+|l['’]\s*)?(ai|ia|llm|model|assistant|bot|chatbot|(automated\s+)?screening)\b/i,
+  /\b(score|rate|note)\s+\d\b.{0,20}\b(every|all|each)\s+(criteri(on|a)|skills?)\b/i,
+  /\b(donne[rz]?|attribue[rz]?|accorde[rz]?)\b.{0,30}\b(la\s+)?(note|score)\s+(maximale?|maximum|parfaite?)\b/i,
+  /\b(classe[rz]?|placez|mettez)\b.{0,30}\b(ce candidat|cette candidate|ce profil|ce cv|moi)\b.{0,30}\b(premier|premi[eè]re|en t[eê]te)/iu,
 ];
 
 /** control chars (except tab/newlines) + format chars: zero-width, bidi overrides, soft hyphen, BOM */
@@ -30,8 +35,10 @@ const REDACTIONS: [RegExp, string][] = [
   [/(?<!\p{L})âgée? de \d{2} ans\b/giu, '[age]'],
   [/^.*(?<!\p{L})(nationality|nationalité|citizenship)(?!\p{L}).*$/gimu, '[nationality]'],
   [/^.*(?<!\p{L})(marital status|situation familiale|married|mariée?|célibataire|single|children|enfants)(?!\p{L})\s*:.*$/gimu, '[family status]'],
+  // a family-status line without a label: "Marié, 2 enfants", "Célibataire"
+  [/^\s*(mariée?|célibataire|pacsée?|divorcée?|veuf|veuve|married|single|divorced|widowed)(?!\p{L})(?=\s*([,;(\d]|$)).*$/gimu, '[family status]'],
   [/^.*(?<!\p{L})(gender|sexe|genre)\s*:.*$/gimu, '[gender]'],
-  [/\b(Mr|Mrs|Ms|Miss|Mme|Mlle|Monsieur|Madame)\b\.?\s*/g, ''],
+  [/\b(Mr|Mrs|Ms|Miss|Mme|Mlle|Monsieur|Madame)\b\.?\s*|\bM\.\s+(?=\p{Lu})/gu, ''],
 ];
 
 export interface GuardResult {
@@ -66,8 +73,7 @@ export function sanitizeCv(raw: string): GuardResult {
 /** Removes the candidate's name (each part, ≥ 2 letters) once the extractor has found it. */
 export function redactName(text: string, fullName: string | null | undefined): string {
   const parts = (fullName ?? '').split(/\s+/).filter((p) => p.length >= 2);
-  return parts.reduce(
-    (t, p) => t.replace(new RegExp(`(?<!\\p{L})${p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?!\\p{L})`, 'giu'), '[name]'),
-    text,
-  );
+  return parts
+    .reduce((t, p) => t.replace(new RegExp(`(?<!\\p{L})${p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?!\\p{L})`, 'giu'), '[name]'), text)
+    .replace(/\[name\](\s+\[name\])+/g, '[name]'); // the number of name parts hints at origin
 }
