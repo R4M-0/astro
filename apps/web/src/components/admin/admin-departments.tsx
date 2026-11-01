@@ -12,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Field } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -280,7 +281,7 @@ export function AdminDepartments() {
             <DialogTitle>{t('merge')}</DialogTitle>
             <DialogDescription>{merging && t('mergeDescription', { name: merging.name })}</DialogDescription>
           </DialogHeader>
-          <div className="flex flex-col gap-2">
+          <Field className="flex flex-col gap-2">
             <Label>{t('mergeTarget')}</Label>
             <Select value={target || undefined} onValueChange={setTarget}>
               <SelectTrigger className="w-full"><SelectValue placeholder={t('mergeTargetPlaceholder')} /></SelectTrigger>
@@ -295,7 +296,7 @@ export function AdminDepartments() {
                 {t('mergeConfirm', { source: merging.name, target: targetName, count: merging.usedBy })}
               </p>
             )}
-          </div>
+          </Field>
           <DialogFooter>
             <Button variant="outline" onClick={() => setMerging(null)}>{t('cancel')}</Button>
             <Button

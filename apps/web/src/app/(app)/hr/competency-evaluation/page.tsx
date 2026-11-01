@@ -19,6 +19,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Field } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -256,14 +257,14 @@ export default function CompetencyEvaluationPage() {
                   <Label>{t('dialog.evaluatedLevel')} *</Label>
                   <ProficiencyPicker value={level} onChange={setLevel} />
                 </div>
-                <div className="flex flex-col gap-1.5">
+                <Field className="flex flex-col gap-1.5">
                   <Label>{t('dialog.method')}</Label>
                   <Input value={method} onChange={(e) => setMethod(e.target.value)} placeholder={t('dialog.methodPh')} />
-                </div>
-                <div className="flex flex-col gap-1.5">
+                </Field>
+                <Field className="flex flex-col gap-1.5">
                   <Label>{t('dialog.action')}</Label>
                   <Textarea rows={2} value={action} onChange={(e) => setAction(e.target.value)} placeholder={t('dialog.actionPh')} />
-                </div>
+                </Field>
                 {level > 0 && expected != null && (
                   <div className="text-sm">
                     {t('gap')}:{' '}

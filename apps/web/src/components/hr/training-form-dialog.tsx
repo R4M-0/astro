@@ -23,6 +23,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Field } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
@@ -127,11 +128,11 @@ export function TrainingFormDialog({
 
         <div className="flex flex-col gap-4">
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="flex flex-col gap-1.5">
+            <Field className="flex flex-col gap-1.5">
               <Label>{t('fields.code')} *</Label>
               <Input value={form.code} onChange={(e) => set('code', e.target.value)} placeholder="FORM-2026-01" />
-            </div>
-            <div className="flex flex-col gap-1.5">
+            </Field>
+            <Field className="flex flex-col gap-1.5">
               <Label>{t('fields.type')} *</Label>
               <Select value={form.type} onValueChange={(v) => set('type', v as HrTrainingType)}>
                 <SelectTrigger size="sm"><SelectValue /></SelectTrigger>
@@ -139,28 +140,28 @@ export function TrainingFormDialog({
                   {HR_TRAINING_TYPES.map((s) => <SelectItem key={s} value={s}>{t(`types.${s}`)}</SelectItem>)}
                 </SelectContent>
               </Select>
-            </div>
+            </Field>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="flex flex-col gap-1.5">
+            <Field className="flex flex-col gap-1.5">
               <Label>{t('fields.theme')} *</Label>
               <Input value={form.theme} onChange={(e) => set('theme', e.target.value)} />
-            </div>
-            <div className="flex flex-col gap-1.5">
+            </Field>
+            <Field className="flex flex-col gap-1.5">
               <Label>{td('label')} *</Label>
               <DepartmentSelect size="sm" value={form.departmentId || null} onChange={(id) => set('departmentId', id ?? '')} />
-            </div>
+            </Field>
           </div>
           <div className="grid gap-4 sm:grid-cols-3">
-            <div className="flex flex-col gap-1.5">
+            <Field className="flex flex-col gap-1.5">
               <Label>{t('fields.startDate')}</Label>
               <Input type="date" value={form.startDate} onChange={(e) => set('startDate', e.target.value)} />
-            </div>
-            <div className="flex flex-col gap-1.5">
+            </Field>
+            <Field className="flex flex-col gap-1.5">
               <Label>{t('fields.endDate')}</Label>
               <Input type="date" value={form.endDate} onChange={(e) => set('endDate', e.target.value)} />
-            </div>
-            <div className="flex flex-col gap-1.5">
+            </Field>
+            <Field className="flex flex-col gap-1.5">
               <Label>{t('fields.status')}</Label>
               <Select value={form.status} onValueChange={(v) => set('status', v as TrainingStatus)}>
                 <SelectTrigger size="sm"><SelectValue /></SelectTrigger>
@@ -168,10 +169,10 @@ export function TrainingFormDialog({
                   {TRAINING_STATUSES.map((s) => <SelectItem key={s} value={s}>{t(`statuses.${s}`)}</SelectItem>)}
                 </SelectContent>
               </Select>
-            </div>
+            </Field>
           </div>
           {dateOrderInvalid && <p className="-mt-2 text-xs text-destructive">{t('dateOrderError')}</p>}
-          <div className="flex flex-col gap-1.5">
+          <Field className="flex flex-col gap-1.5">
             <Label>{t('fields.participants')}</Label>
             <EmployeeMultiSelect
               value={form.participantIds}
@@ -179,11 +180,11 @@ export function TrainingFormDialog({
               placeholder={t('fields.participants')}
               emptyLabel={tc('noResults')}
             />
-          </div>
-          <div className="flex flex-col gap-1.5">
+          </Field>
+          <Field className="flex flex-col gap-1.5">
             <Label>{t('fields.observation')}</Label>
             <Textarea rows={3} value={form.observation} onChange={(e) => set('observation', e.target.value)} />
-          </div>
+          </Field>
         </div>
 
         <DialogFooter>

@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Field } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -229,7 +230,7 @@ function SeatDialog({ open, onOpenChange, orgId, current, used, onDone }: { open
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-xs">
         <DialogHeader><DialogTitle>Seat limit</DialogTitle></DialogHeader>
-        <div className="grid gap-1.5"><Label>Maximum accounts</Label><Input type="number" min={used} value={value} onChange={(e) => setValue(e.target.value)} /><p className="text-xs text-muted-foreground">{used} accounts currently active.</p></div>
+        <Field className="grid gap-1.5"><Label>Maximum accounts</Label><Input type="number" min={used} value={value} onChange={(e) => setValue(e.target.value)} /><p className="text-xs text-muted-foreground">{used} accounts currently active.</p></Field>
         <DialogFooter><Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button><Button disabled={save.isPending} onClick={() => save.mutate()}>Save</Button></DialogFooter>
       </DialogContent>
     </Dialog>
