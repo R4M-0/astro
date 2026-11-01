@@ -60,7 +60,7 @@ export default function PlatformLayout({ children }: { children: React.ReactNode
             <ShieldCheck className="size-4" />
           </div>
           <div className="leading-tight">
-            <p className="text-sm font-semibold">Astro</p>
+            <p className="text-sm font-semibold">Constella</p>
             <p className="text-[10px] uppercase tracking-wider text-muted-foreground">Platform admin</p>
           </div>
         </div>
@@ -99,7 +99,7 @@ export default function PlatformLayout({ children }: { children: React.ReactNode
             <ShieldCheck className="size-4 text-primary" />
             <span className="text-sm font-semibold">Platform</span>
           </div>
-          <div className="hidden text-sm text-muted-foreground md:block">Astro platform administration</div>
+          <div className="hidden text-sm text-muted-foreground md:block">Constella platform administration</div>
           <div className="flex items-center gap-1">
             <Button variant="ghost" size="icon" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
               <Sun className="size-4 dark:hidden" />

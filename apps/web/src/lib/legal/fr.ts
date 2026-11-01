@@ -37,7 +37,7 @@ export function legalFr(L: LegalIdentity): Record<LegalDocKey, LegalDoc> {
           title: 'Propriété intellectuelle',
           blocks: [
             `L’ensemble des éléments du site et du logiciel ${L.brand} (textes, interfaces, graphismes, logos, code, bases de données) est protégé par le droit de la propriété intellectuelle et appartient à ${L.entity} ou fait l’objet d’une licence. Toute reproduction, représentation ou adaptation, totale ou partielle, sans autorisation écrite préalable est interdite.`,
-            'ISO 9001, ISO 14001, ISO 45001 et ISO 22000 sont des normes publiées par l’Organisation internationale de normalisation (ISO). Astro n’est ni affilié à l’ISO ni à un organisme de certification ; l’utilisation du logiciel ne vaut pas certification.',
+            'ISO 9001, ISO 14001, ISO 45001 et ISO 22000 sont des normes publiées par l’Organisation internationale de normalisation (ISO). Constella n’est ni affilié à l’ISO ni à un organisme de certification ; l’utilisation du logiciel ne vaut pas certification.',
           ],
         },
         {

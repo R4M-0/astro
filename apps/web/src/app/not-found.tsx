@@ -21,7 +21,7 @@ export default async function NotFound() {
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,color-mix(in_oklab,var(--primary)_10%,transparent),transparent_60%)]"
       />
       <header className="relative mx-auto flex h-16 w-full max-w-5xl items-center">
-        <Link href="/" aria-label="Astro">
+        <Link href="/" aria-label="Constella">
           <Logo />
         </Link>
       </header>

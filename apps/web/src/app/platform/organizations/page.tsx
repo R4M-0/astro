@@ -50,7 +50,7 @@ export default function OrganizationsPage() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Organizations</h1>
-          <p className="text-sm text-muted-foreground">Every tenant subscribed to Astro.</p>
+          <p className="text-sm text-muted-foreground">Every tenant subscribed to Constella.</p>
         </div>
         <Button onClick={() => setCreateOpen(true)}><Plus className="size-4" /> New organization</Button>
       </div>
