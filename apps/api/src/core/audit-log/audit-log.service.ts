@@ -372,7 +372,7 @@ export class AuditLogService {
     const body = (row.after && typeof row.after === 'object' && !Array.isArray(row.after) ? row.after : {}) as Row;
     const isPrivate = PRIVATE_ROUTE.test(p.route);
     const fr = lang === 'fr';
-    if (p.method === 'ACCESS' || p.method === 'EXPORT' || p.method === 'COMPLIANCE' || p.method === 'GALAXY') {
+    if (['ACCESS', 'EXPORT', 'COMPLIANCE', 'GALAXY'].includes(p.method) || /^compliance\/retention\/(preview|run)$/.test(p.route)) {
       return this.describeCompliance(row, p, body, ctx, lang, actorName);
     }
 
@@ -580,7 +580,11 @@ export class AuditLogService {
       const event = p.route;
       const subject = typeof body.subjectLabel === 'string' ? body.subjectLabel : label;
       summary =
-        event === 'retention.run'
+        event === 'compliance/retention/preview'
+          ? fr ? 'a prévisualisé les durées de conservation (rien n’a été modifié)' : 'previewed retention (nothing changed)'
+          : event === 'compliance/retention/run'
+            ? fr ? 'a lancé l’application des durées de conservation' : 'started applying retention'
+            : event === 'retention.run'
           ? fr
             ? `a appliqué les durées de conservation : ${count('anonymized')} personne(s) anonymisée(s), ${count('purged')} entrée(s) d'audit purgée(s), ${count('held')} sous gel juridique`
             : `applied retention: ${count('anonymized')} people anonymized, ${count('purged')} audit entries purged, ${count('held')} under legal hold`

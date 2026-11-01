@@ -89,6 +89,9 @@ export const VERBS: Record<string, { fr: string; en: string }> = {
   restore: { fr: 'a restauré', en: 'restored' },
   transition: { fr: "a fait avancer l'état de", en: 'moved forward' },
   complete: { fr: 'a terminé', en: 'completed' },
+  // compliance (docs/compliance)
+  execute: { fr: "a exécuté l'effacement demandé par", en: 'executed the erasure requested by' },
+  release: { fr: 'a levé', en: 'released' },
   acknowledge: { fr: 'a confirmé avoir pris connaissance de', en: 'acknowledged' },
   decide: { fr: 'a rendu sa décision sur', en: 'gave a decision on' },
   decision: { fr: 'a rendu une décision sur', en: 'recorded a decision on' },
