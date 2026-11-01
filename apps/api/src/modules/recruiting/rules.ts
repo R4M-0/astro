@@ -35,7 +35,7 @@ export interface CriterionScore {
 const norm = (s: string) => s.toLowerCase().replace(/\s+/g, ' ').trim();
 const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 /** whole-word match so "Java" does not pass on "JavaScript" */
-const mentions = (haystack: string, needle: string) =>
+export const mentions = (haystack: string, needle: string) =>
   new RegExp(`(^|[^\\p{L}\\p{N}+#])${escape(norm(needle))}($|[^\\p{L}\\p{N}+#])`, 'u').test(norm(haystack));
 
 const fold = (s: string) => norm(s).normalize('NFD').replace(/\p{M}/gu, '');

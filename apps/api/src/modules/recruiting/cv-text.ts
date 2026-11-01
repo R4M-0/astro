@@ -2,9 +2,9 @@ import { BadRequestException } from '@nestjs/common';
 import { extractRawText } from 'mammoth';
 import { sniffOffice } from '../../common/office-files';
 
-// unpdf is ESM-only: Node ≥ 22.12 require()s it fine, but its types need moduleResolution node16+
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const { extractText, getDocumentProxy } = require('unpdf') as {
+// unpdf is ESM-only: Node ≥ 22.12 require()s it fine, but its types need moduleResolution node16+.
+// Required on first use so the upload checks load without it (Jest can't parse its import.meta).
+type Unpdf = {
   getDocumentProxy(data: Uint8Array): Promise<unknown>;
   extractText(pdf: unknown, options: { mergePages: true }): Promise<{ text: string }>;
 };
@@ -28,6 +28,8 @@ export function cvKind(fileName: string, buf: Buffer): CvKind {
 export async function cvToText(kind: CvKind, buf: Buffer): Promise<string> {
   if (kind === 'txt') return buf.toString('utf8');
   if (kind === 'docx') return (await extractRawText({ buffer: buf })).value;
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { extractText, getDocumentProxy } = require('unpdf') as Unpdf;
   const { text } = await extractText(await getDocumentProxy(new Uint8Array(buf)), { mergePages: true });
   return text;
 }

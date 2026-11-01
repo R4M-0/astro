@@ -400,15 +400,20 @@ export class OutreachService {
     return { ok: true };
   }
 
+  /** Reply triage model call on the guarded message. */
+  classify(openingTitle: string, body: string) {
+    return this.ai.structured<{ intent: Intent; needsHuman: boolean; summary: string }>(
+      TRIAGE_SYSTEM,
+      `Job opening: ${openingTitle}\n\n<message>\n${sanitizeCv(body).text}\n</message>`,
+      TRIAGE_SCHEMA,
+    );
+  }
+
   /** Worker: intent → reply draft for HR, or straight to HR when it needs a human. The agent never acts on the request itself. */
   async triage(messageId: string) {
     const m = await this.prisma.candidateMessage.findUnique({ where: { id: messageId }, include: { candidate: { include: { jobOpening: true } } } });
     if (!m || m.intent) return;
-    const out = await this.ai.structured<{ intent: Intent; needsHuman: boolean; summary: string }>(
-      TRIAGE_SYSTEM,
-      `Job opening: ${m.candidate.jobOpening.title}\n\n<message>\n${sanitizeCv(m.body).text}\n</message>`,
-      TRIAGE_SCHEMA,
-    );
+    const out = await this.classify(m.candidate.jobOpening.title, m.body);
     const human = needsHuman(out.intent, out.needsHuman, (m.flags as string[]).length > 0);
     await this.prisma.candidateMessage.update({ where: { id: m.id }, data: { intent: out.intent, needsHuman: human, summary: out.summary.slice(0, 500) } });
     if (out.intent !== 'OTHER' && out.intent !== 'DECLINE') await this.enqueueDraft(m.candidateId, 'REPLY', m.id);
