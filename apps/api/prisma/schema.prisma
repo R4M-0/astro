@@ -286,6 +286,31 @@ model AuditLogEntry {
   /// super admin acting through impersonation (« via support »)
   impersonatedById String?
   createdAt        DateTime @default(now())
+  // ── tamper evidence: set by the audit_chain_before_insert trigger, never by the app ──
+  /// position in the organization's chain (1, 2, 3…; a gap = a removed row)
+  seq              Int?
+  /// sha256(before | after): the hash covers the body through this digest, so a body can be erased
+  bodyDigest       String?
+  prevHash         String?
+  hash             String?
+  /// personal data removed from before/after (erasure, retention); the digest still proves what was there
+  redactedAt       DateTime?
+
+  @@index([organizationId, createdAt])
+  @@index([organizationId, seq])
+  @@index([entityId])
+}
+
+/// Chain head anchors (append-only). DAILY / EXPORT seals are copied outside the database
+/// (log line, export manifest); an ANCHOR is the last row purged by retention.
+model AuditSeal {
+  id             String   @id @default(cuid())
+  organizationId String?
+  kind           String // DAILY | EXPORT | ANCHOR
+  seq            Int
+  hash           String
+  createdById    String?
+  createdAt      DateTime @default(now())
 
   @@index([organizationId, createdAt])
 }
@@ -350,6 +375,8 @@ model Employee {
   trialEndDate   DateTime? // fin de période d'essai
   exitDate       DateTime? // date de sortie (offboarding)
   exitReason     String?
+  /// personal data removed (retention or erasure request); the row stays for statistics
+  anonymizedAt   DateTime?
   createdById    String?
   updatedById    String?
   createdAt      DateTime              @default(now())
@@ -1039,6 +1066,9 @@ model Candidate {
   slot     InterviewSlot?
   messages CandidateMessage[]
 
+  /// personal data removed (retention or erasure request): CV file, vector, text and identity
+  anonymizedAt DateTime?
+
   createdById String?
   updatedById String?
   createdAt   DateTime  @default(now())
@@ -1094,4 +1124,110 @@ model CandidateMessage {
 
   @@index([organizationId, candidateId])
   @@index([status])
+}
+
+// ─────────────────────────── Compliance: retention, data subject requests, legal holds ───────────────────────────
+// docs/compliance/README.md. Nothing personal is erased without a human: policies start disabled,
+// erasure requests are executed by someone holding compliance:approve, a legal hold always wins.
+
+enum RetentionCategory {
+  CANDIDATE_NOT_HIRED
+  FORMER_EMPLOYEE
+  SURVEY_IDENTITY
+  AUDIT_LOG
+}
+
+enum RetentionAction {
+  ANONYMIZE
+  PURGE
+}
+
+model RetentionPolicy {
+  id             String            @id @default(cuid())
+  organizationId String
+  category       RetentionCategory
+  retentionDays  Int
+  action         RetentionAction
+  enabled        Boolean           @default(false)
+  updatedById    String?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  @@unique([organizationId, category])
+}
+
+model RetentionRun {
+  id             String    @id @default(cuid())
+  organizationId String
+  dryRun         Boolean
+  /// { [category]: { due, applied, held } }
+  results        Json      @default("{}")
+  triggeredById  String? // null = daily job
+  startedAt      DateTime  @default(now())
+  finishedAt     DateTime?
+
+  @@index([organizationId, startedAt])
+}
+
+enum DataSubjectType {
+  EMPLOYEE
+  CANDIDATE
+}
+
+enum DsrType {
+  ACCESS
+  ERASURE
+}
+
+enum DsrStatus {
+  OPEN
+  COMPLETED
+  REJECTED
+}
+
+model DataSubjectRequest {
+  id             String          @id @default(cuid())
+  organizationId String
+  reference      String // DSR-0001
+  type           DsrType
+  subjectType    DataSubjectType
+  subjectId      String
+  /// display name captured at creation (the subject may be anonymized afterwards)
+  subjectLabel   String
+  requesterEmail String?
+  channel        String? // e-mail, letter, in person…
+  notes          String?
+  receivedAt     DateTime        @default(now())
+  /// GDPR Art. 12(3): one month
+  dueAt          DateTime
+  status         DsrStatus       @default(OPEN)
+  resolution     String?
+  /// what was exported / anonymized (counts, never the data itself)
+  result         Json?
+  completedAt    DateTime?
+  completedById  String?
+  createdById    String?
+  updatedById    String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  deletedAt      DateTime?
+
+  @@unique([organizationId, reference])
+  @@index([organizationId, status, dueAt])
+}
+
+model LegalHold {
+  id             String          @id @default(cuid())
+  organizationId String
+  subjectType    DataSubjectType
+  subjectId      String
+  subjectLabel   String
+  reason         String
+  createdById    String?
+  createdAt      DateTime        @default(now())
+  releasedAt     DateTime?
+  releasedById   String?
+  updatedAt      DateTime        @updatedAt
+
+  @@index([organizationId, subjectType, subjectId])
 }
