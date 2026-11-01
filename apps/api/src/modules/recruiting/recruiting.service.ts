@@ -31,6 +31,9 @@ const CANDIDATE_ROW = {
   rank: true,
   shortlisted: true,
   decision: true,
+  email: true,
+  inviteStatus: true,
+  slot: { select: { startsAt: true, durationMinutes: true } },
   createdAt: true,
 } satisfies Prisma.CandidateSelect;
 
@@ -148,7 +151,7 @@ export class RecruitingService {
       include: { jobOpening: { select: { id: true, title: true, criteria: true, shortlistSize: true } } },
     });
     if (!c) throw new NotFoundException('Candidat introuvable');
-    const { fileKey: _key, ...rest } = c;
+    const { fileKey: _key, inviteToken: _token, ...rest } = c;
     return rest;
   }
 
@@ -186,7 +189,10 @@ export class RecruitingService {
 
   async removeCandidate(orgId: string, userId: string, id: string) {
     await this.getCandidate(orgId, id);
-    await this.prisma.candidate.update({ where: { id }, data: { deletedAt: new Date(), updatedById: userId } });
+    await this.prisma.$transaction([
+      this.prisma.interviewSlot.updateMany({ where: { candidateId: id }, data: { candidateId: null, bookedAt: null } }),
+      this.prisma.candidate.update({ where: { id }, data: { deletedAt: new Date(), updatedById: userId, inviteToken: null } }),
+    ]);
     await this.ai.deleteCandidate(id);
   }
 }

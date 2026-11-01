@@ -9,4 +9,5 @@ export type NotificationType =
   | 'trial_period_due'
   | 'handover_received'
   | 'license_expiring'
+  | 'recruiting_update'
   | 'generic';

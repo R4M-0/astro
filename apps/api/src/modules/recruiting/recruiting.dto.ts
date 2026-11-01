@@ -1,6 +1,8 @@
 import { Type } from 'class-transformer';
 import {
   ArrayMaxSize,
+  ArrayMinSize,
+  IsISO8601,
   IsArray,
   IsBoolean,
   IsIn,
@@ -43,6 +45,8 @@ export class UpdateOpeningDto {
   @IsOptional() @IsInt() @Min(1) @Max(500) retrievalSize?: number;
   @IsOptional() @IsInt() @Min(1) @Max(100) shortlistSize?: number;
   @IsOptional() @IsIn(OPENING_STATUSES as unknown as string[]) status?: string;
+  @IsOptional() @IsInt() @Min(1) @Max(30) reminderDays?: number;
+  @IsOptional() @IsInt() @Min(1) @Max(60) closeDays?: number;
 }
 
 export class SuggestCriteriaDto {
@@ -53,4 +57,42 @@ export class SuggestCriteriaDto {
 export class DecisionDto {
   @IsIn(DECISIONS as unknown as string[]) decision: (typeof DECISIONS)[number];
   @IsOptional() @IsString() @MaxLength(2000) reason?: string;
+}
+
+// ── pipeline 2 ──
+
+export class SlotDto {
+  @IsISO8601({ strict: true }) startsAt: string;
+  @IsOptional() @IsInt() @Min(10) @Max(480) durationMinutes?: number;
+  @IsOptional() @IsString() @MaxLength(300) location?: string;
+  @IsOptional() @IsString() @MaxLength(200) interviewer?: string;
+}
+
+export class CreateSlotsDto {
+  @IsArray() @ArrayMinSize(1) @ArrayMaxSize(100) @ValidateNested({ each: true }) @Type(() => SlotDto) slots: SlotDto[];
+}
+
+export class RequestDraftsDto {
+  @IsIn(['INVITATION', 'REJECTION']) kind: 'INVITATION' | 'REJECTION';
+}
+
+export class UpdateMessageDto {
+  @IsString() @IsNotEmpty() @MaxLength(300) subject: string;
+  @IsString() @IsNotEmpty() @MaxLength(10_000) body: string;
+}
+
+export class DraftMessageDto extends UpdateMessageDto {
+  @IsOptional() @IsString() @MaxLength(64) inReplyToId?: string;
+}
+
+export class ApproveMessagesDto {
+  @IsArray() @ArrayMinSize(1) @ArrayMaxSize(200) @IsString({ each: true }) ids: string[];
+}
+
+export class BookSlotDto {
+  @IsString() @IsNotEmpty() @MaxLength(64) slotId: string;
+}
+
+export class CandidateReplyDto {
+  @IsString() @IsNotEmpty() @MaxLength(2000) text: string;
 }

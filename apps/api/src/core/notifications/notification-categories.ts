@@ -8,6 +8,7 @@ const EXACT: Record<string, NotificationCategory> = {
   onboarding_assigned: 'people',
   trial_period_due: 'people',
   handover_received: 'people',
+  recruiting_update: 'people',
   mention: 'people',
   record_shared: 'people',
   entity_deleted: 'system',
