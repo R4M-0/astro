@@ -19,6 +19,7 @@ import {
   Send,
   Settings2,
   Sparkles,
+  ShieldCheck,
   ShieldHalf,
   Users,
 } from 'lucide-react';
@@ -105,6 +106,7 @@ export const NAV_GROUPS: NavGroup[] = [
     color: 'oklch(0.78 0.02 250)', // aluminium — tools
     items: [
       { key: 'hrSurveys', href: '/hr/surveys', icon: MessageSquareText, permission: 'hr-surveys:read', openDetails: true },
+      { key: 'compliance', href: '/compliance', icon: ShieldCheck, permission: 'compliance:read' },
       { key: 'admin', href: '/admin', icon: Building2, permission: ['organization:read', 'users:read', 'roles:read', 'audit-log:read'] },
     ],
   },

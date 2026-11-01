@@ -26,7 +26,7 @@ export interface ReadableEntry {
   actorName: string | null;
   /** performed by platform support while impersonating the actor */
   viaSupport: boolean;
-  category: 'create' | 'update' | 'delete' | 'workflow' | 'export' | 'other';
+  category: 'create' | 'update' | 'delete' | 'workflow' | 'export' | 'access' | 'compliance' | 'other';
   summary: string;
   /** what was created / deleted / submitted — every meaningful field */
   details: { label: string; value: Val }[];
@@ -35,6 +35,8 @@ export interface ReadableEntry {
   /** other records affected by the same operation */
   related: string[];
   technical: { method: string; route: string; ip: string | null; device: string | null };
+  /** tamper evidence: position in the chain, its hash, whether the body was erased */
+  integrity: { seq: number | null; hash: string | null; redacted: boolean };
 }
 
 export type AuditCategory = ReadableEntry['category'];
@@ -145,6 +147,10 @@ export class AuditLogService {
         return { action: { startsWith: 'DELETE ' } };
       case 'export':
         return { action: { startsWith: 'EXPORT ' } };
+      case 'access':
+        return { action: { startsWith: 'ACCESS ' } };
+      case 'compliance':
+        return { action: { startsWith: 'COMPLIANCE ' } };
       case 'workflow':
         return { OR: workflow, NOT: { action: { startsWith: 'DELETE ' } } };
       default:
@@ -251,7 +257,7 @@ export class AuditLogService {
     });
     const byActor = new Map<string, AuditLogEntry[]>();
     for (const r of [...rows].sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())) {
-      if (!r.actorId || r.action.startsWith('EXPORT ')) continue;
+      if (!r.actorId || /^(EXPORT|ACCESS|COMPLIANCE) /.test(r.action)) continue;
       if (!byActor.has(r.actorId)) byActor.set(r.actorId, []);
       byActor.get(r.actorId)!.push(r);
     }
@@ -347,7 +353,7 @@ export class AuditLogService {
     const clean = (v: unknown) => (typeof v === 'string' && v !== '[redacted]' ? v : null);
     const ref = clean(r.reference) ?? clean(r.code);
     const person = r.firstName && r.lastName ? `${r.firstName} ${r.lastName}` : null;
-    const rawName = (r.title ?? r.name ?? r.fileName ?? person ?? r.theme ?? r.label ?? r.subject ?? r.decision ??
+    const rawName = (r.title ?? r.name ?? person ?? r.fullName ?? r.subjectLabel ?? r.fileName ?? r.theme ?? r.label ?? r.subject ?? r.decision ??
       r.statement ?? r.description ?? r.body ?? null) as unknown;
     const name = typeof rawName === 'string' && rawName.trim() ? clip(stripHtml(rawName), 90) : null;
     if (ref && name) return `${ref} ${q(name)}`;
@@ -366,6 +372,9 @@ export class AuditLogService {
     const body = (row.after && typeof row.after === 'object' && !Array.isArray(row.after) ? row.after : {}) as Row;
     const isPrivate = PRIVATE_ROUTE.test(p.route);
     const fr = lang === 'fr';
+    if (['ACCESS', 'EXPORT', 'COMPLIANCE', 'GALAXY'].includes(p.method) || /^compliance\/retention\/(preview|run)$/.test(p.route)) {
+      return this.describeCompliance(row, p, body, ctx, lang, actorName);
+    }
 
     // what the route is about
     const lastStatic = p.statics.length - 1;
@@ -520,6 +529,87 @@ export class AuditLogService {
         ip: row.ip,
         device: this.device(row.userAgent, lang),
       },
+      integrity: { seq: row.seq, hash: row.hash, redacted: !!row.redactedAt },
+    };
+  }
+
+  /**
+   * Reads, exports and compliance events (docs/compliance): ACCESS <route>, EXPORT <route>,
+   * COMPLIANCE <event>. Written by AuditWriter, never by the generic request path.
+   */
+  private describeCompliance(
+    row: AuditLogEntry,
+    p: Parsed,
+    body: Row,
+    ctx: { labels: Map<string, string>; records: Map<string, Row> },
+    lang: Lang,
+    actorName: string | null,
+  ): ReadableEntry {
+    const fr = lang === 'fr';
+    const noun = row.entityType ? MODEL_NOUNS[row.entityType] : undefined;
+    const label = row.entityId ? (ctx.labels.get(row.entityId) ?? null) : null;
+    const what = noun
+      ? fr ? (label ? `${frDef(noun)} ${label}` : frIndef(noun)) : label ? `the ${noun.en} ${label}` : enIndef(noun.en)
+      : fr ? 'un élément' : 'an item';
+    let category: AuditCategory = 'compliance';
+    let summary: string;
+    const count = (k: string) => (typeof body[k] === 'number' ? (body[k] as number) : 0);
+    if (p.method === 'ACCESS') {
+      category = 'access';
+      summary = /\/file$/.test(p.route)
+        ? fr ? `a téléchargé le CV ${frOf(noun ?? NOUNS['recruiting/candidates'])} ${label ?? ''}`.trim() : `downloaded the CV of ${what}`
+        : p.route === 'galaxy/employee.view'
+          ? fr ? `a consulté dans la galaxie RH ${what}` : `viewed ${what} in the workforce galaxy`
+          : p.route === 'galaxy/ask'
+            ? fr ? 'a posé une question à la galaxie RH' : 'asked the workforce galaxy a question'
+            : p.route.startsWith('galaxy/')
+              ? fr ? `a consulté la galaxie RH (${p.route.slice(7)})` : `used the workforce galaxy (${p.route.slice(7)})`
+          : fr ? `a consulté ${what}` : `viewed ${what}`;
+    } else if (p.method === 'EXPORT') {
+      category = 'export';
+      summary = p.route.startsWith('compliance/audit')
+        ? fr ? "a exporté le journal d'audit (avec son sceau d'intégrité)" : 'exported the audit trail (with its integrity seal)'
+        : p.route.startsWith('compliance/requests')
+          ? fr ? `a exporté toutes les données personnelles de la demande ${label ?? ''}`.trim() : `exported all personal data for the request ${label ?? ''}`.trim()
+          : fr ? `a exporté ${what}` : `exported ${what}`;
+    } else if (p.method === 'GALAXY') {
+      category = 'workflow';
+      const action = p.route.replace(/^galaxy\//, '');
+      summary = fr ? `a agi depuis la galaxie RH (${action})` : `acted from the workforce galaxy (${action})`;
+    } else {
+      const event = p.route;
+      const subject = typeof body.subjectLabel === 'string' ? body.subjectLabel : label;
+      summary =
+        event === 'compliance/retention/preview'
+          ? fr ? 'a prévisualisé les durées de conservation (rien n’a été modifié)' : 'previewed retention (nothing changed)'
+          : event === 'compliance/retention/run'
+            ? fr ? 'a lancé l’application des durées de conservation' : 'started applying retention'
+            : event === 'retention.run'
+          ? fr
+            ? `a appliqué les durées de conservation : ${count('anonymized')} personne(s) anonymisée(s), ${count('purged')} entrée(s) d'audit purgée(s), ${count('held')} sous gel juridique`
+            : `applied retention: ${count('anonymized')} people anonymized, ${count('purged')} audit entries purged, ${count('held')} under legal hold`
+          : event === 'subject.anonymized'
+            ? fr ? `a anonymisé les données de ${subject ?? 'une personne'}` : `anonymized the personal data of ${subject ?? 'a person'}`
+            : event === 'audit.sealed'
+              ? fr ? "a scellé le journal d'audit" : 'sealed the audit trail'
+              : fr ? `événement de conformité « ${event} »` : `compliance event “${event}”`;
+    }
+    const details: ReadableEntry['details'] = Object.entries(body)
+      .filter(([, v]) => typeof v === 'number' || typeof v === 'string')
+      .map(([k, v]) => ({ label: FIELDS_FR[k] && fr ? FIELDS_FR[k] : humanizeKey(k), value: { t: String(v) } }));
+    return {
+      id: row.id,
+      createdAt: row.createdAt.toISOString(),
+      actorId: row.actorId,
+      actorName: actorName ?? (row.actorId ? null : fr ? 'Système' : 'System'),
+      viaSupport: !!row.impersonatedById,
+      category,
+      summary: cap(summary),
+      details,
+      changes: [],
+      related: [],
+      technical: { method: p.method, route: p.route, ip: row.ip, device: this.device(row.userAgent, lang) },
+      integrity: { seq: row.seq, hash: row.hash, redacted: !!row.redactedAt },
     };
   }
 
@@ -545,11 +635,6 @@ export class AuditLogService {
     };
     const linkRow = (model: string) => history.find((h) => h.entityType === model);
 
-    if (p.method === 'EXPORT') {
-      return fr
-        ? "a téléchargé l'export complet des données de l'entreprise (archive ZIP : tous les registres, l'historique, le journal d'audit)"
-        : 'downloaded the full company data export (ZIP archive: every register, the history and the audit log)';
-    }
     if (r === 'attachments/presign') {
       return fr
         ? `a joint le fichier ${q(body.fileName)} à ${target(body.entityType, body.entityId)}`

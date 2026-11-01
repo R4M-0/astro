@@ -100,7 +100,8 @@
     "competencies": "Competencies",
     "trainings": "Training",
     "recruiting": "Recruiting",
-    "recruitingOpenings": "Openings & candidates"
+    "recruitingOpenings": "Openings & candidates",
+    "compliance": "Compliance"
   },
   "auth": {
     "loginTitle": "Sign in to Constella",
@@ -467,7 +468,9 @@
         "delete": "Deletion",
         "workflow": "Approval / follow-up step",
         "export": "Data export",
-        "other": "Other operation"
+        "other": "Other operation",
+        "access": "Personal data viewed",
+        "compliance": "Compliance (GDPR, retention)"
       },
       "today": "Today",
       "yesterday": "Yesterday",
@@ -485,7 +488,9 @@
       "ip": "IP address",
       "localNetwork": "local network",
       "technicalRef": "Technical reference",
-      "viaSupport": "via support"
+      "viaSupport": "via support",
+      "chain": "Link #{seq} of the integrity chain",
+      "redacted": "content erased (GDPR), proof kept"
     },
     "groups": {
       "title": "Groups",
@@ -567,7 +572,8 @@
       "messages": "Messaging",
       "notifications": "Notifications",
       "search": "Search",
-      "recruiting": "Recruiting (CVs & ranking)"
+      "recruiting": "Recruiting (CVs & ranking)",
+      "compliance": "Compliance (GDPR, audit)"
     },
     "visibility": {
       "saved": "Visibility updated",
@@ -2201,5 +2207,249 @@
     "pageHint": "On this page: {count, plural, one {# item to handle} other {# items to handle}}. First up: {title}.",
     "pageHintNone": "Nothing to report here.",
     "jobs": "My jobs: I run the daily rounds of what needs attention, deliver your mail, and inspect every page."
+  },
+  "compliance": {
+    "title": "Compliance",
+    "desc": "Audit trail integrity, GDPR requests, retention, legal holds and the record of processing.",
+    "tabs": {
+      "overview": "Overview",
+      "requests": "GDPR requests",
+      "retention": "Retention",
+      "holds": "Legal holds",
+      "register": "Record of processing"
+    },
+    "overview": {
+      "checksTitle": "Checks",
+      "chainTitle": "Tamper-evident audit trail",
+      "chainIntro": "Every entry is chained to the previous one by a SHA-256 hash computed by the database. Any edit, deletion or rewrite shows at verification.",
+      "head": "Latest link",
+      "lastSeal": "Latest seal",
+      "verify": "Verify the chain",
+      "verifyOk": "Chain intact: {entries} entries verified",
+      "verifyBroken": "Break detected at link #{seq} ({reason})",
+      "exportHint": "The export carries a manifest with the latest link's hash: keep it, it proves later that nothing was rewritten.",
+      "reasons": {
+        "link": "broken link",
+        "gap": "entry deleted",
+        "hash": "entry edited",
+        "body": "content edited",
+        "seal": "no longer matches a seal"
+      },
+      "tiles": {
+        "activeEmployees": "Active employees",
+        "formerEmployees": "Former employees",
+        "candidates": "Candidates",
+        "anonymized": "People anonymized",
+        "openRequests": "Open requests",
+        "legalHolds": "Active legal holds"
+      },
+      "checks": {
+        "chainTitle": "Audit trail integrity",
+        "chainNever": "Never verified: run a verification.",
+        "chainOk": "{entries} entries verified {when}, no break.",
+        "chainBroken": "Break at link #{seq} ({reason}). Tell your DPO.",
+        "sealTitle": "Daily seal",
+        "sealNever": "No seal yet (the nightly job adds one every day).",
+        "seal": "Last seal {hours} h ago (link #{seq}).",
+        "writesTitle": "Audit writes",
+        "writesOk": "No entry lost.",
+        "writesFailed": "{count, plural, one {# entry could not be written} other {# entries could not be written}}: check the server logs (AUDIT_WRITE_FAILED).",
+        "retentionTitle": "Retention",
+        "retention": "{enabled} of {total} categories applied.",
+        "requestsTitle": "GDPR requests",
+        "requests": "{open} open, {dueSoon} due within 7 days.",
+        "requestsOverdue": "{count, plural, one {# request is} other {# requests are}} past the one-month deadline."
+      }
+    },
+    "subjects": {
+      "placeholder": "Name, e-mail or reference…",
+      "none": "Nobody found.",
+      "clear": "Change person",
+      "status": {
+        "active": "Employed",
+        "former": "Former",
+        "deleted": "Deleted",
+        "anonymized": "Anonymized",
+        "pending": "Candidate",
+        "approved": "Shortlisted candidate",
+        "rejected": "Rejected candidate"
+      }
+    },
+    "requests": {
+      "intro": "Right of access and right to erasure (GDPR Art. 15, 17, 20). An answer is due within one month of receipt.",
+      "new": "New request",
+      "newDesc": "Record the request as soon as it arrives: the one-month deadline starts on that date.",
+      "create": "Save",
+      "created": "Request {reference} saved",
+      "empty": "No request.",
+      "allStatuses": "All statuses",
+      "overdue": "Overdue",
+      "status": {
+        "OPEN": "Open",
+        "COMPLETED": "Completed",
+        "REJECTED": "Rejected"
+      },
+      "type": {
+        "ACCESS": "Access / portability",
+        "ERASURE": "Erasure"
+      },
+      "columns": {
+        "reference": "Reference",
+        "type": "Type",
+        "subject": "Data subject",
+        "received": "Received",
+        "due": "Due",
+        "status": "Status"
+      },
+      "fields": {
+        "type": "Request type",
+        "subject": "Data subject",
+        "subjectHint": "Employee or candidate.",
+        "receivedAt": "Received on",
+        "receivedAtHint": "Due one month later.",
+        "channel": "Channel",
+        "channelPlaceholder": "e-mail, letter, in person…",
+        "requesterEmail": "Requester e-mail",
+        "notes": "Notes"
+      }
+    },
+    "request": {
+      "back": "GDPR requests",
+      "daysLeft": "{count, plural, =0 {Due today} one {# day left} other {# days left}}",
+      "lateBy": "{count, plural, one {# day late} other {# days late}}",
+      "holdTitle": "Active legal hold: no erasure until it is released.",
+      "subject": "Person",
+      "received": "Received",
+      "due": "Due",
+      "requester": "Requester",
+      "notes": "Notes",
+      "closed": "Closed on",
+      "resolution": "Answer / reason",
+      "subjectType": {
+        "EMPLOYEE": "employee",
+        "CANDIDATE": "candidate"
+      },
+      "accessTitle": "Data to hand over",
+      "accessDesc": "One JSON file with everything Constella holds about the person: file, account, competencies, training, journeys, named survey answers, history and the list of who viewed or changed their file. The export is recorded in the audit trail.",
+      "lastExport": "Last export on {date}",
+      "export": "Export the data",
+      "complete": "Mark as completed",
+      "erasureTitle": "Erasure",
+      "erasureDesc": "Anonymizes the person: identity, contact details, national ID, reasons, CV and attachments are erased, as are their copies in the history and the audit trail (the integrity chain still verifies). Levels, attendance and scores stay for statistics. Refused while the employment contract runs or a legal hold is active. Irreversible.",
+      "execute": "Execute the erasure",
+      "reject": "Reject the request",
+      "result": {
+        "history": "{count} history line(s) cleaned",
+        "audit": "{count} audit entry(ies) redacted",
+        "files": "{count} file(s) deleted"
+      },
+      "done": {
+        "complete": "Request closed",
+        "reject": "Request rejected",
+        "execute": "Erasure executed"
+      },
+      "confirm": {
+        "complete": {
+          "title": "Close the request",
+          "desc": "Say how the data was handed over.",
+          "cta": "Close"
+        },
+        "reject": {
+          "title": "Reject the request",
+          "desc": "A reason is required (identity not verified, manifestly unfounded request…).",
+          "cta": "Reject"
+        },
+        "execute": {
+          "title": "Erase for good",
+          "desc": "The personal data linked to {reference} will be anonymized. This cannot be undone.",
+          "type": "Type {reference} to confirm",
+          "cta": "Erase"
+        }
+      }
+    },
+    "retention": {
+      "intro": "Retention periods per category (CNIL guidance by default). Disabled until an administrator enables them; the preview shows what would be anonymized today. A legal hold always wins. The nightly job applies enabled categories at 03:30.",
+      "columns": {
+        "category": "Category",
+        "duration": "Period",
+        "action": "Action",
+        "due": "Due today",
+        "enabled": "Applied"
+      },
+      "categories": {
+        "CANDIDATE_NOT_HIRED": {
+          "name": "Candidates not hired",
+          "clock": "since the last update (rejected, opening closed or deleted)"
+        },
+        "FORMER_EMPLOYEE": {
+          "name": "Former employees",
+          "clock": "since the exit date"
+        },
+        "SURVEY_IDENTITY": {
+          "name": "Survey respondent identity",
+          "clock": "since the answer; answers stay"
+        },
+        "AUDIT_LOG": {
+          "name": "Audit trail",
+          "clock": "since the entry; purged behind an anchor seal"
+        }
+      },
+      "action": {
+        "ANONYMIZE": "Anonymize",
+        "PURGE": "Purge"
+      },
+      "years": "{count, plural, one {# year} other {# years}}",
+      "days": "{count} days",
+      "daysUnit": "days",
+      "held": "{count} on hold",
+      "on": "Yes",
+      "off": "No",
+      "saved": "Policy saved",
+      "preview": "Preview (changes nothing)",
+      "previewAt": "Preview of {date}",
+      "runNow": "Apply now",
+      "ran": "{count} item(s) processed",
+      "confirmTitle": "Apply retention now?",
+      "confirmDesc": "Enabled categories will be anonymized or purged now, except people under legal hold. Irreversible.",
+      "history": "Runs",
+      "noRuns": "No run yet.",
+      "manual": "manual",
+      "daily": "nightly job",
+      "applied": "{count} processed"
+    },
+    "holds": {
+      "intro": "A legal hold (litigation, labour inspection…) blocks erasure and automatic retention of one person's data until it is released.",
+      "new": "New hold",
+      "newDesc": "This person's data will no longer be erased, neither by a request nor by automatic retention.",
+      "create": "Place the hold",
+      "created": "Legal hold placed",
+      "released": "Hold released",
+      "empty": "No legal hold.",
+      "showReleased": "Show released holds",
+      "subject": "Data subject",
+      "reason": "Reason",
+      "reasonHint": "E.g. employment tribunal case no. …, social security audit…",
+      "since": "Since {date}",
+      "releasedOn": "released on {date}",
+      "release": "Release the hold"
+    },
+    "register": {
+      "intro": "Record of processing activities (GDPR Art. 30) for what Constella does with personal data. A starting point for your DPO to complete; retention reflects your active policies.",
+      "name": "Processing",
+      "fields": {
+        "purpose": "Purpose",
+        "legalBasis": "Legal basis",
+        "subjects": "Data subjects",
+        "dataCategories": "Data",
+        "recipients": "Recipients",
+        "retention": "Retention",
+        "ai": "AI and safeguards"
+      },
+      "aiBadge": "AI",
+      "policyOn": "retention applied",
+      "policyOff": "retention not applied",
+      "open": "Open the module",
+      "fileName": "record-of-processing"
+    }
   }
 }

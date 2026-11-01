@@ -14,6 +14,7 @@ export const RESOURCES = [
   'hr-surveys',
   'recruiting',
   'audit-log',
+  'compliance',
   'notifications',
 ] as const;
 export type Resource = (typeof RESOURCES)[number];
@@ -44,6 +45,9 @@ export const RESOURCE_ACTIONS: Record<Resource, readonly Action[]> = {
   'hr-surveys': ['read', 'create', 'update', 'delete'],
   'recruiting': ['read', 'create', 'update', 'delete', 'approve'],
   'audit-log': ['read'],
+  // read: overview, register, requests · update: policies, holds, requests
+  // approve: execute an erasure, run retention now · export: subject export, audit export
+  'compliance': ['read', 'update', 'approve', 'export'],
   'notifications': ['read'],
 };
 
@@ -58,7 +62,7 @@ export const resourceSupports = (resource: string, action: string): boolean =>
   SUPPORTED.has(`${resource}:${action}`);
 
 const ALL_MODULE_RESOURCES: Resource[] = RESOURCES.filter(
-  (r) => !['organization', 'users', 'roles', 'audit-log'].includes(r),
+  (r) => !['organization', 'users', 'roles', 'audit-log', 'compliance'].includes(r),
 ) as Resource[];
 /** Candidate files: only roles that recruit see them by default (not managers / viewers). */
 const BROAD_RESOURCES = ALL_MODULE_RESOURCES.filter((r) => r !== 'recruiting');
@@ -83,11 +87,15 @@ const ROLE_GRANTS: Record<string, PermissionKey[]> = {
     'roles:admin',
     'audit-log:read',
   ],
+  // erasure (compliance:approve) stays with the organization admin
   hr_manager: [
     ...ALL_MODULE_RESOURCES.flatMap((r) => full(r)),
     'users:read',
     'roles:read',
     'audit-log:read',
+    'compliance:read',
+    'compliance:update',
+    'compliance:export',
   ],
   manager: [
     ...BROAD_RESOURCES.flatMap((r) => read(r)),

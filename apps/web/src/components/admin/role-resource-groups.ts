@@ -2,7 +2,7 @@ import { RESOURCES } from '@astro/shared';
 
 /** Permission-matrix sections — mirror the navigation (people / competencies / trainings / tools). */
 export const RESOURCE_SECTIONS: { id: string; resources: string[] }[] = [
-  { id: 'administration', resources: ['organization', 'users', 'roles', 'audit-log'] },
+  { id: 'administration', resources: ['organization', 'users', 'roles', 'audit-log', 'compliance'] },
   { id: 'people', resources: ['employees'] },
   { id: 'competencies', resources: ['skills', 'job-descriptions', 'competency-evaluations'] },
   { id: 'trainings', resources: ['hr-trainings'] },

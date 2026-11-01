@@ -14,6 +14,6 @@ import { RecruitingService } from './recruiting.service';
   imports: [BullModule.registerQueue({ name: QUEUE_RECRUITING }), MailModule],
   controllers: [OpeningsController, CandidatesController, OutreachController, BookingController],
   providers: [RecruitingAiService, RecruitingPipelineService, RecruitingService, OutreachService],
-  exports: [RecruitingPipelineService, OutreachService],
+  exports: [RecruitingPipelineService, OutreachService, RecruitingAiService],
 })
 export class RecruitingModule {}

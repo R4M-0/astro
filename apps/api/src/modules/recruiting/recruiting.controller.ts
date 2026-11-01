@@ -5,6 +5,7 @@ import { Throttle } from '@nestjs/throttler';
 import { AuthUser, CurrentUser } from '../../common/decorators/current-user.decorator';
 import { OrgId } from '../../common/decorators/org.decorator';
 import { RequirePermissions } from '../../common/decorators/require-permissions.decorator';
+import { AuditAccess } from '../../core/audit-log/audit-access.decorator';
 import { CV_MAX_BYTES } from './cv-text';
 import { RecruitingPipelineService } from './recruiting-pipeline.service';
 import { CreateOpeningDto, DecisionDto, SuggestCriteriaDto, UpdateOpeningDto } from './recruiting.dto';
@@ -85,12 +86,14 @@ export class CandidatesController {
 
   @Get(':id')
   @RequirePermissions('recruiting:read')
+  @AuditAccess('Candidate')
   get(@OrgId() orgId: string, @Param('id') id: string) {
     return this.recruiting.getCandidate(orgId, id);
   }
 
   @Get(':id/file')
   @RequirePermissions('recruiting:read')
+  @AuditAccess('Candidate')
   file(@OrgId() orgId: string, @Param('id') id: string) {
     return this.recruiting.candidateFileUrl(orgId, id);
   }

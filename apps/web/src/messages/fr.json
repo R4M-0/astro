@@ -100,7 +100,8 @@
     "competencies": "Compétences",
     "trainings": "Formations",
     "recruiting": "Recrutement",
-    "recruitingOpenings": "Offres & candidatures"
+    "recruitingOpenings": "Offres & candidatures",
+    "compliance": "Conformité"
   },
   "auth": {
     "loginTitle": "Connexion à Constella",
@@ -467,7 +468,9 @@
         "delete": "Suppression",
         "workflow": "Étape de validation / suivi",
         "export": "Export de données",
-        "other": "Autre opération"
+        "other": "Autre opération",
+        "access": "Consultation de données personnelles",
+        "compliance": "Conformité (RGPD, conservation)"
       },
       "today": "Aujourd'hui",
       "yesterday": "Hier",
@@ -485,7 +488,9 @@
       "ip": "Adresse IP",
       "localNetwork": "réseau local",
       "technicalRef": "Référence technique",
-      "viaSupport": "via support"
+      "viaSupport": "via support",
+      "chain": "Maillon n° {seq} de la chaîne d’intégrité",
+      "redacted": "contenu effacé (RGPD), preuve conservée"
     },
     "groups": {
       "title": "Groupes",
@@ -567,7 +572,8 @@
       "messages": "Messagerie",
       "notifications": "Notifications",
       "search": "Recherche",
-      "recruiting": "Recrutement (CV & classement)"
+      "recruiting": "Recrutement (CV & classement)",
+      "compliance": "Conformité (RGPD, audit)"
     },
     "visibility": {
       "saved": "Visibilité mise à jour",
@@ -2201,5 +2207,249 @@
     "pageHint": "Sur cette page : {count, plural, one {# point à traiter} other {# points à traiter}}. Le premier : {title}.",
     "pageHintNone": "Rien à signaler ici.",
     "jobs": "Mes tâches : je fais la tournée des points à traiter, je distribue le courrier et j’inspecte chaque page."
+  },
+  "compliance": {
+    "title": "Conformité",
+    "desc": "Intégrité du journal d'audit, demandes RGPD, durées de conservation, gels juridiques et registre des traitements.",
+    "tabs": {
+      "overview": "Vue d'ensemble",
+      "requests": "Demandes RGPD",
+      "retention": "Conservation",
+      "holds": "Gels juridiques",
+      "register": "Registre des traitements"
+    },
+    "overview": {
+      "checksTitle": "Contrôles",
+      "chainTitle": "Journal d'audit infalsifiable",
+      "chainIntro": "Chaque entrée est chaînée à la précédente par une empreinte SHA-256 calculée par la base. Toute modification, suppression ou réécriture apparaît à la vérification.",
+      "head": "Dernier maillon",
+      "lastSeal": "Dernier sceau",
+      "verify": "Vérifier la chaîne",
+      "verifyOk": "Chaîne intacte : {entries} entrées vérifiées",
+      "verifyBroken": "Rupture détectée au maillon n° {seq} ({reason})",
+      "exportHint": "L'export contient un manifeste avec l'empreinte du dernier maillon : conservez-le, il permettra de prouver plus tard que rien n'a été réécrit.",
+      "reasons": {
+        "link": "lien rompu",
+        "gap": "entrée supprimée",
+        "hash": "entrée modifiée",
+        "body": "contenu modifié",
+        "seal": "ne correspond plus à un sceau"
+      },
+      "tiles": {
+        "activeEmployees": "Collaborateurs actifs",
+        "formerEmployees": "Anciens collaborateurs",
+        "candidates": "Candidats",
+        "anonymized": "Personnes anonymisées",
+        "openRequests": "Demandes ouvertes",
+        "legalHolds": "Gels juridiques actifs"
+      },
+      "checks": {
+        "chainTitle": "Intégrité du journal d'audit",
+        "chainNever": "Jamais vérifié : lancez une vérification.",
+        "chainOk": "{entries} entrées vérifiées {when}, aucune rupture.",
+        "chainBroken": "Rupture au maillon n° {seq} ({reason}). Prévenez votre DPO.",
+        "sealTitle": "Sceau quotidien",
+        "sealNever": "Aucun sceau encore (le job de nuit en pose un chaque jour).",
+        "seal": "Dernier sceau il y a {hours} h (maillon n° {seq}).",
+        "writesTitle": "Écritures du journal",
+        "writesOk": "Aucune entrée perdue.",
+        "writesFailed": "{count, plural, one {# entrée n'a pas pu être écrite} other {# entrées n'ont pas pu être écrites}} : consultez les journaux du serveur (AUDIT_WRITE_FAILED).",
+        "retentionTitle": "Durées de conservation",
+        "retention": "{enabled} catégorie(s) sur {total} appliquée(s).",
+        "requestsTitle": "Demandes RGPD",
+        "requests": "{open} ouverte(s), {dueSoon} à échéance sous 7 jours.",
+        "requestsOverdue": "{count, plural, one {# demande en retard} other {# demandes en retard}} sur le délai d'un mois."
+      }
+    },
+    "subjects": {
+      "placeholder": "Nom, e-mail ou matricule…",
+      "none": "Aucune personne trouvée.",
+      "clear": "Changer de personne",
+      "status": {
+        "active": "En poste",
+        "former": "Ancien",
+        "deleted": "Supprimé",
+        "anonymized": "Anonymisé",
+        "pending": "Candidat",
+        "approved": "Candidat retenu",
+        "rejected": "Candidat non retenu"
+      }
+    },
+    "requests": {
+      "intro": "Droit d'accès et droit à l'effacement (RGPD art. 15, 17, 20). Réponse due sous un mois à compter de la réception.",
+      "new": "Nouvelle demande",
+      "newDesc": "Enregistrez la demande dès sa réception : l'échéance d'un mois part de cette date.",
+      "create": "Enregistrer",
+      "created": "Demande {reference} enregistrée",
+      "empty": "Aucune demande.",
+      "allStatuses": "Tous les statuts",
+      "overdue": "En retard",
+      "status": {
+        "OPEN": "Ouverte",
+        "COMPLETED": "Traitée",
+        "REJECTED": "Refusée"
+      },
+      "type": {
+        "ACCESS": "Accès / portabilité",
+        "ERASURE": "Effacement"
+      },
+      "columns": {
+        "reference": "Référence",
+        "type": "Type",
+        "subject": "Personne concernée",
+        "received": "Reçue le",
+        "due": "Échéance",
+        "status": "Statut"
+      },
+      "fields": {
+        "type": "Type de demande",
+        "subject": "Personne concernée",
+        "subjectHint": "Collaborateur ou candidat.",
+        "receivedAt": "Reçue le",
+        "receivedAtHint": "Échéance : un mois plus tard.",
+        "channel": "Canal",
+        "channelPlaceholder": "e-mail, courrier, en main propre…",
+        "requesterEmail": "E-mail du demandeur",
+        "notes": "Notes"
+      }
+    },
+    "request": {
+      "back": "Demandes RGPD",
+      "daysLeft": "{count, plural, =0 {Échéance aujourd'hui} one {# jour restant} other {# jours restants}}",
+      "lateBy": "{count, plural, one {# jour de retard} other {# jours de retard}}",
+      "holdTitle": "Gel juridique actif : aucun effacement possible tant qu'il n'est pas levé.",
+      "subject": "Personne",
+      "received": "Reçue le",
+      "due": "Échéance",
+      "requester": "Demandeur",
+      "notes": "Notes",
+      "closed": "Clôturée le",
+      "resolution": "Réponse / motif",
+      "subjectType": {
+        "EMPLOYEE": "collaborateur",
+        "CANDIDATE": "candidat"
+      },
+      "accessTitle": "Données à transmettre",
+      "accessDesc": "Un fichier JSON avec tout ce que Constella détient sur la personne : dossier, compte, compétences, formations, parcours, réponses nominatives, historique et la liste de qui a consulté ou modifié son dossier. L'export est tracé dans le journal d'audit.",
+      "lastExport": "Dernier export le {date}",
+      "export": "Exporter les données",
+      "complete": "Marquer comme traitée",
+      "erasureTitle": "Effacement",
+      "erasureDesc": "Anonymise la personne : identité, coordonnées, CIN, motifs, CV et pièces jointes sont effacés, ainsi que leurs copies dans l'historique et le journal d'audit (la chaîne d'intégrité reste vérifiable). Les niveaux, présences et scores restent pour les statistiques. Refusé tant que le contrat de travail court ou qu'un gel juridique est actif. Irréversible.",
+      "execute": "Exécuter l'effacement",
+      "reject": "Refuser la demande",
+      "result": {
+        "history": "{count} ligne(s) d'historique nettoyée(s)",
+        "audit": "{count} entrée(s) d'audit expurgée(s)",
+        "files": "{count} fichier(s) supprimé(s)"
+      },
+      "done": {
+        "complete": "Demande clôturée",
+        "reject": "Demande refusée",
+        "execute": "Effacement exécuté"
+      },
+      "confirm": {
+        "complete": {
+          "title": "Clôturer la demande",
+          "desc": "Indiquez comment les données ont été transmises.",
+          "cta": "Clôturer"
+        },
+        "reject": {
+          "title": "Refuser la demande",
+          "desc": "Le motif est obligatoire (identité non vérifiée, demande manifestement infondée…).",
+          "cta": "Refuser"
+        },
+        "execute": {
+          "title": "Effacer définitivement",
+          "desc": "Les données personnelles liées à {reference} seront anonymisées. Cette action ne peut pas être annulée.",
+          "type": "Tapez {reference} pour confirmer",
+          "cta": "Effacer"
+        }
+      }
+    },
+    "retention": {
+      "intro": "Durées de conservation par catégorie (recommandations CNIL par défaut). Désactivées tant qu'un administrateur ne les active pas ; l'aperçu montre ce qui serait anonymisé aujourd'hui. Un gel juridique l'emporte toujours. Le job de nuit applique les catégories activées à 03:30.",
+      "columns": {
+        "category": "Catégorie",
+        "duration": "Durée",
+        "action": "Action",
+        "due": "Concernés aujourd'hui",
+        "enabled": "Appliquée"
+      },
+      "categories": {
+        "CANDIDATE_NOT_HIRED": {
+          "name": "Candidats non retenus",
+          "clock": "depuis la dernière mise à jour (refusé, offre close ou supprimée)"
+        },
+        "FORMER_EMPLOYEE": {
+          "name": "Anciens collaborateurs",
+          "clock": "depuis la date de sortie"
+        },
+        "SURVEY_IDENTITY": {
+          "name": "Identité des répondants aux enquêtes",
+          "clock": "depuis la réponse ; les réponses restent"
+        },
+        "AUDIT_LOG": {
+          "name": "Journal d'audit",
+          "clock": "depuis l'entrée ; purge derrière un sceau d'ancrage"
+        }
+      },
+      "action": {
+        "ANONYMIZE": "Anonymiser",
+        "PURGE": "Purger"
+      },
+      "years": "{count, plural, one {# an} other {# ans}}",
+      "days": "{count} jours",
+      "daysUnit": "jours",
+      "held": "{count} sous gel",
+      "on": "Oui",
+      "off": "Non",
+      "saved": "Politique enregistrée",
+      "preview": "Aperçu (sans rien modifier)",
+      "previewAt": "Aperçu du {date}",
+      "runNow": "Appliquer maintenant",
+      "ran": "{count} élément(s) traité(s)",
+      "confirmTitle": "Appliquer les durées de conservation ?",
+      "confirmDesc": "Les catégories activées seront anonymisées ou purgées maintenant, sauf les personnes sous gel juridique. Irréversible.",
+      "history": "Exécutions",
+      "noRuns": "Aucune exécution pour l'instant.",
+      "manual": "manuelle",
+      "daily": "job de nuit",
+      "applied": "{count} traité(s)"
+    },
+    "holds": {
+      "intro": "Un gel juridique (contentieux, contrôle de l'inspection du travail…) bloque l'effacement et la conservation automatique des données d'une personne jusqu'à sa levée.",
+      "new": "Nouveau gel",
+      "newDesc": "Les données de cette personne ne seront plus effacées, ni par une demande ni par la conservation automatique.",
+      "create": "Poser le gel",
+      "created": "Gel juridique posé",
+      "released": "Gel levé",
+      "empty": "Aucun gel juridique.",
+      "showReleased": "Afficher les gels levés",
+      "subject": "Personne concernée",
+      "reason": "Motif",
+      "reasonHint": "Ex. : contentieux prud'homal n° …, contrôle URSSAF…",
+      "since": "Depuis le {date}",
+      "releasedOn": "levé le {date}",
+      "release": "Lever le gel"
+    },
+    "register": {
+      "intro": "Registre des activités de traitement (RGPD art. 30) de ce que fait Constella avec les données personnelles. Point de départ à compléter par votre DPO ; la conservation reflète vos politiques actives.",
+      "name": "Traitement",
+      "fields": {
+        "purpose": "Finalité",
+        "legalBasis": "Base légale",
+        "subjects": "Personnes concernées",
+        "dataCategories": "Données",
+        "recipients": "Destinataires",
+        "retention": "Conservation",
+        "ai": "IA et garanties"
+      },
+      "aiBadge": "IA",
+      "policyOn": "conservation appliquée",
+      "policyOff": "conservation non appliquée",
+      "open": "Ouvrir le module",
+      "fileName": "registre-des-traitements"
+    }
   }
 }

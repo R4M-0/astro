@@ -6,6 +6,7 @@ import { Granted } from '../../common/decorators/granted.decorator';
 import { OrgId } from '../../common/decorators/org.decorator';
 import { Public } from '../../common/decorators/public.decorator';
 import { RequirePermissions } from '../../common/decorators/require-permissions.decorator';
+import { AuditAccess } from '../../core/audit-log/audit-access.decorator';
 import {
   CreateEmployeeDto,
   CreateJobDescriptionDto,
@@ -50,6 +51,7 @@ export class EmployeesController {
 
   @Get(':id')
   @RequirePermissions('employees:read')
+  @AuditAccess('Employee')
   get(@OrgId() orgId: string, @Param('id') id: string) {
     return this.employees.get(orgId, id);
   }

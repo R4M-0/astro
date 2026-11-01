@@ -7,6 +7,7 @@ import { AuthUser, CurrentUser } from '../../common/decorators/current-user.deco
 import { Granted } from '../../common/decorators/granted.decorator';
 import { OrgId } from '../../common/decorators/org.decorator';
 import { RequirePermissions } from '../../common/decorators/require-permissions.decorator';
+import { AuditAccess } from '../../core/audit-log/audit-access.decorator';
 import {
   CreateJourneyDto,
   HandoverDto,
@@ -181,6 +182,8 @@ export class HrImportController {
 
   @Get(':kind/template')
   @RequirePermissions('employees:read')
+  // the competency matrix template is pre-filled with every collaborator: a bulk export of personal data
+  @AuditAccess('Employee', { export: true, param: '-' })
   async template(@OrgId() orgId: string, @Param('kind') kind: string, @Res() res: Response) {
     const k = this.kind(kind);
     const body = await this.importer.template(orgId, k);

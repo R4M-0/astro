@@ -1,12 +1,12 @@
 import "dotenv/config";
-import { appendFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { randomUUID } from "node:crypto";
 import express from "express";
 import cors from "cors";
 import { ask, draft } from "./ask.js";
 import { auth, canAct, canReadMail, canSeeGalaxy, limit, visibleTo, type Ctx } from "./auth.js";
-import { DATA_DIR, type Email, type Employee, getDataset, isHrMail, participants, saveEmail } from "./data.js";
+import { DATA_DIR, type Email, type Employee, getDataset, isHrMail, participants, pool, saveEmail } from "./data.js";
 import { buildDigest, overview } from "./digest.js";
 import { events, sendViaMailpit, startMailPoller } from "./ingest.js";
 import { analyse, bridges, galaxy, signals, topTopics } from "./graph.js";
@@ -22,10 +22,20 @@ const api = express.Router();
 api.use(auth);
 const need = (ok: (c: Ctx) => boolean) => (req: express.Request, res: express.Response, next: express.NextFunction) => (ok(req.ctx) ? next() : res.status(403).json({ message: "Forbidden" }));
 
-// Audit: who looked at / did what about whom
-const AUDIT = join(DATA_DIR, "audit.jsonl");
-const audit = (c: Ctx, action: string, target?: string, extra: object = {}) =>
-  appendFileSync(AUDIT, JSON.stringify({ at: new Date().toISOString(), userId: c.userId, orgId: c.orgId, role: c.role, action, target, ...extra }) + "\n");
+// Audit: who looked at / did what about whom. Rows go to the API's AuditLogEntry table, where the
+// audit_chain_before_insert trigger chains them like every other entry (docs/compliance).
+// Reads are ACCESS rows; drafts, decisions and simulated mail are GALAXY rows.
+const READS = new Set(["employee.view", "ask", "digest.view"]);
+const audit = (c: Ctx, action: string, target?: string, extra: object = {}, entityId?: string) => {
+  const verb = READS.has(action) ? "ACCESS" : "GALAXY";
+  pool
+    .query(
+      `INSERT INTO "AuditLogEntry" (id, "organizationId", "actorId", action, "entityType", "entityId", "after")
+       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      [randomUUID(), c.orgId, c.userId, `${verb} galaxy/${action}`, entityId ? "Employee" : null, entityId ?? null, JSON.stringify({ role: c.role, target, ...extra })],
+    )
+    .catch((err) => console.error(`AUDIT_WRITE_FAILED galaxy/${action}: ${err?.message ?? err}`));
+};
 
 api.get("/galaxy", need(canSeeGalaxy), async (req, res) => {
   const ds = await getDataset(req.ctx.orgId);
@@ -36,7 +46,7 @@ api.get("/employees/:ref", async (req, res) => {
   const ds = await getDataset(req.ctx.orgId);
   const e = ds.byRef.get(req.params.ref);
   if (!e || !visibleTo(req.ctx)(e)) return res.status(404).json({ message: "Not found" });
-  audit(req.ctx, "employee.view", e.ref);
+  audit(req.ctx, "employee.view", e.ref, {}, e.id);
   const { edges, bc, deptLinks, topics } = analyse(ds);
   const neighbors = edges.filter(x => x.source === e.ref || x.target === e.ref)
     .map(x => ({ ref: x.source === e.ref ? x.target : x.source, weight: x.weight, topic: x.topic, hr: x.hr }))
@@ -147,9 +157,13 @@ api.post("/mail/send", need(canAct), limit(20), async (req, res) => {
   } catch (e: any) { res.status(502).json({ message: e?.message ?? "Send failed" }); }
 });
 
-api.get("/audit", need(canAct), (req, res) => {
-  const lines = existsSync(AUDIT) ? readFileSync(AUDIT, "utf8").trim().split("\n").filter(Boolean).map(l => JSON.parse(l)) : [];
-  res.json(lines.filter(l => l.orgId === req.ctx.orgId).slice(-200).reverse());
+api.get("/audit", need(canAct), async (req, res) => {
+  const { rows } = await pool.query(
+    `SELECT "createdAt", "actorId", action, "after" FROM "AuditLogEntry"
+      WHERE "organizationId" = $1 AND action LIKE '% galaxy/%' ORDER BY seq DESC LIMIT 200`,
+    [req.ctx.orgId],
+  );
+  res.json(rows.map((r) => ({ at: r.createdAt, userId: r.actorId, orgId: req.ctx.orgId, action: String(r.action).replace(/^\S+ galaxy\//, ""), ...(r.after ?? {}) })));
 });
 
 app.use(api);

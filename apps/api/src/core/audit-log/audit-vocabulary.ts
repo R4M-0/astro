@@ -34,6 +34,13 @@ export const NOUNS: Record<string, Noun> = {
   'surveys/questions': n("question d'enquête", 'f', 'survey question', 'HrSurveyQuestion'),
   'surveys/responses': n("réponse à l'enquête", 'f', 'survey response', 'HrSurveyResponse'),
   'trainings/participants': n('participant', 'm', 'participant', 'TrainingParticipant'),
+  // recruiting
+  'recruiting/candidates': n('candidat', 'm', 'candidate', 'Candidate'),
+  'recruiting/openings': n('offre d’emploi', 'f', 'job opening', 'JobOpening'),
+  // compliance (docs/compliance)
+  'compliance/requests': n('demande RGPD', 'f', 'data subject request', 'DataSubjectRequest'),
+  'compliance/legal-holds': n('gel juridique', 'm', 'legal hold', 'LegalHold'),
+  'compliance/retention': n('politique de conservation', 'f', 'retention policy', 'RetentionPolicy'),
   // organisation & admin
   organizations: n('organisation', 'f', 'organization', 'Organization'),
   'organizations/current': n('organisation', 'f', 'organization', 'Organization'),
@@ -82,6 +89,9 @@ export const VERBS: Record<string, { fr: string; en: string }> = {
   restore: { fr: 'a restauré', en: 'restored' },
   transition: { fr: "a fait avancer l'état de", en: 'moved forward' },
   complete: { fr: 'a terminé', en: 'completed' },
+  // compliance (docs/compliance)
+  execute: { fr: "a exécuté l'effacement demandé par", en: 'executed the erasure requested by' },
+  release: { fr: 'a levé', en: 'released' },
   acknowledge: { fr: 'a confirmé avoir pris connaissance de', en: 'acknowledged' },
   decide: { fr: 'a rendu sa décision sur', en: 'gave a decision on' },
   decision: { fr: 'a rendu une décision sur', en: 'recorded a decision on' },
