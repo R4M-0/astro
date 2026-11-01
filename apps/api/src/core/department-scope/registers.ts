@@ -37,8 +37,6 @@ export interface Register extends PeopleRule {
 }
 
 const ALL: VisibilityMode[] = ['organization', 'process', 'members'];
-/** registers without a department column cannot be filtered by process */
-const NO_PROCESS: VisibilityMode[] = ['organization', 'members'];
 
 export const REGISTERS: Register[] = [
   // RH

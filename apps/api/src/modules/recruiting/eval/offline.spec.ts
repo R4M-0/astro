@@ -143,11 +143,15 @@ describe('level 2 — follow-ups (mocked clock)', () => {
     for (const [reminderDays, closeDays] of [[1, 2], [3, 7], [2, 3], [5, 5]])
       for (const offsetMin of [0, 17, 59]) {
         const invitedAt = new Date(Date.UTC(2026, 9, 24, 9, offsetMin)); // spans the 25 Oct DST change
-        let reminders: number[] = [], closedAt: number | null = null, hasReminder = false;
+        const reminders: number[] = [];
+        let closedAt: number | null = null, hasReminder = false;
         const start = Date.UTC(2026, 9, 24, 10); // hourly cron ticks on the hour
         for (let t = start; t < start + 14 * DAY; t += HOUR) {
           const action = followUp({ inviteStatus: closedAt ? 'NO_RESPONSE' : 'INVITED', invitedAt, hasReminder }, { reminderDays, closeDays }, new Date(t));
-          if (action === 'REMIND') (reminders.push(t), (hasReminder = true));
+          if (action === 'REMIND') {
+            reminders.push(t);
+            hasReminder = true;
+          }
           if (action === 'CLOSE') closedAt = t;
         }
         const tag = `D1=${reminderDays} D2=${closeDays} +${offsetMin}min`;
