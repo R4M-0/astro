@@ -2,7 +2,8 @@
 
 **One-line pitch:** *Every HR email is a thread between people. We turn a company's mail into a living galaxy you can explore and ask questions of, where every answer is cited and explained, and no decision about a person is made by the AI.*
 
-Spec requirements this demo shows: **Intelligent** (usable answers), **Reliable** (cited, explained, live), **Human in the loop** (approval queue), **Security** (injection blocked live, RBAC).
+Spec axes covered: **Email Summary** (HR inbox digest) and **Employee Questions** (Ask HR), extended into full employee management (the galaxy).
+Spec requirements this demo shows: **Intelligent** (usable answers), **Reliable** (cited, explained, live), **Human in the loop** (draft → edit → approve), **Security** (injection blocked live, RBAC).
 
 ---
 
@@ -15,7 +16,7 @@ Spec requirements this demo shows: **Intelligent** (usable answers), **Reliable*
   curl -X DELETE localhost:8026/api/v1/messages      # empty the mailbox
   ```
   Then restart the graph service.
-- [ ] **Window A (HR):** log in as `hr@demo.astro.app` (Lucas Martin) → Collaborateurs → **Galaxie RH**. Ask one warm-up question, then close the answer.
+- [ ] **Window A (HR):** log in as `hr@demo.astro.app` (Lucas Martin) → Collaborateurs → **Boîte RH** once (warms up the AI summary), then **Galaxie RH**. Ask one warm-up question, then close the answer.
 - [ ] **Window B (employee, private window):** log in as `employee@demo.astro.app` (Yanis Benali) → **Mon espace**.
 - [ ] Browser zoom 100%, full screen, at least 1440 px wide (labels show on the buttons at 1536 px and up).
 - [ ] **Don't edit code during the demo.** A dev-server restart logs you out (one page bounce).
@@ -52,16 +53,7 @@ Scroll the answer card to **"Why these people matched"**:
 
 *(Optional if time allows: set the scope to **Commercial**, ask `Who asked about remote work recently, and what does the policy allow?` The answer combines people and the handbook policy.)*
 
-### 2:35 – Human in the loop (40 s)
-
-Click one of the people in the answer → their panel opens. In **Draft an HR email**, type `Propose a meeting this week about night shift staffing` → **Draft**.
-The **approval queue** opens with the drafted email.
-> "The agent drafts. It never sends. I can edit…" *(change a word)* "…and only my click sends it."
-
-Click **Approve & send**.
-> "And the approved email is now part of their history: it's on their timeline like any other conversation."
-
-### 3:15 – Live mail + security (50 s)
+### 2:35 – Live mail + security (50 s)
 
 Click the **envelope** (Send a company email). Keep the **Workload** preset → **Send**.
 > "This goes through a real mail server. Watch." *(about 5 s)* "It arrives: Gemini tagged it Workload and Overtime, read the sentiment, wrote a neutral summary and flagged that it needs a human reply. The beam lights up live."
@@ -72,7 +64,20 @@ Open the envelope again → **Injection** preset → **Send**. Read it aloud:
 Red toast: **Blocked: AI classifier**.
 > "Caught. That email is never used by the assistant, and the security signal just went from 3 to 4. Emails are untrusted data, always."
 
-### 4:05 – The employee side (35 s)
+### 3:25 – HR inbox digest + human in the loop (45 s)
+
+Click the **Boîte RH** tab (next to Galaxie RH), **Last 7 days**.
+> "That's the second spec axis, the inbox digest. The two emails we just sent are already here: the night-shift complaint is already in **Needs a human answer**, marked urgent *with its reason*, and the injection sits under **Security** on the right, blocked. Above it, the oldest unanswered requests: urgent because they have waited for days."
+
+Point at the **AI summary**: a headline plus bullets in priority order, each citing its emails.
+> "Every morning HR reads this instead of 50 emails, and every line links to its source."
+
+Scroll to the night-shift email ("Night shift staffing on Line 3") and click **Draft reply**. A draft grounded in the handbook appears inline.
+> "The agent drafts, using the employee's file and the handbook. It never sends. I edit…" *(change a word)* "…and only my click sends it."
+
+Click **Approve & send**: the email leaves the list and the **To answer** count drops.
+
+### 4:10 – The employee side (30 s)
 
 Switch to **Window B** (Yanis, maintenance technician, Mon espace). In **Ask HR**, click **"Can I work remotely?"**
 > "Same engine, employee view. It answers from the handbook *and* his own file: his maintenance role isn't eligible for remote work, so it suggests a shift change. And Yanis can't open the galaxy at all. Same roles as Astro: an employee sees only their own file, a manager only their department."
@@ -81,7 +86,7 @@ Click **"How many leave days do I have left?"** → *"9 days, straight from his 
 
 ### 4:40 – Close (20 s)
 
-> "Galaxy for the big picture, signals that explain themselves, answers with sources and reasons, an AI that drafts but never decides, live mail with injection defense. Built into Astro with Gemini Flash Lite and XQdrant. Thank you."
+> "Galaxy for the big picture, signals that explain themselves, answers with sources and reasons, a daily inbox digest, an AI that drafts but never decides, live mail with injection defense. Built into Astro with Gemini Flash Lite and XQdrant. Thank you."
 
 ---
 
@@ -94,14 +99,17 @@ Click **"How many leave days do I have left?"** → *"9 days, straight from his 
 | Galaxy black or empty | Reload the page (Ctrl+R). Wait 5 s for the layout. |
 | Bounced to the login page | A dev server restarted. Log in again. Don't edit code during the demo. |
 | A panel covers the stars | Close it with ✕, press the 🏠 button to reset the camera. |
+| The inbox AI summary shows "unavailable" | The lists below it are complete, so keep going. Click **Regenerate** once at the end of the beat. |
+| The live emails aren't in the inbox digest yet | Reload the Boîte RH page. The digest reads the latest data on every load. |
 
 ## Numbers to quote
 
-142 employees · 10 departments · ~3,500 emails over 12 months · 32 interpretable HR topics · 7 signal kinds · 1 Gemini call per question · prompt-injection defense in 2 layers (patterns + AI classifier) · 0 actions without human approval.
+142 employees · 10 departments · ~3,500 emails over 12 months · 2 spec axes · 32 interpretable HR topics · 9 email types in the digest · 7 signal kinds · 1 Gemini call per question · prompt-injection defense in 2 layers (patterns + AI classifier) · 0 actions without human approval.
 
 ## Likely jury questions
 
 - **"Isn't this surveillance?"** Only company mail, only what HR already receives or what's addressed to colleagues at work. Roles restrict who sees what, mail bodies are visible to HR only, every view and question goes to the audit log, and the topic list excludes sensitive traits (health, religion, politics…). The AI never scores or ranks people.
 - **"Where does the data come from?"** It's fictional: a seeded generator writes the employees into Astro's database and the emails into the graph service. In production, the poller would point at the company mail server instead of Mailpit.
 - **"Is XQdrant doing the explanations?"** XQdrant stores and searches all the vectors. Each email also has an interpretable 32-topic vector, and the per-topic contributions come from that vector. XQdrant's `dims_explained` returns exactly these terms natively; the image we run predates it, so the service computes the same math itself.
+- **"How is urgency decided? Can the AI get it wrong?"** Urgency comes from explicit rules, not from the model, and each one is shown: blocked AI instructions, a wellbeing issue with a very negative tone, a resignation, or no HR answer for 5+ days → high. Pay, contracts, or 2+ days waiting → medium. Everything else → low. The AI only writes the summary, and the summary cites its emails.
 - **"Why Gemini Flash Lite?"** It's fast enough for live tagging and answers (about 3 s). Heavy work happens once at ingest, so each question costs one embedding plus one generation.
