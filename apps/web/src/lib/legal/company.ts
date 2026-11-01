@@ -14,7 +14,7 @@ const TODO = LEGAL_TODO;
 const v = (value: string | undefined, fallback = TODO) => (value && value.trim()) || fallback;
 
 export const LEGAL = {
-  brand: 'Astro',
+  brand: 'Constella',
   site: v(process.env.NEXT_PUBLIC_LEGAL_SITE_URL, 'https://astro.app'),
   /** raison sociale */
   entity: v(process.env.NEXT_PUBLIC_LEGAL_ENTITY),

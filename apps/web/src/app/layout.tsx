@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: { default: 'Astro', template: '%s · Astro' },
+  title: { default: 'Constella', template: '%s · Constella' },
   description: 'ISO 9001:2026 Quality Management SaaS',
 };
 

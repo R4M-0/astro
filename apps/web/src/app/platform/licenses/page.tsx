@@ -42,7 +42,7 @@ export default function LicensesPage() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Self-hosted licenses</h1>
-          <p className="text-sm text-muted-foreground">Signed license keys for customers running Astro on their own servers.</p>
+          <p className="text-sm text-muted-foreground">Signed license keys for customers running Constella on their own servers.</p>
         </div>
         {key.data?.configured && (
           <Button asChild><Link href="/platform/licenses/new"><Plus className="size-4" /> Issue license</Link></Button>

@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Astro",
+    "appName": "Constella",
     "loading": "Loading…",
     "save": "Save",
     "cancel": "Cancel",
@@ -98,13 +98,13 @@
     "recruitingOpenings": "Openings & candidates"
   },
   "auth": {
-    "loginTitle": "Sign in to Astro",
+    "loginTitle": "Sign in to Constella",
     "loginSubtitle": "Run your human resources",
     "email": "Email address",
     "password": "Password",
     "login": "Sign in",
     "register": "Create account",
-    "registerTitle": "Create your Astro workspace",
+    "registerTitle": "Create your Constella workspace",
     "firstName": "First name",
     "lastName": "Last name",
     "organizationName": "Your organization name",
@@ -1231,7 +1231,7 @@
         "title": "Handover of open work",
         "desc": "{count, plural, one {# open record is assigned to this employee.} other {# open records are assigned to this employee.}} Choose who takes them over.",
         "nothing": "No open record is assigned to this employee.",
-        "noAccount": "This employee has no Astro account: nothing to hand over or deactivate.",
+        "noAccount": "This employee has no Constella account: nothing to hand over or deactivate.",
         "to": "Hand over to",
         "choose": "Choose who takes over",
         "submit": "Hand over",
@@ -1244,7 +1244,7 @@
         }
       },
       "account": {
-        "title": "Astro account",
+        "title": "Constella account",
         "desc": "Deactivate the employee’s access on the exit date: their sessions are closed, their history is kept.",
         "deactivate": "Deactivate account",
         "confirm": "Deactivate this employee’s account? They will no longer be able to sign in.",
@@ -1276,7 +1276,7 @@
       "hello": "Hello {name}",
       "desc": "Your position, competencies, trainings and onboarding plan.",
       "notLinked": "No employee record linked to your account",
-      "notLinkedDesc": "Ask HR to link your Astro account to your employee record.",
+      "notLinkedDesc": "Ask HR to link your Constella account to your employee record.",
       "tiles": {
         "skillsMet": "Required competencies met",
         "toImprove": "{count} to develop",
@@ -1409,7 +1409,7 @@
     "status": "Status",
     "date": "Date",
     "amount": "Amount",
-    "requestSent": "Request sent to Astro."
+    "requestSent": "Request sent to Constella."
   },
   "history": {
     "title": "History",
@@ -1538,7 +1538,7 @@
       "draftExplain": "The survey is a draft. Publishing generates a unique public link to share with employees.",
       "closedExplain": "The survey is closed: the link shows a closing message and no longer accepts responses. Reopen it to resume collection.",
       "expiredExplain": "The closing date has passed: the link no longer accepts responses. Move the date in the settings to extend collection.",
-      "publishedExplain": "The survey is published: anyone with this link can answer, without a Astro account.",
+      "publishedExplain": "The survey is published: anyone with this link can answer, without a Constella account.",
       "linkLabel": "Public link",
       "copied": "Link copied",
       "copyFailed": "Could not copy — select the link manually",
@@ -1604,7 +1604,7 @@
       "notFoundBody": "This link is invalid or the survey is no longer available.",
       "errorTitle": "Could not load",
       "retry": "Retry",
-      "poweredBy": "Powered by Astro"
+      "poweredBy": "Powered by Constella"
     },
     "answer": {
       "unavailable": "This survey is not open for answers."
@@ -1663,7 +1663,7 @@
     "askAdmin": "Ask your organization administrator to activate it.",
     "request": "Request activation",
     "requestBundle": "Request the QHSE bundle",
-    "requested": "Request sent to Astro — we will get back to you shortly.",
+    "requested": "Request sent to Constella — we will get back to you shortly.",
     "seeBilling": "View subscription",
     "open": "Open module",
     "active": "Active",
@@ -1706,7 +1706,7 @@
       ]
     },
     "lockedBodyLicense": "This add-on module is not included in this installation's license.",
-    "licenseHint": "Contact Astro to add it to your license, then install the new license.",
+    "licenseHint": "Contact Constella to add it to your license, then install the new license.",
     "seeLicense": "View license"
   },
   "esign": {
@@ -1775,17 +1775,17 @@
     "copy": "Copy",
     "copied": "ID copied",
     "copyFailed": "Copy failed — select the text",
-    "instanceHint": "Send it to Astro to get a license bound to this server.",
+    "instanceHint": "Send it to Constella to get a license bound to this server.",
     "bound": "The license is bound to this installation.",
     "installTitle": "Install a license",
-    "installBody": "Paste the license key provided by Astro (QLIC1.…) or choose the .lic file. A renewal can be installed in advance: it takes over on its start date.",
+    "installBody": "Paste the license key provided by Constella (QLIC1.…) or choose the .lic file. A renewal can be installed in advance: it takes over on its start date.",
     "chooseFile": "Choose a file",
     "install": "Install",
     "installed": "License {reference} installed",
     "banner": {
-      "expiring": "The Astro license expires in {days, plural, =0 {less than a day} one {# day} other {# days}} ({date}).",
-      "grace": "The Astro license has expired. The application becomes read-only on {date}.",
-      "expired": "The Astro license has expired: the application is read-only.",
+      "expiring": "The Constella license expires in {days, plural, =0 {less than a day} one {# day} other {# days}} ({date}).",
+      "grace": "The Constella license has expired. The application becomes read-only on {date}.",
+      "expired": "The Constella license has expired: the application is read-only.",
       "missing": "No license is installed: the application is read-only.",
       "invalid": "The installed license is not valid: the application is read-only.",
       "clock_tampered": "The server clock is inconsistent: the application is read-only.",
@@ -1802,7 +1802,7 @@
   },
   "notificationsPage": {
     "title": "Notifications",
-    "desc": "Everything Astro has flagged for you: assignments, deadlines, approvals.",
+    "desc": "Everything Constella has flagged for you: assignments, deadlines, approvals.",
     "status": {
       "all": "All",
       "unread": "Unread",
@@ -1842,7 +1842,7 @@
       "dpa": "Data processing agreement (DPA)",
       "subprocessors": "Sub-processors"
     },
-    "hubSubtitle": "The documents that govern the use of Astro and the processing of your data.",
+    "hubSubtitle": "The documents that govern the use of Constella and the processing of your data.",
     "hubDesc": {
       "notice": "Publisher, host and intellectual property.",
       "privacy": "What data we process, why, for how long, and your rights.",

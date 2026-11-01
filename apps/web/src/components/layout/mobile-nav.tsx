@@ -96,9 +96,9 @@ export function MobileNav() {
           <SheetTitle className="flex items-center gap-2 text-sm">
             <span className="flex size-6 items-center justify-center overflow-hidden rounded-md">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/favicon.ico" alt="" className="size-6 object-contain" />
+              <img src="/constella.svg" alt="" className="size-6 object-contain" />
             </span>
-            Astro
+            Constella
           </SheetTitle>
         </SheetHeader>
         <ScrollArea className="h-[calc(100svh-3.5rem)] px-2 py-3">
