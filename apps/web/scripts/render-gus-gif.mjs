@@ -4,7 +4,8 @@ import { writeFileSync } from 'node:fs';
 import { paintFrame, SPRITE_W, SPRITE_H } from '../src/components/mascot/sprite.ts';
 
 const OUT = process.argv[2];
-const SW = 128, SH = 46, S = 5; // scene in pixel units, upscaled ×5 → 640×230
+const SW = 60, SH = 80, S = 7; // portrait scene in pixel units, upscaled ×7 → 420×560
+const FLOOR = 62; // floor-tape row: keeps Gus and his bubbles vertically centred
 const BG = [238, 240, 244], INK = [27, 30, 37], YEL = [245, 203, 31], WHITE = [255, 255, 255], SHADOW = [200, 204, 212];
 const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
 
@@ -25,13 +26,13 @@ function frame({ x, y = 0, pose, facing = 1, extras = [] }) {
   const px = Array.from({ length: SH }, () => Array.from({ length: SW }, () => BG));
   const put = (X, Y, c) => { if (X >= 0 && Y >= 0 && X < SW && Y < SH) px[Y][X] = c; };
   // floor tape between two posts
-  for (let X = 4; X < SW - 4; X++) for (let Y = 42; Y < 44; Y++) put(X, Y, Math.floor((X - 4) / 3) % 2 ? INK : YEL);
-  for (const X of [3, SW - 4]) for (let Y = 39; Y < 44; Y++) put(X, Y, INK);
+  for (let X = 4; X < SW - 4; X++) for (let Y = FLOOR; Y < FLOOR + 2; Y++) put(X, Y, Math.floor((X - 4) / 3) % 2 ? INK : YEL);
+  for (const X of [3, SW - 4]) for (let Y = FLOOR - 3; Y < FLOOR + 2; Y++) put(X, Y, INK);
   // shadow shrinks while airborne
   const w = Math.max(4, 10 + Math.round(y / 2));
-  for (let X = 0; X < w; X++) put(x + 8 - Math.floor(w / 2) + X, 41, SHADOW);
+  for (let X = 0; X < w; X++) put(x + 8 - Math.floor(w / 2) + X, FLOOR - 1, SHADOW);
   const spr = sprite(pose, facing);
-  const top = 42 - SPRITE_H + y;
+  const top = FLOOR - SPRITE_H + y;
   spr.forEach((row, j) => row.forEach((c, i) => c && put(x + i, top + j, c)));
   for (const draw of extras) draw(put, x, top);
   const data = Buffer.alloc(SW * S * SH * S * 3);
@@ -65,7 +66,7 @@ const ha = (put, x, top) => {
 };
 
 const base = { eyes: 'open', mouth: 'smile', arms: 'down', legs: 'stand', look: 0 };
-let x = 10;
+let x = 6;
 const walkTo = (to, holding) => {
   const dir = to > x ? 1 : -1;
   let k = 0;
@@ -77,7 +78,7 @@ const walkTo = (to, holding) => {
 };
 const hold = (count, make) => { for (let k = 0; k < count; k++) frame(make(k)); };
 
-walkTo(52);
+walkTo(26);
 hold(4, () => ({ x, pose: base }));
 hold(1, () => ({ x, pose: { ...base, eyes: 'closed' } }));                                     // blink
 hold(4, () => ({ x, pose: base }));
@@ -96,11 +97,12 @@ hold(10, (k) => ({ x, pose: { ...base, mouth: k % 2 ? 'open' : 'neutral', holdin
 hold(3, () => ({ x, pose: base }));
 jump(10, { ...base, eyes: 'happy', mouth: 'open', arms: 'up' });                                  // jump
 hold(12, (k) => ({ x: x + (k % 2 ? 1 : -1) * (k < 11 ? 1 : 0), pose: { ...base, eyes: 'happy', cheeks: true, mouth: k % 2 ? 'open' : 'smile', arms: k % 4 < 2 ? 'swing1' : 'swing2' }, extras: [ha] })); // laugh
-walkTo(84, 'clipboard');                                                                          // the daily round
+walkTo(4, 'clipboard');                                                                           // the daily round
+walkTo(36, 'clipboard');
 hold(8, (k) => ({ x, pose: { ...base, holding: 'clipboard', mouth: k % 2 ? 'open' : 'neutral' } }));
 for (let r = 0; r < 2; r++) jump(6, { ...base, eyes: 'happy', mouth: 'open', cheeks: true, arms: 'up' }, [heart]); // celebrate
-walkTo(66);
+walkTo(20);
 hold(26, (k) => ({ x, pose: { ...base, eyes: 'closed', legs: 'crouch', mouth: Math.floor(k / 8) % 2 ? 'o' : 'neutral' }, extras: [zzz(Math.floor(k / 2))] })); // nap
 hold(1, () => ({ x, pose: { ...base, eyes: 'wide', mouth: 'o' } }));
-walkTo(10);
+walkTo(6);
 console.log('frames', n);
