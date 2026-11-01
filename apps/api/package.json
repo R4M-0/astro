@@ -11,6 +11,9 @@
     "build:protected": "node scripts/build-protected.mjs",
     "lint": "eslint \"src/**/*.ts\"",
     "test": "jest",
+    "eval:gates": "jest --testRegex '\\.db-spec\\.ts$' --runInBand",
+    "eval:live": "node --env-file=.env -r ts-node/register/transpile-only src/modules/recruiting/eval/run.ts live",
+    "eval:online": "node --env-file=.env -r ts-node/register/transpile-only src/modules/recruiting/eval/run.ts online",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:seed": "ts-node --transpile-only prisma/seed.ts"
