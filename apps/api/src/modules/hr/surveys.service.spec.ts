@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { ActivityService } from '../../core/activity/activity.service';
 import { PrismaService } from '../../prisma/prisma.service';
+import { NotificationsService } from '../../core/notifications/notifications.service';
 import { SurveysService } from './surveys.service';
 
 describe('SurveysService — respondent identity & duplicate guard', () => {
@@ -46,6 +47,7 @@ describe('SurveysService — respondent identity & duplicate guard', () => {
         SurveysService,
         { provide: PrismaService, useValue: prismaMock },
         { provide: ActivityService, useValue: { record: jest.fn() } },
+        { provide: NotificationsService, useValue: { notify: jest.fn() } },
         { provide: ConfigService, useValue: { get: (k: string) => (k === 'APP_URL' ? 'https://app.test' : 'secret') } },
       ],
     }).compile();
