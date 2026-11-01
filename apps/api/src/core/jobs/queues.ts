@@ -1,6 +1,7 @@
 import type { JobsOptions, Queue } from 'bullmq';
 
 export const QUEUE_MAIL = 'mail';
+export const QUEUE_RECRUITING = 'recruiting';
 
 /**
  * Bounds a queue call. BullMQ connections retry forever while Redis is down;
