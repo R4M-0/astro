@@ -84,7 +84,7 @@ const judgeSchema = (ids: string[]) =>
   });
 
 /** Candidate tower input: the extracted profile, never the raw CV (no personal data in the vector). */
-const profileText = (p: CandidateProfile) =>
+export const profileText = (p: CandidateProfile) =>
   [
     p.summary,
     `Skills: ${p.skills.join(', ')}`,
@@ -94,7 +94,7 @@ const profileText = (p: CandidateProfile) =>
   ].join('\n');
 
 /** Job tower input. */
-const jobText = (o: { title: string; description: string }, criteria: Criterion[]) =>
+export const jobText = (o: { title: string; description: string }, criteria: Criterion[]) =>
   [o.title, o.description, `Requirements: ${criteria.map((c) => (c.value ? `${c.label} (${c.value})` : c.label)).join(', ')}`].join('\n');
 
 async function mapLimit<T, R>(items: T[], limit: number, fn: (item: T) => Promise<R>): Promise<R[]> {
@@ -158,11 +158,7 @@ export class RecruitingPipelineService {
     if (raw.length > CV_MAX_CHARS) throw new Error(`CV too long (${raw.length} characters, ${CV_MAX_CHARS} max)`);
 
     const guard = sanitizeCv(raw);
-    const { fullName, ...profile } = await this.ai.structured<CandidateProfile & { fullName: string }>(
-      EXTRACT_SYSTEM,
-      `<cv>\n${guard.text}\n</cv>`,
-      PROFILE_SCHEMA,
-    );
+    const { fullName, ...profile } = await this.extractProfile(guard.text);
     const cvText = redactName(guard.text, fullName);
     const vector = await this.ai.embed(profileText(profile));
     await this.ai.upsertCandidate(c.id, vector, { organizationId: c.organizationId, jobOpeningId: c.jobOpeningId });
@@ -197,6 +193,32 @@ export class RecruitingPipelineService {
     if (!n('RECEIVED') && !n('PROCESSING') && n('READY')) await this.enqueueRank(organizationId, openingId);
   }
 
+  /** Stage 1 extractor on the sanitized CV text. */
+  extractProfile(sanitizedCv: string) {
+    return this.ai.structured<CandidateProfile & { fullName: string }>(EXTRACT_SYSTEM, `<cv>\n${sanitizedCv}\n</cv>`, PROFILE_SCHEMA);
+  }
+
+  /** Stage 3 LLM judge, then stage 4 evidence check and HR weights. */
+  async judge(opening: { title: string; description: string }, criteria: Criterion[], cvText: string) {
+    const out = await this.ai.structured<{ criteria: { id: string; score: number; evidence: string }[]; justification: string }>(
+      JUDGE_SYSTEM,
+      [
+        `Job: ${opening.title}\n${opening.description}`,
+        `Criteria:\n${criteria.map((k) => `- id=${k.id} | ${k.label}${k.value ? ` (${k.value})` : ''} | weight ${k.weight}${k.mustHave ? ' | must-have' : ''}`).join('\n')}`,
+        `<cv>\n${cvText}\n</cv>`,
+      ].join('\n\n'),
+      judgeSchema(criteria.map((k) => k.id)),
+    );
+    const scores = verifyEvidence(
+      criteria.map((k) => {
+        const s = out.criteria.find((x) => x.id === k.id);
+        return { id: k.id, label: k.label, score: s?.score ?? 0, evidence: s?.evidence ?? '' };
+      }),
+      cvText,
+    );
+    return { score: weightedScore(criteria, scores), scores, justification: out.justification };
+  }
+
   /** Stages 2-4 for one opening. HR decisions are kept across reruns. */
   async rank(openingId: string) {
     const opening = await this.prisma.jobOpening.findFirst({ where: { id: openingId, deletedAt: null } });
@@ -220,24 +242,7 @@ export class RecruitingPipelineService {
       // Filtered-out candidates are scored too, so HR sees how close they came, but never ranked.
       const judged = await mapLimit(filtered, JUDGE_CONCURRENCY, async ({ c, hit }) => {
         if (!criteria.length) return { id: c.id, retrievalScore: hit.score, score: 0, scores: [], justification: null };
-        const out = await this.ai.structured<{ criteria: { id: string; score: number; evidence: string }[]; justification: string }>(
-          JUDGE_SYSTEM,
-          [
-            `Job: ${opening.title}\n${opening.description}`,
-            `Criteria:\n${criteria.map((k) => `- id=${k.id} | ${k.label}${k.value ? ` (${k.value})` : ''} | weight ${k.weight}${k.mustHave ? ' | must-have' : ''}`).join('\n')}`,
-            `<cv>\n${c.cvText}\n</cv>`,
-          ].join('\n\n'),
-          judgeSchema(criteria.map((k) => k.id)),
-        );
-        // stage 4: evidence check then HR weights
-        const scores = verifyEvidence(
-          criteria.map((k) => {
-            const s = out.criteria.find((x) => x.id === k.id);
-            return { id: k.id, label: k.label, score: s?.score ?? 0, evidence: s?.evidence ?? '' };
-          }),
-          c.cvText ?? '',
-        );
-        return { id: c.id, retrievalScore: hit.score, score: weightedScore(criteria, scores), scores, justification: out.justification };
+        return { id: c.id, retrievalScore: hit.score, ...(await this.judge(opening, criteria, c.cvText ?? '')) };
       });
       const failed = new Set(filtered.filter((f) => f.reasons.length).map((f) => f.c.id));
       const ranked = rankAndCut(
