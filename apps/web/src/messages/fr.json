@@ -68,7 +68,12 @@
     "switchToDark": "Passer en thème sombre",
     "switchToLight": "Passer en thème clair",
     "addonModules": "Modules QSE",
-    "viewAllNotifications": "Voir toutes les notifications"
+    "viewAllNotifications": "Voir toutes les notifications",
+    "noAccessTitle": "Accès non autorisé",
+    "noAccessDesc": "Votre rôle ne permet pas d’ouvrir cette page. Contactez votre administrateur si vous pensez qu’il s’agit d’une erreur.",
+    "notFoundTitle": "Élément introuvable",
+    "notFoundDesc": "Cet élément n’existe pas, a été supprimé ou ne fait pas partie de votre périmètre.",
+    "backHome": "Retour au tableau de bord"
   },
   "nav": {
     "dashboard": "Tableau de bord",
@@ -1608,6 +1613,15 @@
     },
     "answer": {
       "unavailable": "Cette enquête n'est pas ouverte aux réponses."
+    },
+    "mine": {
+      "title": "Enquêtes à remplir",
+      "questions": "{count, plural, =1 {1 question} other {# questions}}",
+      "anonymous": "anonyme",
+      "closesOn": "clôture le {date}",
+      "answered": "Répondu",
+      "toAnswer": "À remplir",
+      "back": "Mon espace"
     }
   },
   "departments": {
@@ -2079,5 +2093,43 @@
     "error": "Réessayez dans un instant.",
     "tooMany": "Trop de tentatives, réessayez dans une minute.",
     "retry": "Réessayer"
+  },
+  "hrInbox": {
+    "title": "Boîte RH",
+    "desc": "Tous les e-mails reçus par les RH, regroupés par type et par urgence. Ceux qui attendent une réponse humaine passent en premier.",
+    "today": "Aujourd’hui",
+    "last7": "7 derniers jours",
+    "tiles": {
+      "received": "Reçus",
+      "last24h": "dernières 24 heures",
+      "last7": "7 derniers jours",
+      "toAnswer": "À répondre",
+      "toAnswerHint": "y compris les demandes plus anciennes sans réponse",
+      "urgent": "Urgents",
+      "urgentHint": "à traiter en premier",
+      "blocked": "Bloqués",
+      "blockedHint": "instructions destinées à l’IA, retenus"
+    },
+    "summary": "Synthèse IA",
+    "regenerate": "Régénérer",
+    "summaryUnavailable": "Synthèse indisponible pour le moment ({reason}). Les listes ci-dessous sont complètes.",
+    "summaryFooter": "Rédigée par Gemini Flash Lite à partir des e-mails ci-dessous. Le contenu des e-mails est traité comme des données, jamais comme des instructions.",
+    "needsAnswer": "Réponse humaine attendue ({count})",
+    "inboxZero": "Boîte à zéro : chaque demande a reçu une réponse.",
+    "byType": "Par type",
+    "noEmail": "Aucun e-mail reçu sur cette période.",
+    "blockedSubject": "Bloqué : {subject}",
+    "waiting": "en attente depuis {days} j",
+    "draftReply": "Rédiger une réponse",
+    "draftHint": "Brouillon IA : modifiez-le puis validez. Rien n’est envoyé avant.",
+    "draftSubject": "Objet de la réponse",
+    "draftBody": "Corps de la réponse",
+    "reject": "Rejeter",
+    "approveSend": "Valider et envoyer",
+    "urgency": {
+      "high": "Haute",
+      "medium": "Moyenne",
+      "low": "Basse"
+    }
   }
 }

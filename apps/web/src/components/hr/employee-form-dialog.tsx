@@ -16,6 +16,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Field } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
@@ -146,36 +147,36 @@ export function EmployeeFormDialog({
 
         <div className="flex flex-col gap-4">
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="flex flex-col gap-1.5">
+            <Field className="flex flex-col gap-1.5">
               <Label>{t('fields.firstName')} *</Label>
               <Input value={form.firstName} onChange={(e) => set('firstName', e.target.value)} />
-            </div>
-            <div className="flex flex-col gap-1.5">
+            </Field>
+            <Field className="flex flex-col gap-1.5">
               <Label>{t('fields.lastName')} *</Label>
               <Input value={form.lastName} onChange={(e) => set('lastName', e.target.value)} />
-            </div>
-            <div className="flex flex-col gap-1.5">
+            </Field>
+            <Field className="flex flex-col gap-1.5">
               <Label>{t('fields.contact')}</Label>
               <Input value={form.contact} onChange={(e) => set('contact', e.target.value)} />
-            </div>
-            <div className="flex flex-col gap-1.5">
+            </Field>
+            <Field className="flex flex-col gap-1.5">
               <Label>{t('fields.email')}</Label>
               <Input type="email" value={form.email} onChange={(e) => set('email', e.target.value)} />
               {emailInvalid && <p className="text-xs text-destructive">{tc('error')}</p>}
-            </div>
-            <div className="flex flex-col gap-1.5">
+            </Field>
+            <Field className="flex flex-col gap-1.5">
               <Label>{t('fields.cin')}</Label>
               <Input value={form.cin} onChange={(e) => set('cin', e.target.value)} />
-            </div>
-            <div className="flex flex-col gap-1.5">
+            </Field>
+            <Field className="flex flex-col gap-1.5">
               <Label>{t('fields.jobTitle')}</Label>
               <Input value={form.jobTitle} onChange={(e) => set('jobTitle', e.target.value)} />
-            </div>
-            <div className="flex flex-col gap-1.5">
+            </Field>
+            <Field className="flex flex-col gap-1.5">
               <Label>{t('fields.department')} *</Label>
               <DepartmentSelect size="sm" value={form.departmentId || null} onChange={(id) => set('departmentId', id ?? '')} />
-            </div>
-            <div className="flex flex-col gap-1.5">
+            </Field>
+            <Field className="flex flex-col gap-1.5">
               <Label>{t('fields.manager')}</Label>
               <Select value={form.managerId || NONE} onValueChange={(v) => set('managerId', v === NONE ? '' : v)}>
                 <SelectTrigger size="sm"><SelectValue placeholder={t('noManager')} /></SelectTrigger>
@@ -191,8 +192,8 @@ export function EmployeeFormDialog({
                     ))}
                 </SelectContent>
               </Select>
-            </div>
-            <div className="flex flex-col gap-1.5">
+            </Field>
+            <Field className="flex flex-col gap-1.5">
               <Label>{t('fields.jobDescription')}</Label>
               <Select value={form.jobDescriptionId || NONE} onValueChange={(v) => set('jobDescriptionId', v === NONE ? '' : v)}>
                 <SelectTrigger size="sm"><SelectValue placeholder={t('unassigned')} /></SelectTrigger>
@@ -203,8 +204,8 @@ export function EmployeeFormDialog({
                   ))}
                 </SelectContent>
               </Select>
-            </div>
-            <div className="flex flex-col gap-1.5">
+            </Field>
+            <Field className="flex flex-col gap-1.5">
               <Label>{t('fields.user')}</Label>
               <Select value={form.userId || NONE} onValueChange={(v) => set('userId', v === NONE ? '' : v)}>
                 <SelectTrigger size="sm"><SelectValue placeholder={t('unassigned')} /></SelectTrigger>
@@ -215,12 +216,12 @@ export function EmployeeFormDialog({
                   ))}
                 </SelectContent>
               </Select>
-            </div>
-            <div className="flex flex-col gap-1.5">
+            </Field>
+            <Field className="flex flex-col gap-1.5">
               <Label>{t('fields.hireDate')}</Label>
               <Input type="date" value={form.hireDate} onChange={(e) => set('hireDate', e.target.value)} />
-            </div>
-            <div className="flex flex-col gap-1.5">
+            </Field>
+            <Field className="flex flex-col gap-1.5">
               <Label>{t('fields.contractType')}</Label>
               <Select value={form.contractType || NONE} onValueChange={(v) => set('contractType', v === NONE ? '' : v)}>
                 <SelectTrigger size="sm"><SelectValue placeholder={t('unassigned')} /></SelectTrigger>
@@ -231,12 +232,12 @@ export function EmployeeFormDialog({
                   ))}
                 </SelectContent>
               </Select>
-            </div>
-            <div className="flex flex-col gap-1.5">
+            </Field>
+            <Field className="flex flex-col gap-1.5">
               <Label>{t('fields.trialEndDate')}</Label>
               <Input type="date" value={form.trialEndDate} min={form.hireDate || undefined} onChange={(e) => set('trialEndDate', e.target.value)} />
               {trialInvalid && <p className="text-xs text-destructive">{t('trialBeforeHire')}</p>}
-            </div>
+            </Field>
           </div>
           <div className="flex items-center gap-2">
             <Switch checked={form.active} onCheckedChange={(v) => set('active', v)} id="emp-active" />

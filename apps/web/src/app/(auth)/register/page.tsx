@@ -5,7 +5,7 @@ import { Check, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -61,7 +61,7 @@ export default function RegisterPage() {
   };
 
   const err = form.formState.errors;
-  const password = form.watch('password') ?? '';
+  const password = useWatch({ control: form.control, name: 'password' }) ?? '';
   const legalLink = (href: string) =>
     function LegalLink(chunks: React.ReactNode) {
       return (

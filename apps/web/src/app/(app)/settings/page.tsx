@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Field } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -130,22 +131,22 @@ export default function SettingsPage() {
           <Card>
             <CardContent className="grid gap-4 p-5">
               <div className="grid grid-cols-2 gap-3">
-                <div className="grid gap-2">
+                <Field className="grid gap-2">
                   <Label>{t('firstName')}</Label>
                   <Input
                     value={profile.firstName}
                     onChange={(e) => setProfile({ ...profile, firstName: e.target.value })}
                   />
-                </div>
-                <div className="grid gap-2">
+                </Field>
+                <Field className="grid gap-2">
                   <Label>{t('lastName')}</Label>
                   <Input
                     value={profile.lastName}
                     onChange={(e) => setProfile({ ...profile, lastName: e.target.value })}
                   />
-                </div>
+                </Field>
               </div>
-              <div className="grid gap-2">
+              <Field className="grid gap-2">
                 <Label>{t('language')}</Label>
                 <Select value={profile.locale} onValueChange={(locale) => setProfile({ ...profile, locale })}>
                   <SelectTrigger className="w-48">
@@ -156,7 +157,7 @@ export default function SettingsPage() {
                     <SelectItem value="en">English</SelectItem>
                   </SelectContent>
                 </Select>
-              </div>
+              </Field>
               <div>
                 <Button
                   disabled={!profile.firstName.trim() || !profile.lastName.trim() || saveProfile.isPending}
@@ -178,18 +179,18 @@ export default function SettingsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="grid gap-4 sm:grid-cols-3">
-              <div className="flex flex-col gap-1.5">
+              <Field className="flex flex-col gap-1.5">
                 <Label>{t('currentPassword')}</Label>
                 <Input type="password" autoComplete="current-password" value={pwd.current} onChange={(e) => setPwd({ ...pwd, current: e.target.value })} />
-              </div>
-              <div className="flex flex-col gap-1.5">
+              </Field>
+              <Field className="flex flex-col gap-1.5">
                 <Label>{t('newPassword')}</Label>
                 <Input type="password" autoComplete="new-password" value={pwd.next} onChange={(e) => setPwd({ ...pwd, next: e.target.value })} />
-              </div>
-              <div className="flex flex-col gap-1.5">
+              </Field>
+              <Field className="flex flex-col gap-1.5">
                 <Label>{t('confirmPassword')}</Label>
                 <Input type="password" autoComplete="new-password" value={pwd.confirm} onChange={(e) => setPwd({ ...pwd, confirm: e.target.value })} />
-              </div>
+              </Field>
               <p className="text-xs text-muted-foreground sm:col-span-2">{t('passwordHint')}</p>
               <Button className="w-fit justify-self-end" disabled={!pwdValid || changePassword.isPending} onClick={() => changePassword.mutate()}>
                 {t('changePassword')}

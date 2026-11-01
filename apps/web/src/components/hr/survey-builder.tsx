@@ -473,7 +473,7 @@ function QuestionCard({
                       {scaleValues.slice(0, 10).map((n) => <SelectItem key={n} value={String(n)}>{n}</SelectItem>)}
                     </SelectContent>
                   </Select>
-                  <Input maxLength={100} placeholder={t('builder.scaleMinLabelPh')} value={draft.scaleMinLabel} onChange={(e) => setDraft({ ...draft, scaleMinLabel: e.target.value })} />
+                  <Input id="survey-scale-min-label" aria-label={t('builder.scaleMinLabelPh')} maxLength={100} placeholder={t('builder.scaleMinLabelPh')} value={draft.scaleMinLabel} onChange={(e) => setDraft({ ...draft, scaleMinLabel: e.target.value })} />
                 </div>
               </Field>
               <Field label={t('builder.scaleMax')}>
@@ -484,7 +484,7 @@ function QuestionCard({
                       {scaleValues.slice(1).map((n) => <SelectItem key={n} value={String(n)}>{n}</SelectItem>)}
                     </SelectContent>
                   </Select>
-                  <Input maxLength={100} placeholder={t('builder.scaleMaxLabelPh')} value={draft.scaleMaxLabel} onChange={(e) => setDraft({ ...draft, scaleMaxLabel: e.target.value })} />
+                  <Input id="survey-scale-max-label" aria-label={t('builder.scaleMaxLabelPh')} maxLength={100} placeholder={t('builder.scaleMaxLabelPh')} value={draft.scaleMaxLabel} onChange={(e) => setDraft({ ...draft, scaleMaxLabel: e.target.value })} />
                 </div>
               </Field>
             </FormGrid>

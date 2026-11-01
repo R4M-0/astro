@@ -75,9 +75,12 @@ export function SurveyDetail({ id }: { id: string }) {
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
+  // members without survey read rights (employees) only get the answering form, served by /:id/form
+  const answerOnly = !hasPermission(cfg.perms.read);
   const { data: survey, isLoading, error } = useQuery({
     queryKey: [...cfg.queryKey, id],
     queryFn: () => apiGet<SurveyRecord>(`${cfg.api}/${id}`),
+    enabled: !answerOnly,
   });
   // no ?tab=: managers land on the questions, other members on the answer form once published
   const activeTab = tab ?? (!canEdit && survey && survey.status !== 'DRAFT' ? 'answer' : 'questions');
@@ -105,6 +108,14 @@ export function SurveyDetail({ id }: { id: string }) {
     },
     onError: onErr,
   });
+
+  if (answerOnly) {
+    return (
+      <DetailPage backHref="/hr/me" backLabel={t('mine.back')}>
+        <SurveyAnswer surveyId={id} />
+      </DetailPage>
+    );
+  }
 
   if (error) {
     return (

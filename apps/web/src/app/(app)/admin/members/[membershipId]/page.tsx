@@ -5,11 +5,13 @@ import { EyeOff, Layers, Lock, ShieldCheck, Users } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { DetailPage } from '@/components/layout/detail-page';
+import { NoAccess } from '@/components/layout/no-access';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { apiGet } from '@/lib/api';
 import { cn } from '@/lib/utils';
+import { useHasPermission } from '@/stores/session';
 
 interface DeptRef {
   id: string;
@@ -56,10 +58,12 @@ export default function MemberEffectiveAccessPage() {
   const membershipId = params.membershipId as string;
   const t = useTranslations('admin');
   const tm = useTranslations('admin.members.access');
+  const canAdmin = useHasPermission()('users:admin');
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['admin', 'members', 'effective-access', membershipId],
     queryFn: () => apiGet<EffectiveAccess>(`/users/${membershipId}/effective-access`),
+    enabled: canAdmin,
   });
 
   const label = (key: string, fallback: string) => (t.has(key as never) ? t(key as never) : fallback);
@@ -74,6 +78,9 @@ export default function MemberEffectiveAccessPage() {
     byResource.set(res, [...(byResource.get(res) ?? []), p.slice(i + 1)]);
   }
   const resources = [...byResource.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+
+  // effective access is a users:admin view (the members list only links here for admins)
+  if (!canAdmin) return <NoAccess />;
 
   return (
     <DetailPage

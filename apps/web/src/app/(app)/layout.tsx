@@ -7,7 +7,8 @@ import { AddonLocked } from '@/components/billing/addons';
 import { CommandPalette } from '@/components/layout/command-palette';
 import { ImpersonationBanner } from '@/components/layout/impersonation-banner';
 import { LicenseBanner } from '@/components/license/license-banner';
-import { lockedAddonOf } from '@/components/layout/nav-config';
+import { lockedAddonOf, requiredPermissionFor } from '@/components/layout/nav-config';
+import { NoAccess } from '@/components/layout/no-access';
 import { SectionTabs } from '@/components/layout/section-tabs';
 import { Sidebar } from '@/components/layout/sidebar';
 import { Topbar } from '@/components/layout/topbar';
@@ -24,6 +25,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const impersonation = useSession((s) => s.impersonation);
   const initialize = useSession((s) => s.initialize);
   const addons = useSession((s) => s.addons);
+  const permissions = useSession((s) => s.permissions);
   const pathname = usePathname();
   const [paletteOpen, setPaletteOpen] = useState(false);
   useRealtime();
@@ -65,6 +67,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   // paid add-on module the organization does not subscribe to → upsell page instead of the module
   const lockedAddon = lockedAddonOf(pathname, addons);
+  // a page the member's role cannot open (deep link, stale bookmark) → explain instead of firing forbidden requests
+  const needed = requiredPermissionFor(pathname);
+  const forbidden = !!needed && !needed.some((p) => permissions.includes(p));
 
   return (
     <div className="flex min-h-svh">
@@ -81,7 +86,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <Topbar onOpenPalette={() => setPaletteOpen(true)} />
         {!lockedAddon && <SectionTabs />}
         <main id="main-content" tabIndex={-1} className="min-w-0 focus:outline-none flex-1 overflow-y-auto bg-background bg-[radial-gradient(120%_80%_at_100%_0%,color-mix(in_oklab,var(--primary)_9%,transparent),transparent_55%),radial-gradient(100%_70%_at_0%_0%,color-mix(in_oklab,var(--chart-2)_8%,transparent),transparent_50%)]">
-          {lockedAddon ? <AddonLocked addon={lockedAddon} /> : children}
+          {lockedAddon ? <AddonLocked addon={lockedAddon} /> : forbidden ? <NoAccess /> : children}
         </main>
       </div>
       <CommandPalette open={paletteOpen} onOpenChange={setPaletteOpen} />

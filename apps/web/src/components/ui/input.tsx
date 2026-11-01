@@ -1,10 +1,15 @@
+"use client"
+
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
+import { useFieldId } from "./field"
 
-function Input({ className, type, ...props }: React.ComponentProps<"input">) {
+function Input({ className, type, id, ...props }: React.ComponentProps<"input">) {
+  const fieldId = useFieldId()
   return (
     <input
+      id={id ?? fieldId}
       type={type}
       data-slot="input"
       className={cn(

@@ -1,5 +1,6 @@
 'use client';
 
+import { RecordNotFound } from '@/components/layout/no-access';
 import { useQuery } from '@tanstack/react-query';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
@@ -34,7 +35,7 @@ export default function JobDescriptionDetailPage() {
   });
 
   if (isLoading) return <div className="p-4 sm:p-6"><Skeleton className="h-96" /></div>;
-  if (!jd) return null;
+  if (!jd) return <RecordNotFound />;
 
   return (
     <div className="mx-auto flex max-w-[1000px] flex-col gap-4 p-4 sm:p-6">

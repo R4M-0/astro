@@ -9,6 +9,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { HrSurveyQuestionType, Prisma, SurveyScope } from '@prisma/client';
 import { ActivityService } from '../../core/activity/activity.service';
+import { NotificationsService } from '../../core/notifications/notifications.service';
 import { paginate, PaginationQuery } from '../../common/dto/pagination.dto';
 import { PrismaService } from '../../prisma/prisma.service';
 import {
@@ -53,6 +54,7 @@ export class SurveysService {
     private readonly prisma: PrismaService,
     private readonly activity: ActivityService,
     private readonly config: ConfigService,
+    private readonly notifications: NotificationsService,
   ) {}
 
   // ── helpers ────────────────────────────────────────────────────────────────
@@ -277,7 +279,26 @@ export class SurveysService {
       },
     });
     this.record(scope, orgId, userId, id, 'status_changed', { from: survey.status, to: 'PUBLISHED' });
+    // first publication only: tell the members there is a survey to answer (republishing stays quiet)
+    if (!survey.publishedAt) await this.notifyMembers(orgId, userId, survey).catch(() => undefined);
     return this.get(scope, orgId, id, true);
+  }
+
+  private async notifyMembers(orgId: string, actorId: string, survey: { id: string; title: string; closesAt: Date | null }) {
+    const members = await this.prisma.membership.findMany({
+      where: { organizationId: orgId, isActive: true, deletedAt: null, acceptedAt: { not: null }, userId: { not: actorId } },
+      select: { userId: true },
+    });
+    await this.notifications.notify({
+      organizationId: orgId,
+      userIds: members.map((m) => m.userId),
+      type: 'survey_published',
+      title: `Nouvelle enquête : ${survey.title}`,
+      body: survey.closesAt ? `À remplir avant le ${survey.closesAt.toLocaleDateString('fr-FR')}` : 'Votre avis est attendu',
+      entityType: 'hr-survey',
+      entityId: survey.id,
+      link: `/hr/surveys/${survey.id}`,
+    });
   }
 
   async close(scope: SurveyScope, orgId: string, userId: string, id: string) {
@@ -727,6 +748,46 @@ export class SurveysService {
     });
     if (!survey) throw new NotFoundException('Enquête introuvable');
     return survey;
+  }
+
+  /** Published, still-open surveys a signed-in member can answer (any member — no survey permission needed). */
+  async memberOpenList(scope: SurveyScope, orgId: string, userId: string) {
+    const now = new Date();
+    const surveys = await this.prisma.hrSurvey.findMany({
+      where: {
+        organizationId: orgId,
+        scope,
+        deletedAt: null,
+        status: 'PUBLISHED',
+        OR: [{ closesAt: null }, { closesAt: { gt: now } }],
+      },
+      select: {
+        id: true,
+        reference: true,
+        title: true,
+        description: true,
+        anonymous: true,
+        allowMultipleResponses: true,
+        closesAt: true,
+        publishedAt: true,
+        _count: { select: { questions: true } },
+      },
+      orderBy: { publishedAt: 'desc' },
+      take: 100,
+    });
+    const keys = surveys.map((s) => this.memberKey(s.id, userId));
+    const answered = keys.length
+      ? await this.prisma.hrSurveyResponse.findMany({
+          where: { surveyId: { in: surveys.map((s) => s.id) }, respondentKey: { in: keys } },
+          select: { surveyId: true },
+        })
+      : [];
+    const done = new Set(answered.map((a) => a.surveyId));
+    return surveys.map(({ _count, ...s }) => ({
+      ...s,
+      questionCount: _count.questions,
+      alreadyAnswered: !s.allowMultipleResponses && done.has(s.id),
+    }));
   }
 
   /** The answering form for a signed-in member (any member — no survey permission needed). */

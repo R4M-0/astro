@@ -1,6 +1,5 @@
 import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import { EmployeeContractType, Prisma } from '@prisma/client';
-import { join } from 'path';
 import * as XLSX from 'xlsx';
 import { MAX_SHEET_ROWS, assertWorkbookUpload, parseWorkbookInWorker, uploadName } from '../../common/office-files';
 import { ActivityService } from '../../core/activity/activity.service';

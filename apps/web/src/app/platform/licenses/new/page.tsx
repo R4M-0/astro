@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
+import { Field } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -113,16 +114,16 @@ function LicenseForm({ renewOf }: { renewOf: IssuedLicense | null }) {
       </div>
 
       <Card className="grid gap-4 p-5">
-        <div className="grid gap-1.5"><Label>Customer *</Label><Input value={form.customer} onChange={set('customer')} placeholder="Acme Industries SA" /></div>
+        <Field className="grid gap-1.5"><Label>Customer *</Label><Input value={form.customer} onChange={set('customer')} placeholder="Acme Industries SA" /></Field>
         <div className="grid gap-4 sm:grid-cols-3">
-          <div className="grid gap-1.5"><Label>Plan *</Label>
+          <Field className="grid gap-1.5"><Label>Plan *</Label>
             <Select value={form.plan} onValueChange={(v) => setForm((f) => ({ ...f, plan: v }))}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>{(plans.data ?? []).map((p) => <SelectItem key={p.id} value={p.key}>{p.name}</SelectItem>)}</SelectContent>
             </Select>
-          </div>
-          <div className="grid gap-1.5"><Label>Accounts *</Label><Input type="number" min={1} value={form.seatLimit} onChange={set('seatLimit')} /></div>
-          <div className="grid gap-1.5"><Label>Organizations *</Label><Input type="number" min={1} value={form.orgLimit} onChange={set('orgLimit')} /></div>
+          </Field>
+          <Field className="grid gap-1.5"><Label>Accounts *</Label><Input type="number" min={1} value={form.seatLimit} onChange={set('seatLimit')} /></Field>
+          <Field className="grid gap-1.5"><Label>Organizations *</Label><Input type="number" min={1} value={form.orgLimit} onChange={set('orgLimit')} /></Field>
         </div>
         <div className="grid gap-2">
           <Label>Add-ons</Label>
@@ -139,22 +140,22 @@ function LicenseForm({ renewOf }: { renewOf: IssuedLicense | null }) {
           </div>
         </div>
         <div className="grid gap-4 sm:grid-cols-3">
-          <div className="grid gap-1.5"><Label>Starts *</Label><Input type="date" value={form.startsAt} onChange={set('startsAt')} /></div>
-          <div className="grid gap-1.5"><Label>Expires *</Label><Input type="date" value={form.expiresAt} onChange={set('expiresAt')} /></div>
-          <div className="grid gap-1.5"><Label>Grace (days)</Label><Input type="number" min={0} max={90} value={form.graceDays} onChange={set('graceDays')} /></div>
+          <Field className="grid gap-1.5"><Label>Starts *</Label><Input type="date" value={form.startsAt} onChange={set('startsAt')} /></Field>
+          <Field className="grid gap-1.5"><Label>Expires *</Label><Input type="date" value={form.expiresAt} onChange={set('expiresAt')} /></Field>
+          <Field className="grid gap-1.5"><Label>Grace (days)</Label><Input type="number" min={0} max={90} value={form.graceDays} onChange={set('graceDays')} /></Field>
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="grid gap-1.5">
+          <Field className="grid gap-1.5">
             <Label>Instance ID</Label>
             <Input value={form.instanceId} onChange={set('instanceId')} placeholder="QI-… (empty = any installation)" className="font-mono text-xs" />
-          </div>
-          <div className="grid gap-1.5">
+          </Field>
+          <Field className="grid gap-1.5">
             <Label>Updates until</Label>
             <Input type="date" value={form.updatesUntil} onChange={set('updatesUntil')} />
-          </div>
+          </Field>
         </div>
-        <div className="grid gap-1.5"><Label>Storage per organization (MB)</Label><Input type="number" min={0} value={form.storageLimitMb} onChange={set('storageLimitMb')} placeholder="Plan default" /></div>
-        <div className="grid gap-1.5"><Label>Internal notes</Label><Textarea value={form.notes} onChange={set('notes')} rows={3} placeholder="Contract, order number…" /></div>
+        <Field className="grid gap-1.5"><Label>Storage per organization (MB)</Label><Input type="number" min={0} value={form.storageLimitMb} onChange={set('storageLimitMb')} placeholder="Plan default" /></Field>
+        <Field className="grid gap-1.5"><Label>Internal notes</Label><Textarea value={form.notes} onChange={set('notes')} rows={3} placeholder="Contract, order number…" /></Field>
         <div className="flex justify-end gap-2 border-t pt-4">
           <Button variant="outline" asChild><Link href="/platform/licenses">Cancel</Link></Button>
           <Button disabled={!valid || issue.isPending} onClick={() => issue.mutate()}>Sign & issue</Button>

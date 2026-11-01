@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Field } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
@@ -103,14 +104,14 @@ export default function PublicTrainingFeedbackPage({ params }: { params: Promise
                 ))}
               </div>
             </div>
-            <div className="grid gap-1.5">
+            <Field className="grid gap-1.5">
               <Label>{t('commentLabel')}</Label>
               <Textarea rows={3} value={comment} onChange={(e) => setComment(e.target.value)} placeholder={t('commentPh')} />
-            </div>
-            <div className="grid gap-1.5">
+            </Field>
+            <Field className="grid gap-1.5">
               <Label>{t('nameLabel')}</Label>
               <Input value={name} onChange={(e) => setName(e.target.value)} placeholder={t('namePh')} />
-            </div>
+            </Field>
             <Button disabled={!score || submitting} onClick={submit} className="w-full">{t('submit')}</Button>
           </CardContent>
         </Card>

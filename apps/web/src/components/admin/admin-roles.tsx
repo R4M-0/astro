@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Field, FormDialog } from '@/components/ui/form-dialog';
 import { Input } from '@/components/ui/input';
+import { Field as FieldScope } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
@@ -479,11 +480,11 @@ export function AdminRoles({ roles: rawRoles }: { roles: AdminRole[] }) {
             <DialogTitle>{t('roles.new')}</DialogTitle>
           </DialogHeader>
           <div className="grid gap-4">
-            <div className="grid gap-2">
+            <FieldScope className="grid gap-2">
               <Label>{t('roles.name')}</Label>
               <Input value={createForm.name} onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })} autoFocus />
-            </div>
-            <div className="grid gap-2">
+            </FieldScope>
+            <FieldScope className="grid gap-2">
               <Label>{t('roles.copyFrom')}</Label>
               <Select value={createForm.copyFrom} onValueChange={(copyFrom) => setCreateForm({ ...createForm, copyFrom })}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
@@ -492,7 +493,7 @@ export function AdminRoles({ roles: rawRoles }: { roles: AdminRole[] }) {
                   {roles.map((r) => <SelectItem key={r.id} value={r.id}>{r.name}</SelectItem>)}
                 </SelectContent>
               </Select>
-            </div>
+            </FieldScope>
           </div>
           <DialogFooter>
             <Button disabled={!createForm.name.trim() || createRole.isPending} onClick={() => createRole.mutate()}>

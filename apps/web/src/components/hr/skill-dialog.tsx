@@ -15,6 +15,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Field } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
@@ -63,11 +64,11 @@ export function SkillDialog({
           <DialogDescription>{t('formDesc')}</DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-4">
-          <div className="flex flex-col gap-1.5">
+          <Field className="flex flex-col gap-1.5">
             <Label>{t('fields.name')} *</Label>
             <Input value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} />
-          </div>
-          <div className="flex flex-col gap-1.5">
+          </Field>
+          <Field className="flex flex-col gap-1.5">
             <Label>{t('fields.type')} *</Label>
             <Select value={form.type} onValueChange={(v) => setForm((f) => ({ ...f, type: v as SkillType }))}>
               <SelectTrigger size="sm"><SelectValue /></SelectTrigger>
@@ -75,11 +76,11 @@ export function SkillDialog({
                 {SKILL_TYPES.map((s) => <SelectItem key={s} value={s}>{t(`types.${s}`)}</SelectItem>)}
               </SelectContent>
             </Select>
-          </div>
-          <div className="flex flex-col gap-1.5">
+          </Field>
+          <Field className="flex flex-col gap-1.5">
             <Label>{t('fields.description')}</Label>
             <Textarea rows={3} value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} />
-          </div>
+          </Field>
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>{tc('cancel')}</Button>

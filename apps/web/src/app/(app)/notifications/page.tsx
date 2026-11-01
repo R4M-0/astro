@@ -103,10 +103,9 @@ export default function NotificationsPage() {
     placeholderData: (prev) => prev,
   });
 
-  // deleting the last rows of the last page: fall back to the new last page
-  useEffect(() => {
-    if (data && page > data.meta.totalPages) setPage(data.meta.totalPages);
-  }, [data, page]);
+  // deleting the last rows of the last page: fall back to the new last page (adjusted while rendering)
+  const lastPage = Math.max(1, data?.meta.totalPages ?? 1);
+  if (data && page > lastPage) setPage(lastPage);
 
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ['notifications'] });
   const setRead = useMutation({

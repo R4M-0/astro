@@ -34,6 +34,8 @@ export interface NavItem {
   match?: string[];
   /** Permission(s) needed to open the page — any of them. Items the user can't open are not shown. */
   permission?: string | readonly string[];
+  /** Detail pages under `href` stay reachable without `permission` (they gate themselves, e.g. survey answering). */
+  openDetails?: boolean;
 }
 
 export interface NavGroup {
@@ -102,7 +104,7 @@ export const NAV_GROUPS: NavGroup[] = [
     key: null,
     color: 'oklch(0.66 0.16 190)', // cyan — tools
     items: [
-      { key: 'hrSurveys', href: '/hr/surveys', icon: MessageSquareText, permission: 'hr-surveys:read' },
+      { key: 'hrSurveys', href: '/hr/surveys', icon: MessageSquareText, permission: 'hr-surveys:read', openDetails: true },
       { key: 'admin', href: '/admin', icon: Building2, permission: ['organization:read', 'users:read', 'roles:read', 'audit-log:read'] },
     ],
   },
@@ -180,4 +182,15 @@ export function lockedAddonOf(pathname: string, addons: readonly string[]): Addo
     if ((pathname === p || pathname.startsWith(`${p}/`)) && !addons.includes(addon.key)) return addon.key;
   }
   return null;
+}
+
+/**
+ * The permission(s) a route needs, from the nav item it belongs to — any of them grants access.
+ * Null when the route is open to every member (or is a self-gating detail page).
+ */
+export function requiredPermissionFor(pathname: string): readonly string[] | null {
+  const loc = locateNav(pathname);
+  if (!loc?.item.permission) return null;
+  if (loc.item.openDetails && pathname !== loc.item.href) return null;
+  return typeof loc.item.permission === 'string' ? [loc.item.permission] : loc.item.permission;
 }

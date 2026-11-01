@@ -21,6 +21,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
+import { Field } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
@@ -130,23 +131,23 @@ export function JobDescriptionForm({ jd }: { jd?: JobDescriptionRow }) {
       {/* 1. Identification de la fiche */}
       <Section title={t('sections.identification')}>
         <div className="grid gap-4 sm:grid-cols-3">
-          <div className="flex flex-col gap-1.5">
+          <Field className="flex flex-col gap-1.5">
             <Label>{t('fields.reference')} *</Label>
             <Input value={reference} onChange={(e) => setReference(e.target.value)} placeholder="CC-QUAL-FDP-01" />
-          </div>
-          <div className="flex flex-col gap-1.5">
+          </Field>
+          <Field className="flex flex-col gap-1.5">
             <Label>{t('fields.version')} *</Label>
             <Input value={version} onChange={(e) => setVersion(e.target.value)} />
-          </div>
-          <div className="flex flex-col gap-1.5">
+          </Field>
+          <Field className="flex flex-col gap-1.5">
             <Label>{t('fields.applicationDate')}</Label>
             <Input type="date" value={applicationDate} onChange={(e) => setApplicationDate(e.target.value)} />
-          </div>
-          <div className="flex flex-col gap-1.5 sm:col-span-2">
+          </Field>
+          <Field className="flex flex-col gap-1.5 sm:col-span-2">
             <Label>{t('fields.jobTitle')} *</Label>
             <Input value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} />
-          </div>
-          <div className="flex flex-col gap-1.5">
+          </Field>
+          <Field className="flex flex-col gap-1.5">
             <Label>{t('fields.status')}</Label>
             <Select value={status} onValueChange={(v) => setStatus(v as typeof status)}>
               <SelectTrigger size="sm"><SelectValue /></SelectTrigger>
@@ -154,46 +155,46 @@ export function JobDescriptionForm({ jd }: { jd?: JobDescriptionRow }) {
                 {JD_STATUSES.map((s) => <SelectItem key={s} value={s}>{t(`statuses.${s}`)}</SelectItem>)}
               </SelectContent>
             </Select>
-          </div>
-          <div className="flex flex-col gap-1.5">
+          </Field>
+          <Field className="flex flex-col gap-1.5">
             <Label>{t('fields.department')} *</Label>
             <DepartmentSelect size="sm" value={departmentId || null} onChange={(id) => setDepartmentId(id ?? '')} />
-          </div>
-          <div className="flex flex-col gap-1.5">
+          </Field>
+          <Field className="flex flex-col gap-1.5">
             <Label>{t('fields.manager')}</Label>
             <EmployeeMultiSelect value={managerId} onChange={(ids) => setManagerId(ids.slice(-1))} placeholder="—" emptyLabel={tc('noResults')} />
-          </div>
-          <div className="flex flex-col gap-1.5">
+          </Field>
+          <Field className="flex flex-col gap-1.5">
             <Label>{t('fields.replacement')}</Label>
             <EmployeeMultiSelect value={replacementId} onChange={(ids) => setReplacementId(ids.slice(-1))} placeholder="—" emptyLabel={tc('noResults')} />
-          </div>
+          </Field>
         </div>
       </Section>
 
       {/* 2. Identification du poste */}
       <Section title={t('sections.jobIdentification')}>
-        <div className="flex flex-col gap-1.5">
+        <Field className="flex flex-col gap-1.5">
           <Label>{t('fields.mainMission')}</Label>
           <Textarea rows={3} value={mainMission} onChange={(e) => setMainMission(e.target.value)} placeholder={t('hints.mainMission')} />
-        </div>
+        </Field>
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="flex flex-col gap-1.5">
+          <Field className="flex flex-col gap-1.5">
             <Label>{t('fields.hierarchicalLink')}</Label>
             <Input value={hierarchicalLink} onChange={(e) => setHierarchicalLink(e.target.value)} />
-          </div>
-          <div className="flex flex-col gap-1.5">
+          </Field>
+          <Field className="flex flex-col gap-1.5">
             <Label>{t('fields.functionalLink')}</Label>
             <Input value={functionalLink} onChange={(e) => setFunctionalLink(e.target.value)} />
-          </div>
+          </Field>
         </div>
-        <div className="flex flex-col gap-1.5">
+        <Field className="flex flex-col gap-1.5">
           <Label>{t('fields.jobPurpose')}</Label>
           <Textarea rows={2} value={jobPurpose} onChange={(e) => setJobPurpose(e.target.value)} placeholder={t('hints.jobPurpose')} />
-        </div>
-        <div className="flex flex-col gap-1.5">
+        </Field>
+        <Field className="flex flex-col gap-1.5">
           <Label>{t('fields.authority')}</Label>
           <Textarea rows={3} maxLength={4000} value={authority} onChange={(e) => setAuthority(e.target.value)} placeholder={t('hints.authority')} />
-        </div>
+        </Field>
       </Section>
 
       {/* 3. Activités principales */}
@@ -249,14 +250,14 @@ export function JobDescriptionForm({ jd }: { jd?: JobDescriptionRow }) {
       {/* 5. Expérience professionnelle */}
       <Section title={t('sections.experience')}>
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="flex flex-col gap-1.5">
+          <Field className="flex flex-col gap-1.5">
             <Label>{t('fields.minExperienceMonths')}</Label>
             <Input type="number" min={0} value={minExperienceMonths} onChange={(e) => setMinExperienceMonths(e.target.value)} />
-          </div>
-          <div className="flex flex-col gap-1.5">
+          </Field>
+          <Field className="flex flex-col gap-1.5">
             <Label>{t('fields.experienceDomain')}</Label>
             <Input value={experienceDomain} onChange={(e) => setExperienceDomain(e.target.value)} />
-          </div>
+          </Field>
         </div>
       </Section>
 

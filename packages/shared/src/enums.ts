@@ -8,6 +8,7 @@ export type NotificationType =
   | 'onboarding_assigned'
   | 'trial_period_due'
   | 'handover_received'
+  | 'survey_published'
   | 'license_expiring'
   | 'recruiting_update'
   | 'generic';

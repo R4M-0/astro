@@ -39,6 +39,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
+import { Field } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -582,19 +583,19 @@ export function AdminMembers({ roles, sites }: { roles: AdminRole[]; sites: Site
             onSubmit={(e) => { e.preventDefault(); if (editForm.firstName.trim() && editForm.lastName.trim()) saveEdit.mutate(); }}
           >
             <div className="grid grid-cols-2 gap-3">
-              <div className="grid gap-2">
+              <Field className="grid gap-2">
                 <Label>{t('members.firstName')} *</Label>
                 <Input value={editForm.firstName} onChange={(e) => setEditForm({ ...editForm, firstName: e.target.value })} autoFocus />
-              </div>
-              <div className="grid gap-2">
+              </Field>
+              <Field className="grid gap-2">
                 <Label>{t('members.lastName')} *</Label>
                 <Input value={editForm.lastName} onChange={(e) => setEditForm({ ...editForm, lastName: e.target.value })} />
-              </div>
+              </Field>
             </div>
-            <div className="grid gap-2">
+            <Field className="grid gap-2">
               <Label>{t('members.columns.jobTitle')}</Label>
               <Input value={editForm.jobTitle} onChange={(e) => setEditForm({ ...editForm, jobTitle: e.target.value })} />
-            </div>
+            </Field>
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setEditing(null)}>{tc('cancel')}</Button>
               <Button type="submit" disabled={!editForm.firstName.trim() || !editForm.lastName.trim() || saveEdit.isPending}>
@@ -612,20 +613,20 @@ export function AdminMembers({ roles, sites }: { roles: AdminRole[]; sites: Site
             <DialogTitle>{t('members.invite')}</DialogTitle>
           </DialogHeader>
           <div className="grid gap-4">
-            <div className="grid gap-2">
+            <Field className="grid gap-2">
               <Label>{t('members.email')}</Label>
               <Input type="email" value={invite.email} onChange={(e) => setInvite({ ...invite, email: e.target.value })} autoFocus />
-            </div>
+            </Field>
             <div className="grid grid-cols-2 gap-3">
-              <div className="grid gap-2">
+              <Field className="grid gap-2">
                 <Label>{t('members.firstName')}</Label>
                 <Input value={invite.firstName} onChange={(e) => setInvite({ ...invite, firstName: e.target.value })} />
-              </div>
-              <div className="grid gap-2">
+              </Field>
+              <Field className="grid gap-2">
                 <Label>{t('members.lastName')}</Label>
                 <Input value={invite.lastName} onChange={(e) => setInvite({ ...invite, lastName: e.target.value })} />
-              </div>
-              <div className="grid gap-2">
+              </Field>
+              <Field className="grid gap-2">
                 <Label>{t('members.columns.role')}</Label>
                 <Select value={invite.roleId || undefined} onValueChange={(roleId) => setInvite({ ...invite, roleId })}>
                   <SelectTrigger><SelectValue placeholder="—" /></SelectTrigger>
@@ -633,8 +634,8 @@ export function AdminMembers({ roles, sites }: { roles: AdminRole[]; sites: Site
                     {roles.map((r) => <SelectItem key={r.id} value={r.id}>{r.name}</SelectItem>)}
                   </SelectContent>
                 </Select>
-              </div>
-              <div className="grid gap-2">
+              </Field>
+              <Field className="grid gap-2">
                 <Label>{t('members.columns.site')}</Label>
                 <Select value={invite.siteId || undefined} onValueChange={(siteId) => setInvite({ ...invite, siteId })}>
                   <SelectTrigger><SelectValue placeholder="—" /></SelectTrigger>
@@ -642,17 +643,17 @@ export function AdminMembers({ roles, sites }: { roles: AdminRole[]; sites: Site
                     {sites.map((s) => <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>)}
                   </SelectContent>
                 </Select>
-              </div>
+              </Field>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <div className="grid gap-2">
+              <Field className="grid gap-2">
                 <Label>{t('members.columns.jobTitle')}</Label>
                 <Input value={invite.jobTitle} onChange={(e) => setInvite({ ...invite, jobTitle: e.target.value })} />
-              </div>
-              <div className="grid gap-2">
+              </Field>
+              <Field className="grid gap-2">
                 <Label>{tdep('department')}</Label>
                 <DepartmentSelect allowNone value={invite.departmentId || null} onChange={(id) => setInvite({ ...invite, departmentId: id ?? '' })} />
-              </div>
+              </Field>
             </div>
             <p className="text-xs text-muted-foreground">{t('members.inviteHint')}</p>
           </div>

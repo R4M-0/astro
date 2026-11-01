@@ -18,6 +18,7 @@ import {
   type TrainingStatus,
 } from '@/components/hr/hr-meta';
 import { ITEM_KIND_ICON } from '@/components/hr/journey-item-fields';
+import { MySurveysPanel } from '@/components/hr/my-surveys';
 import { ProficiencyBadge } from '@/components/hr/proficiency';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -101,6 +102,9 @@ export default function MySpacePage() {
       <div className="mx-auto max-w-3xl p-4 sm:p-6">
         <PageHeader title={t('title')} description={t('desc')} />
         <EmptyState icon={UserRound} title={t('notLinked')} description={t('notLinkedDesc')} />
+        <div className="mt-5">
+          <MySurveysPanel />
+        </div>
       </div>
     );
   }
@@ -126,6 +130,8 @@ export default function MySpacePage() {
       <PageHeader title={t('hello', { name: e.firstName })} description={t('desc')} />
 
       <AskHr />
+
+      <MySurveysPanel />
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <StatTile s={{ label: t('tiles.skillsMet'), value: required.length ? `${met}/${required.length}` : '—', icon: Target, hint: toImprove ? t('tiles.toImprove', { count: toImprove }) : notEvaluated ? t('tiles.notEvaluated', { count: notEvaluated }) : undefined, hintTone: toImprove ? 'warn' : 'muted' }} />

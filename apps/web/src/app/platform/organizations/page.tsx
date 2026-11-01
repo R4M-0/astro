@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Field } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -179,19 +180,19 @@ function CreateOrgDialog({ open, onOpenChange, onCreated }: { open: boolean; onO
       <DialogContent className="sm:max-w-md">
         <DialogHeader><DialogTitle>New organization</DialogTitle></DialogHeader>
         <div className="grid gap-3">
-          <div className="grid gap-1.5"><Label>Organization name</Label><Input value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value, slug: f.slug || e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') }))} placeholder="ACME Industries" /></div>
-          <div className="grid gap-1.5"><Label>Slug</Label><Input value={form.slug} onChange={set('slug')} placeholder="acme-industries" /></div>
-          <div className="grid gap-1.5"><Label>Plan</Label>
+          <Field className="grid gap-1.5"><Label>Organization name</Label><Input value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value, slug: f.slug || e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') }))} placeholder="ACME Industries" /></Field>
+          <Field className="grid gap-1.5"><Label>Slug</Label><Input value={form.slug} onChange={set('slug')} placeholder="acme-industries" /></Field>
+          <Field className="grid gap-1.5"><Label>Plan</Label>
             <Select value={form.planKey} onValueChange={(v) => setForm((f) => ({ ...f, planKey: v }))}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>{(plans.data ?? []).map((p) => <SelectItem key={p.id} value={p.key}>{p.name}{p.seatLimit != null ? ` · ${p.seatLimit} seats` : ' · custom'}</SelectItem>)}</SelectContent>
             </Select>
-          </div>
+          </Field>
           <div className="grid grid-cols-2 gap-3">
-            <div className="grid gap-1.5"><Label>Admin first name</Label><Input value={form.adminFirstName} onChange={set('adminFirstName')} /></div>
-            <div className="grid gap-1.5"><Label>Admin last name</Label><Input value={form.adminLastName} onChange={set('adminLastName')} /></div>
+            <Field className="grid gap-1.5"><Label>Admin first name</Label><Input value={form.adminFirstName} onChange={set('adminFirstName')} /></Field>
+            <Field className="grid gap-1.5"><Label>Admin last name</Label><Input value={form.adminLastName} onChange={set('adminLastName')} /></Field>
           </div>
-          <div className="grid gap-1.5"><Label>Admin email</Label><Input type="email" value={form.adminEmail} onChange={set('adminEmail')} placeholder="admin@acme.com" /></div>
+          <Field className="grid gap-1.5"><Label>Admin email</Label><Input type="email" value={form.adminEmail} onChange={set('adminEmail')} placeholder="admin@acme.com" /></Field>
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>

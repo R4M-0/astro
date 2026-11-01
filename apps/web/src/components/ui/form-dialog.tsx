@@ -11,6 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Field as FieldScope } from '@/components/ui/field';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 
@@ -104,7 +105,7 @@ export function Field({
   children: React.ReactNode;
 }) {
   return (
-    <div className={cn('flex flex-col gap-1.5', className)}>
+    <FieldScope className={cn('flex flex-col gap-1.5', className)}>
       {label != null && (
         <Label htmlFor={htmlFor}>
           {label}
@@ -114,7 +115,7 @@ export function Field({
       {children}
       {hint ? <p className="text-xs text-muted-foreground">{hint}</p> : null}
       {error ? <p className="text-xs text-destructive">{error}</p> : null}
-    </div>
+    </FieldScope>
   );
 }
 

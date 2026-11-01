@@ -12,6 +12,7 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
+import { useFieldId } from '@/components/ui/field';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { useEmployees } from './use-hr';
@@ -33,6 +34,7 @@ export function EmployeeMultiSelect({
   const { employees, nameOf } = useEmployees();
   const [open, setOpen] = useState(false);
 
+  const fieldId = useFieldId();
   const toggle = (id: string) =>
     onChange(value.includes(id) ? value.filter((x) => x !== id) : [...value, id]);
 
@@ -41,6 +43,7 @@ export function EmployeeMultiSelect({
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
+            id={fieldId}
             type="button"
             variant="outline"
             size="sm"

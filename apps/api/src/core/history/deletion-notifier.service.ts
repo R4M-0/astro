@@ -56,13 +56,14 @@ export class DeletionNotifierService {
     return [...new Set(rows.map((r) => r.userId))];
   }
 
-  private async readersOf(orgId: string, resource: string): Promise<string[]> {
+  /** Members who maintain the resource (can update it) — plain readers are not told about deletions. */
+  private async maintainersOf(orgId: string, resource: string): Promise<string[]> {
     const rows = await this.prisma.membership.findMany({
       where: {
         organizationId: orgId,
         isActive: true,
         deletedAt: null,
-        role: { permissions: { some: { permission: { resource, action: 'read' } } } },
+        role: { permissions: { some: { permission: { resource, action: 'update' } } } },
       },
       select: { userId: true },
     });
@@ -89,11 +90,11 @@ export class DeletionNotifierService {
       // anything deleted by a non-admin → the admins are notified
       for (const uid of admins) for (const t of types) add(uid, t);
     } else {
-      // an admin deleted → everyone with read access to that resource is notified
+      // an admin deleted → the other people who maintain that resource are notified
       for (const type of types) {
         const resource = MODEL_RESOURCE[type];
-        const readers = resource ? await this.readersOf(orgId, resource) : admins;
-        for (const uid of readers) add(uid, type);
+        const maintainers = resource ? await this.maintainersOf(orgId, resource) : admins;
+        for (const uid of maintainers) add(uid, type);
       }
     }
     if (!recipients.size) return;
@@ -105,12 +106,19 @@ export class DeletionNotifierService {
         })
       : null;
     const actorName = actor ? `${actor.firstName} ${actor.lastName}`.trim() : 'Le système';
+    const actorRole = actorIsAdmin
+      ? await this.prisma.membership.findFirst({
+          where: { organizationId: orgId, userId: actorId!, deletedAt: null },
+          select: { role: { select: { key: true } } },
+        })
+      : null;
+    const roleLabel = actorRole?.role.key === 'hr_manager' ? 'responsable RH' : 'administrateur';
     const title = actorIsAdmin ? 'Élément(s) supprimé(s)' : 'Suppression à vérifier';
 
     for (const [uid, typeSet] of recipients) {
       const summary = [...typeSet].map((t) => labelFor(t, counts[t])).join(', ');
       const body = actorIsAdmin
-        ? `${actorName} (administrateur) a supprimé ${summary}.`
+        ? `${actorName} (${roleLabel}) a supprimé ${summary}.`
         : `${actorName} a supprimé ${summary}.`;
       await this.notifications
         .notify({

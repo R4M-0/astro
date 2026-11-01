@@ -1,5 +1,6 @@
 'use client';
 
+import { RecordNotFound } from '@/components/layout/no-access';
 import { useQuery } from '@tanstack/react-query';
 import { ArrowLeft, GraduationCap, LogIn, LogOut, Pencil, ScrollText } from 'lucide-react';
 import Link from 'next/link';
@@ -113,7 +114,7 @@ export default function EmployeeDetailPage() {
   const fmt = (d: string | null | undefined) => (d ? new Date(d).toLocaleDateString(locale) : null);
 
   if (isLoading) return <div className="p-4 sm:p-6"><Skeleton className="h-96" /></div>;
-  if (!emp) return null;
+  if (!emp) return <RecordNotFound />;
 
   return (
     <div className="mx-auto flex max-w-[1100px] flex-col gap-4 p-4 sm:p-6">

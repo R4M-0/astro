@@ -26,7 +26,9 @@ export interface MailEvent {
 export function useLiveMail(onEvent: (e: MailEvent) => void) {
   const seq = useRef<number | null>(null);
   const cb = useRef(onEvent);
-  cb.current = onEvent;
+  useEffect(() => {
+    cb.current = onEvent;
+  });
   useEffect(() => {
     let stop = false;
     const tick = async () => {
