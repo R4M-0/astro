@@ -85,6 +85,24 @@ Run it in three modes:
 2. **Simulation:** for Pipeline 2, LLM-driven candidate personas against a sandbox mailbox and calendar.
 3. **Online/shadow:** HR decisions logged in the audit/feedback store become new labels.
 
+### Running it
+
+Code in `apps/api/src/modules/recruiting/eval/` (datasets, metrics, runners).
+
+| Command (`pnpm --filter @astro/api …`) | Mode | Covers | Needs |
+|---|---|---|---|
+| `test` (`offline.spec.ts`) | Offline, CI gate | L1 hard filters (false rejections, also with an extractor that missed every skill), evidence check; L3 injection recall / FPR, poisoned twin = clean twin after the guard, PII redaction recall, counterfactual twins identical after the guard, malformed / disguised / oversized files; L2 follow-ups on an hourly mocked clock across the DST change, replies forced to a human | nothing |
+| `eval:gates` (`gates.db-spec.ts`) | Offline, release gate | Unapproved sends = 0 (drafts, unsigned approvals, cross-tenant approval, decision changed after approval), duplicate e-mails = 0 (8 concurrent send jobs, retry after an SMTP failure, retried draft job), double bookings = 0 (10 candidates on the last slot, random rebooking), booking-link tampering (unknown / oversized / closed / foreign token or slot, past slot, first name only), cross-candidate leakage canaries in draft and triage prompts, injected reply → human and nothing changed | Postgres (`DATABASE_URL`); creates and deletes its own organization |
+| `eval:live` (`run.ts live`) | Offline with the real models | L1 schema validity, extractor F1 (skills, languages), years error, retrieval Recall@N / MRR / nDCG@N (both towers, cosine), filter false rejections with extracted profiles, nDCG@K / P@K, Kendall τ vs labels, faithfulness, protected attributes in justifications; L3 injection ASR through the guard and with the guard bypassed (held-out injections), rank gain of poisoned CVs, counterfactual score spread, adverse impact ratio, repeat stability; L2 triage macro-F1, needs-human recall, injected-reply ASR | `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`; ~120 model calls |
+| `eval:online` (`run.ts online`) | Online | L5 top-K approval rate, HR override rate, booking rate, median hours to book, no-response rate, reminders per candidate, share of replies routed to HR; gates on unapproved and duplicate sends in the real mail log | the database |
+
+`eval:live` and `eval:online` write `eval-report-<mode>.json` and exit 1 when a gate fails. `eval:live --write-baseline`
+stores `baseline.json`; later runs fail if Recall@N, nDCG@K or triage macro-F1 drop more than 0.02 under it.
+
+Not automated yet: approve-without-edit rate and edit distance (the original draft is not kept once HR edits it),
+SUS / HR minutes (usability test), persona simulation against Mailpit, load test, OCR / scanned CVs (no text layer is
+rejected at ingest), annotator agreement (the seed set has one annotator).
+
 ### Test data (fictional, as the brief requires)
 
 - **Golden ranking set:** 5–10 job offers × 50–100 synthetic CVs each, labelled by 2–3 annotators on a graded
