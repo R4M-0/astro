@@ -6,6 +6,7 @@ export const RESOURCE_SECTIONS: { id: string; resources: string[] }[] = [
   { id: 'people', resources: ['employees'] },
   { id: 'competencies', resources: ['skills', 'job-descriptions', 'competency-evaluations'] },
   { id: 'trainings', resources: ['hr-trainings'] },
+  { id: 'recruiting', resources: ['recruiting'] },
   { id: 'tools', resources: ['dashboard', 'hr-surveys', 'notifications'] },
 ];
 

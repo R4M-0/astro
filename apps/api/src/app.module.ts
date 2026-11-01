@@ -26,6 +26,7 @@ import { EntitiesModule } from './core/entities/entities.module';
 import { EsignModule } from './core/signatures/esign.module';
 import { HistoryInterceptor } from './core/history/history.interceptor';
 import { HrModule } from './modules/hr/hr.module';
+import { RecruitingModule } from './modules/recruiting/recruiting.module';
 import { PlatformModule } from './modules/platform/platform.module';
 import { LicenseModule } from './core/license/license.module';
 import { LicenseGuard } from './core/license/license.guard';
@@ -89,6 +90,7 @@ import { RedisThrottlerStorage } from './core/redis/redis-throttler.storage';
     DepartmentScopeModule,
     GroupsModule,
     HrModule,
+    RecruitingModule,
     PlatformModule,
   ],
   providers: [
