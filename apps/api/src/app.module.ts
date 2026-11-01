@@ -11,6 +11,7 @@ import { PermissionsGuard } from './common/guards/permissions.guard';
 import { TenantGuard } from './common/guards/tenant.guard';
 import { AuditLogInterceptor } from './common/interceptors/audit-log.interceptor';
 import { AuditLogModule } from './core/audit-log/audit-log.module';
+import { ComplianceModule } from './core/compliance/compliance.module';
 import { AuthModule } from './core/auth/auth.module';
 import { FilesModule } from './core/files/files.module';
 import { MailModule } from './core/mail/mail.module';
@@ -92,6 +93,7 @@ import { RedisThrottlerStorage } from './core/redis/redis-throttler.storage';
     HrModule,
     RecruitingModule,
     PlatformModule,
+    ComplianceModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },
