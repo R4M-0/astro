@@ -1,0 +1,5 @@
+data/audit.jsonl
+data/actions.json
+data/saved-emails.jsonl
+
+data/mailpit-seen.json

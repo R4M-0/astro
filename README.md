@@ -27,6 +27,7 @@ self-hosted licensing. UI is French by default (English available).
 - **Enquêtes** (`/hr/surveys`) — survey builder, public link (`/e/<token>`), in-app answers, results.
 - **Mon espace** (`/hr/me`) — the member's own record, job description, competencies, training and onboarding.
 - **Administration** — members, roles & permissions, departments & members, groups, visibility, organization, audit log, billing / license.
+- **Galaxie RH** (`/hr/galaxy`, service `apps/graph` :3012) — the workforce as a 3D galaxy built from company mail: lenses, timeline replay, explained signals, bridges, search-to-fly, « ask the galaxy » with cited and explained answers (Gemini + XQdrant), approval queue. « Mon espace » gets an *Ask HR* panel, and **Boîte RH** (`/hr/inbox`) gives the daily HR inbox digest by type and urgency. See [apps/graph/README.md](apps/graph/README.md).
 
 ## Getting started
 
@@ -38,6 +39,7 @@ pnpm --filter @astro/shared build
 pnpm --filter @astro/api prisma:migrate           # or: cd apps/api && npx prisma migrate deploy
 pnpm --filter @astro/api prisma:seed
 pnpm dev                                          # api :3011, web :3010
+pnpm --filter @astro/graph index && pnpm --filter @astro/graph dev   # galaxy service :3012 (needs GEMINI_API_KEY)
 ```
 
 `apps/web/.env.local` needs `NEXT_PUBLIC_API_URL=http://localhost:3011/api/v1` and

@@ -22,6 +22,13 @@ services:
   mailpit:
     image: axllent/mailpit:latest
     ports: ["127.0.0.1:1026:1025", "127.0.0.1:8026:8025"]
+  # Vector DB for the graph service: XQdrant, our Qdrant fork with dims_explained (per-dimension score explanations).
+  # Plain Qdrant also works (explanations are then computed in the graph service): ASTRO_QDRANT_IMAGE=qdrant/qdrant:latest
+  qdrant:
+    image: ${ASTRO_QDRANT_IMAGE:-golden5ragon/xqdrant:latest}
+    ports: ["127.0.0.1:6333:6333"]
+    volumes: [qdrantdata:/qdrant/storage]
 volumes:
   pgdata:
   miniodata:
+  qdrantdata:

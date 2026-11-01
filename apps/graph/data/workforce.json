@@ -1,0 +1,4458 @@
+{
+ "company": "Aurora Industries",
+ "generatedFor": "2026-10-31",
+ "departments": [
+  {
+   "name": "Direction",
+   "color": "#ffffff",
+   "teams": [
+    "Comité de direction"
+   ]
+  },
+  {
+   "name": "Ressources humaines",
+   "color": "#ff8a5b",
+   "teams": [
+    "RH"
+   ]
+  },
+  {
+   "name": "Production",
+   "color": "#5b8cff",
+   "teams": [
+    "Assemblage",
+    "Usinage",
+    "Méthodes"
+   ]
+  },
+  {
+   "name": "Maintenance",
+   "color": "#2fd6c3",
+   "teams": [
+    "Maintenance curative",
+    "Maintenance préventive"
+   ]
+  },
+  {
+   "name": "Qualité",
+   "color": "#ff6fa8",
+   "teams": [
+    "Contrôle qualité",
+    "Assurance qualité"
+   ]
+  },
+  {
+   "name": "Logistique",
+   "color": "#ffb347",
+   "teams": [
+    "Entrepôt",
+    "Supply"
+   ]
+  },
+  {
+   "name": "Commercial",
+   "color": "#ffe066",
+   "teams": [
+    "Ventes France",
+    "Export"
+   ]
+  },
+  {
+   "name": "R&D",
+   "color": "#a98bff",
+   "teams": [
+    "Mécanique",
+    "Électronique"
+   ]
+  },
+  {
+   "name": "Finance",
+   "color": "#8be06b",
+   "teams": [
+    "Comptabilité",
+    "Contrôle de gestion"
+   ]
+  },
+  {
+   "name": "Informatique",
+   "color": "#4dd2ff",
+   "teams": [
+    "Infrastructure & support"
+   ]
+  }
+ ],
+ "employees": [
+  {
+   "reference": "EMP-0001",
+   "firstName": "Awa",
+   "lastName": "Diallo",
+   "email": "admin@demo.astro.app",
+   "hireDate": "2015-03-02",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Droit social",
+    "SIRH",
+    "Recrutement"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 18,
+    "remaining": 7
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": "admin",
+   "department": "Direction",
+   "team": "Comité de direction",
+   "jobTitle": "Directrice Générale",
+   "level": "Executive",
+   "managerRef": null
+  },
+  {
+   "reference": "EMP-0002",
+   "firstName": "Lucas",
+   "lastName": "Martin",
+   "email": "hr@demo.astro.app",
+   "hireDate": "2018-09-03",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Droit social",
+    "SIRH",
+    "Recrutement"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 12,
+    "remaining": 13
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": "hr",
+   "department": "Ressources humaines",
+   "team": "RH",
+   "jobTitle": "Responsable RH",
+   "level": "Head",
+   "managerRef": "EMP-0001"
+  },
+  {
+   "reference": "EMP-0003",
+   "firstName": "Tariq",
+   "lastName": "Bianchi",
+   "email": "tariq.bianchi@aurora-industries.example",
+   "hireDate": "2018-01-18",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Droit social",
+    "SIRH",
+    "Recrutement"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 20,
+    "remaining": 5
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Direction",
+   "team": "Comité de direction",
+   "jobTitle": "Directeur Administratif et Financier",
+   "level": "Executive",
+   "managerRef": "EMP-0001"
+  },
+  {
+   "reference": "EMP-0004",
+   "firstName": "Louis",
+   "lastName": "Mansour",
+   "email": "louis.mansour@aurora-industries.example",
+   "hireDate": "2018-02-06",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Droit social",
+    "SIRH",
+    "Recrutement"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 14,
+    "remaining": 11
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [
+    "Production",
+    "Maintenance",
+    "Logistique"
+   ],
+   "account": null,
+   "department": "Direction",
+   "team": "Comité de direction",
+   "jobTitle": "Responsable HSE",
+   "level": "Senior",
+   "managerRef": "EMP-0001"
+  },
+  {
+   "reference": "EMP-0005",
+   "firstName": "Myriam",
+   "lastName": "Bouzid",
+   "email": "myriam.bouzid@aurora-industries.example",
+   "hireDate": "2026-07-23",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": "2026-10-21",
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Droit social",
+    "SIRH",
+    "Recrutement"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 14,
+    "remaining": 11
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Ressources humaines",
+   "team": "RH",
+   "jobTitle": "HR Business Partner – Industrie",
+   "level": "Senior",
+   "managerRef": "EMP-0002"
+  },
+  {
+   "reference": "EMP-0006",
+   "firstName": "Lucía",
+   "lastName": "Faure",
+   "email": "lucia.faure@aurora-industries.example",
+   "hireDate": "2026-06-01",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDD",
+   "skills": [
+    "Droit social",
+    "SIRH",
+    "Recrutement"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 13,
+    "remaining": 12
+   },
+   "sickDays": 0,
+   "persona": "silent",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Ressources humaines",
+   "team": "RH",
+   "jobTitle": "HR Business Partner – Fonctions support",
+   "level": "Senior",
+   "managerRef": "EMP-0002"
+  },
+  {
+   "reference": "EMP-0007",
+   "firstName": "Priya",
+   "lastName": "Leroy",
+   "email": "priya.leroy@aurora-industries.example",
+   "hireDate": "2021-08-05",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Droit social",
+    "SIRH",
+    "Recrutement"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 12,
+    "remaining": 13
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Ressources humaines",
+   "team": "RH",
+   "jobTitle": "Gestionnaire paie et avantages",
+   "level": "Mid",
+   "managerRef": "EMP-0002"
+  },
+  {
+   "reference": "EMP-0008",
+   "firstName": "Kenji",
+   "lastName": "Hamdi",
+   "email": "kenji.hamdi@aurora-industries.example",
+   "hireDate": "2023-12-08",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Droit social",
+    "SIRH",
+    "Recrutement"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 11,
+    "remaining": 14
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Ressources humaines",
+   "team": "RH",
+   "jobTitle": "Chargée de recrutement",
+   "level": "Mid",
+   "managerRef": "EMP-0002"
+  },
+  {
+   "reference": "EMP-0009",
+   "firstName": "Eva",
+   "lastName": "Saidi",
+   "email": "eva.saidi@aurora-industries.example",
+   "hireDate": "2016-05-06",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Droit social",
+    "SIRH",
+    "Recrutement"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 10,
+    "remaining": 15
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Ressources humaines",
+   "team": "RH",
+   "jobTitle": "Chargé de formation",
+   "level": "Mid",
+   "managerRef": "EMP-0002"
+  },
+  {
+   "reference": "EMP-0010",
+   "firstName": "Sofia",
+   "lastName": "Rossi",
+   "email": "manager@demo.astro.app",
+   "hireDate": "2017-01-09",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Conduite de ligne",
+    "Soudure"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 21,
+    "remaining": 4
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": "manager",
+   "department": "Production",
+   "team": "Assemblage",
+   "jobTitle": "Responsable Production",
+   "level": "Head",
+   "managerRef": "EMP-0001"
+  },
+  {
+   "reference": "EMP-0011",
+   "firstName": "Pauline",
+   "lastName": "Faure",
+   "email": "pauline.faure@aurora-industries.example",
+   "hireDate": "2023-03-20",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Lean",
+    "Soudure"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 9,
+    "remaining": 16
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Assemblage",
+   "jobTitle": "Responsable Assemblage",
+   "level": "Lead",
+   "managerRef": "EMP-0010"
+  },
+  {
+   "reference": "EMP-0012",
+   "firstName": "Inès",
+   "lastName": "Moreau",
+   "email": "ines.moreau@aurora-industries.example",
+   "hireDate": "2022-04-04",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Soudure",
+    "Lean"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 19,
+    "remaining": 6
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Assemblage",
+   "jobTitle": "Opératrice",
+   "level": "Mid",
+   "managerRef": "EMP-0010"
+  },
+  {
+   "reference": "EMP-0013",
+   "firstName": "Karim",
+   "lastName": "Haddad",
+   "email": "karim.haddad@aurora-industries.example",
+   "hireDate": "2021-06-14",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Lean",
+    "5S",
+    "Conduite de ligne"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 16,
+    "remaining": 9
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Assemblage",
+   "jobTitle": "Opérateur",
+   "level": "Mid",
+   "managerRef": "EMP-0010"
+  },
+  {
+   "reference": "EMP-0014",
+   "firstName": "Julie",
+   "lastName": "Fournier",
+   "email": "julie.fournier@aurora-industries.example",
+   "hireDate": "2023-11-20",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "5S",
+    "Conduite de ligne",
+    "Sécurité au poste"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 19,
+    "remaining": 6
+   },
+   "sickDays": 2,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Assemblage",
+   "jobTitle": "Chef d'équipe",
+   "level": "Mid",
+   "managerRef": "EMP-0011"
+  },
+  {
+   "reference": "EMP-0015",
+   "firstName": "Julie",
+   "lastName": "Silva",
+   "email": "julie.silva@aurora-industries.example",
+   "hireDate": "2014-07-21",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Sécurité au poste",
+    "Conduite de ligne",
+    "SMED"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 19,
+    "remaining": 6
+   },
+   "sickDays": 2,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Assemblage",
+   "jobTitle": "Opérateur de production",
+   "level": "Mid",
+   "managerRef": "EMP-0011"
+  },
+  {
+   "reference": "EMP-0016",
+   "firstName": "Victor",
+   "lastName": "Leroy",
+   "email": "victor.leroy@aurora-industries.example",
+   "hireDate": "2026-04-03",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Lean",
+    "SMED",
+    "Sécurité au poste"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 12,
+    "remaining": 13
+   },
+   "sickDays": 1,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Assemblage",
+   "jobTitle": "Chef d'équipe",
+   "level": "Senior",
+   "managerRef": "EMP-0011"
+  },
+  {
+   "reference": "EMP-0017",
+   "firstName": "Noah",
+   "lastName": "Petit",
+   "email": "noah.petit@aurora-industries.example",
+   "hireDate": "2025-09-22",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Sécurité au poste",
+    "Conduite de ligne"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 11,
+    "remaining": 14
+   },
+   "sickDays": 3,
+   "persona": "chatty",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Assemblage",
+   "jobTitle": "Opérateur de production",
+   "level": "Mid",
+   "managerRef": "EMP-0011"
+  },
+  {
+   "reference": "EMP-0018",
+   "firstName": "Mehdi",
+   "lastName": "Mejri",
+   "email": "mehdi.mejri@aurora-industries.example",
+   "hireDate": "2014-10-07",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "SMED",
+    "5S",
+    "Lean"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 14,
+    "remaining": 11
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Assemblage",
+   "jobTitle": "Opératrice de production",
+   "level": "Mid",
+   "managerRef": "EMP-0011"
+  },
+  {
+   "reference": "EMP-0019",
+   "firstName": "Kenji",
+   "lastName": "Riahi",
+   "email": "kenji.riahi@aurora-industries.example",
+   "hireDate": "2026-05-13",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDD",
+   "skills": [
+    "Soudure",
+    "Conduite de ligne"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 18,
+    "remaining": 7
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Assemblage",
+   "jobTitle": "Chef d'équipe",
+   "level": "Mid",
+   "managerRef": "EMP-0011"
+  },
+  {
+   "reference": "EMP-0020",
+   "firstName": "Selma",
+   "lastName": "Silva",
+   "email": "selma.silva@aurora-industries.example",
+   "hireDate": "2015-05-04",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Sécurité au poste",
+    "5S",
+    "Soudure"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 15,
+    "remaining": 10
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Assemblage",
+   "jobTitle": "Chef d'équipe",
+   "level": "Senior",
+   "managerRef": "EMP-0011"
+  },
+  {
+   "reference": "EMP-0021",
+   "firstName": "Julie",
+   "lastName": "Lefebvre",
+   "email": "julie.lefebvre@aurora-industries.example",
+   "hireDate": "2022-11-02",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "5S",
+    "Soudure",
+    "Conduite de ligne"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 11,
+    "remaining": 14
+   },
+   "sickDays": 3,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Assemblage",
+   "jobTitle": "Chef d'équipe",
+   "level": "Senior",
+   "managerRef": "EMP-0011"
+  },
+  {
+   "reference": "EMP-0022",
+   "firstName": "Romain",
+   "lastName": "Traoré",
+   "email": "romain.traore@aurora-industries.example",
+   "hireDate": "2015-05-28",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Sécurité au poste",
+    "Lean"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 15,
+    "remaining": 10
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Assemblage",
+   "jobTitle": "Chef d'équipe",
+   "level": "Mid",
+   "managerRef": "EMP-0011"
+  },
+  {
+   "reference": "EMP-0023",
+   "firstName": "Amira",
+   "lastName": "Mensah",
+   "email": "amira.mensah@aurora-industries.example",
+   "hireDate": "2024-02-12",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "SMED",
+    "Lean",
+    "Soudure"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 19,
+    "remaining": 6
+   },
+   "sickDays": 1,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Assemblage",
+   "jobTitle": "Chef d'équipe",
+   "level": "Junior",
+   "managerRef": "EMP-0011"
+  },
+  {
+   "reference": "EMP-0024",
+   "firstName": "Mehdi",
+   "lastName": "Faure",
+   "email": "mehdi.faure@aurora-industries.example",
+   "hireDate": "2021-12-20",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "5S",
+    "Lean",
+    "Conduite de ligne"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 18,
+    "remaining": 7
+   },
+   "sickDays": 0,
+   "persona": "chatty",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Assemblage",
+   "jobTitle": "Chef d'équipe",
+   "level": "Junior",
+   "managerRef": "EMP-0011"
+  },
+  {
+   "reference": "EMP-0025",
+   "firstName": "Adam",
+   "lastName": "Petit",
+   "email": "adam.petit@aurora-industries.example",
+   "hireDate": "2023-05-29",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Conduite de ligne",
+    "5S",
+    "Lean"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 18,
+    "remaining": 7
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Assemblage",
+   "jobTitle": "Opératrice de production",
+   "level": "Senior",
+   "managerRef": "EMP-0011"
+  },
+  {
+   "reference": "EMP-0026",
+   "firstName": "Pauline",
+   "lastName": "Kowalski",
+   "email": "pauline.kowalski@aurora-industries.example",
+   "hireDate": "2020-04-10",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Sécurité au poste",
+    "Soudure",
+    "5S"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 13,
+    "remaining": 12
+   },
+   "sickDays": 0,
+   "persona": "chatty",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Assemblage",
+   "jobTitle": "Opérateur de production",
+   "level": "Mid",
+   "managerRef": "EMP-0011"
+  },
+  {
+   "reference": "EMP-0027",
+   "firstName": "Dina",
+   "lastName": "Bouzid",
+   "email": "dina.bouzid@aurora-industries.example",
+   "hireDate": "2021-02-22",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "SMED",
+    "5S",
+    "Sécurité au poste"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 19,
+    "remaining": 6
+   },
+   "sickDays": 0,
+   "persona": "silent",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Assemblage",
+   "jobTitle": "Opératrice de production",
+   "level": "Senior",
+   "managerRef": "EMP-0011"
+  },
+  {
+   "reference": "EMP-0028",
+   "firstName": "Pauline",
+   "lastName": "Bouzid",
+   "email": "pauline.bouzid@aurora-industries.example",
+   "hireDate": "2022-11-11",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Sécurité au poste",
+    "5S"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 15,
+    "remaining": 10
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Usinage",
+   "jobTitle": "Responsable Usinage",
+   "level": "Lead",
+   "managerRef": "EMP-0010"
+  },
+  {
+   "reference": "EMP-0029",
+   "firstName": "Nina",
+   "lastName": "Mejri",
+   "email": "nina.mejri@aurora-industries.example",
+   "hireDate": "2016-09-05",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "SMED",
+    "Soudure",
+    "Sécurité au poste"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 18,
+    "remaining": 7
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Usinage",
+   "jobTitle": "Opérateur commande numérique",
+   "level": "Senior",
+   "managerRef": "EMP-0028"
+  },
+  {
+   "reference": "EMP-0030",
+   "firstName": "Hugo",
+   "lastName": "Sharma",
+   "email": "hugo.sharma@aurora-industries.example",
+   "hireDate": "2026-03-10",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "INTERNSHIP",
+   "skills": [
+    "SMED",
+    "Soudure",
+    "Lean"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 20,
+    "remaining": 5
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Usinage",
+   "jobTitle": "Opérateur commande numérique",
+   "level": "Intern",
+   "managerRef": "EMP-0028"
+  },
+  {
+   "reference": "EMP-0031",
+   "firstName": "Lina",
+   "lastName": "Blanc",
+   "email": "lina.blanc@aurora-industries.example",
+   "hireDate": "2018-08-10",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "5S",
+    "Sécurité au poste",
+    "Lean"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 11,
+    "remaining": 14
+   },
+   "sickDays": 2,
+   "persona": "chatty",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Usinage",
+   "jobTitle": "Régleur",
+   "level": "Junior",
+   "managerRef": "EMP-0028"
+  },
+  {
+   "reference": "EMP-0032",
+   "firstName": "Bilel",
+   "lastName": "Amri",
+   "email": "bilel.amri@aurora-industries.example",
+   "hireDate": "2018-05-17",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Conduite de ligne",
+    "Lean"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 20,
+    "remaining": 5
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Usinage",
+   "jobTitle": "Usineur CN",
+   "level": "Senior",
+   "managerRef": "EMP-0028"
+  },
+  {
+   "reference": "EMP-0033",
+   "firstName": "Kofi",
+   "lastName": "Garnier",
+   "email": "kofi.garnier@aurora-industries.example",
+   "hireDate": "2018-10-12",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "5S",
+    "Conduite de ligne"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 14,
+    "remaining": 11
+   },
+   "sickDays": 2,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Usinage",
+   "jobTitle": "Régleur",
+   "level": "Mid",
+   "managerRef": "EMP-0028"
+  },
+  {
+   "reference": "EMP-0034",
+   "firstName": "Paul",
+   "lastName": "Bernard",
+   "email": "paul.bernard@aurora-industries.example",
+   "hireDate": "2014-03-18",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Soudure",
+    "Sécurité au poste"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 15,
+    "remaining": 10
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Usinage",
+   "jobTitle": "Régleur",
+   "level": "Junior",
+   "managerRef": "EMP-0028"
+  },
+  {
+   "reference": "EMP-0035",
+   "firstName": "Aya",
+   "lastName": "Vincent",
+   "email": "aya.vincent@aurora-industries.example",
+   "hireDate": "2025-01-06",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Sécurité au poste",
+    "Conduite de ligne",
+    "Lean"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 18,
+    "remaining": 7
+   },
+   "sickDays": 4,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Usinage",
+   "jobTitle": "Opérateur commande numérique",
+   "level": "Junior",
+   "managerRef": "EMP-0028"
+  },
+  {
+   "reference": "EMP-0036",
+   "firstName": "Pauline",
+   "lastName": "Robin",
+   "email": "pauline.robin@aurora-industries.example",
+   "hireDate": "2012-06-11",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Soudure",
+    "SMED",
+    "5S"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 22,
+    "remaining": 3
+   },
+   "sickDays": 0,
+   "persona": "chatty",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Usinage",
+   "jobTitle": "Régleur",
+   "level": "Mid",
+   "managerRef": "EMP-0028"
+  },
+  {
+   "reference": "EMP-0037",
+   "firstName": "Giulia",
+   "lastName": "Lefebvre",
+   "email": "giulia.lefebvre@aurora-industries.example",
+   "hireDate": "2013-06-10",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "SMED",
+    "Soudure"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 14,
+    "remaining": 11
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Usinage",
+   "jobTitle": "Régleur",
+   "level": "Junior",
+   "managerRef": "EMP-0028"
+  },
+  {
+   "reference": "EMP-0038",
+   "firstName": "Leila",
+   "lastName": "Chevalier",
+   "email": "leila.chevalier@aurora-industries.example",
+   "hireDate": "2024-02-05",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Conduite de ligne",
+    "SMED",
+    "Soudure"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 13,
+    "remaining": 12
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Usinage",
+   "jobTitle": "Régleur",
+   "level": "Junior",
+   "managerRef": "EMP-0028"
+  },
+  {
+   "reference": "EMP-0039",
+   "firstName": "Omar",
+   "lastName": "Riahi",
+   "email": "omar.riahi@aurora-industries.example",
+   "hireDate": "2015-12-01",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "SMED",
+    "Soudure",
+    "Sécurité au poste"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 13,
+    "remaining": 12
+   },
+   "sickDays": 0,
+   "persona": "chatty",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Usinage",
+   "jobTitle": "Usineur CN",
+   "level": "Mid",
+   "managerRef": "EMP-0028"
+  },
+  {
+   "reference": "EMP-0040",
+   "firstName": "Noah",
+   "lastName": "Lambert",
+   "email": "noah.lambert@aurora-industries.example",
+   "hireDate": "2016-12-09",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Conduite de ligne",
+    "5S",
+    "Lean"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 20,
+    "remaining": 5
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Méthodes",
+   "jobTitle": "Responsable Méthodes",
+   "level": "Lead",
+   "managerRef": "EMP-0010"
+  },
+  {
+   "reference": "EMP-0041",
+   "firstName": "Walid",
+   "lastName": "Demir",
+   "email": "walid.demir@aurora-industries.example",
+   "hireDate": "2025-02-10",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Conduite de ligne",
+    "Lean"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 17,
+    "remaining": 8
+   },
+   "sickDays": 0,
+   "persona": "chatty",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Méthodes",
+   "jobTitle": "Ingénieur méthodes",
+   "level": "Junior",
+   "managerRef": "EMP-0040"
+  },
+  {
+   "reference": "EMP-0042",
+   "firstName": "Maxime",
+   "lastName": "Mensah",
+   "email": "maxime.mensah@aurora-industries.example",
+   "hireDate": "2026-03-16",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "INTERNSHIP",
+   "skills": [
+    "Lean",
+    "SMED"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 16,
+    "remaining": 9
+   },
+   "sickDays": 0,
+   "persona": "silent",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Méthodes",
+   "jobTitle": "Technicien méthodes",
+   "level": "Intern",
+   "managerRef": "EMP-0040"
+  },
+  {
+   "reference": "EMP-0043",
+   "firstName": "Léa",
+   "lastName": "Okafor",
+   "email": "lea.okafor@aurora-industries.example",
+   "hireDate": "2020-10-21",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "SMED",
+    "Lean"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 13,
+    "remaining": 12
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Méthodes",
+   "jobTitle": "Ingénieur méthodes",
+   "level": "Junior",
+   "managerRef": "EMP-0040"
+  },
+  {
+   "reference": "EMP-0044",
+   "firstName": "Myriam",
+   "lastName": "Faure",
+   "email": "myriam.faure@aurora-industries.example",
+   "hireDate": "2018-04-30",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Lean",
+    "Conduite de ligne",
+    "5S"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 16,
+    "remaining": 9
+   },
+   "sickDays": 6,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Production",
+   "team": "Méthodes",
+   "jobTitle": "Technicien méthodes",
+   "level": "Mid",
+   "managerRef": "EMP-0040"
+  },
+  {
+   "reference": "EMP-0045",
+   "firstName": "Camille",
+   "lastName": "Ben Salah",
+   "email": "camille.bensalah@aurora-industries.example",
+   "hireDate": "2014-09-01",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "INTERIM",
+   "skills": [
+    "Sécurité au poste",
+    "5S",
+    "SMED"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 15,
+    "remaining": 10
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [
+    "Maintenance",
+    "R&D",
+    "Qualité"
+   ],
+   "account": null,
+   "department": "Production",
+   "team": "Méthodes",
+   "jobTitle": "Ingénieur méthodes",
+   "level": "Senior",
+   "managerRef": "EMP-0040"
+  },
+  {
+   "reference": "EMP-0046",
+   "firstName": "Manon",
+   "lastName": "Amri",
+   "email": "manon.amri@aurora-industries.example",
+   "hireDate": "2012-06-21",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Électrotechnique",
+    "GMAO",
+    "Maintenance préventive"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 16,
+    "remaining": 9
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Maintenance",
+   "team": "Maintenance curative",
+   "jobTitle": "Responsable Maintenance",
+   "level": "Head",
+   "managerRef": "EMP-0001"
+  },
+  {
+   "reference": "EMP-0047",
+   "firstName": "Louis",
+   "lastName": "Roux",
+   "email": "louis.roux@aurora-industries.example",
+   "hireDate": "2017-09-18",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Maintenance préventive",
+    "Automatisme"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 18,
+    "remaining": 7
+   },
+   "sickDays": 1,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Maintenance",
+   "team": "Maintenance curative",
+   "jobTitle": "Responsable Maintenance curative",
+   "level": "Lead",
+   "managerRef": "EMP-0046"
+  },
+  {
+   "reference": "EMP-0048",
+   "firstName": "Yanis",
+   "lastName": "Benali",
+   "email": "employee@demo.astro.app",
+   "hireDate": "2023-02-01",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Électrotechnique",
+    "Maintenance préventive",
+    "Hydraulique"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 16,
+    "remaining": 9
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": "employee",
+   "department": "Maintenance",
+   "team": "Maintenance curative",
+   "jobTitle": "Technicien de maintenance",
+   "level": "Mid",
+   "managerRef": "EMP-0010"
+  },
+  {
+   "reference": "EMP-0049",
+   "firstName": "Kenji",
+   "lastName": "Ben Salah",
+   "email": "kenji.bensalah@aurora-industries.example",
+   "hireDate": "2026-02-06",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDD",
+   "skills": [
+    "Hydraulique",
+    "Électrotechnique",
+    "GMAO"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 13,
+    "remaining": 12
+   },
+   "sickDays": 3,
+   "persona": "silent",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Maintenance",
+   "team": "Maintenance curative",
+   "jobTitle": "Électromécanicien",
+   "level": "Senior",
+   "managerRef": "EMP-0047"
+  },
+  {
+   "reference": "EMP-0050",
+   "firstName": "Priya",
+   "lastName": "Dubois",
+   "email": "priya.dubois@aurora-industries.example",
+   "hireDate": "2025-11-10",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Électrotechnique",
+    "Automatisme",
+    "Maintenance préventive"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 19,
+    "remaining": 6
+   },
+   "sickDays": 2,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Maintenance",
+   "team": "Maintenance curative",
+   "jobTitle": "Technicien de maintenance",
+   "level": "Mid",
+   "managerRef": "EMP-0047"
+  },
+  {
+   "reference": "EMP-0051",
+   "firstName": "Romain",
+   "lastName": "Fontaine",
+   "email": "romain.fontaine@aurora-industries.example",
+   "hireDate": "2022-08-09",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Maintenance préventive",
+    "Électrotechnique"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 16,
+    "remaining": 9
+   },
+   "sickDays": 1,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Maintenance",
+   "team": "Maintenance curative",
+   "jobTitle": "Technicien de maintenance",
+   "level": "Mid",
+   "managerRef": "EMP-0047"
+  },
+  {
+   "reference": "EMP-0052",
+   "firstName": "Hana",
+   "lastName": "Chen",
+   "email": "hana.chen@aurora-industries.example",
+   "hireDate": "2024-04-29",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Électrotechnique",
+    "Maintenance préventive",
+    "GMAO"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 22,
+    "remaining": 3
+   },
+   "sickDays": 0,
+   "persona": "chatty",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Maintenance",
+   "team": "Maintenance curative",
+   "jobTitle": "Électromécanicien",
+   "level": "Senior",
+   "managerRef": "EMP-0047"
+  },
+  {
+   "reference": "EMP-0053",
+   "firstName": "Nathan",
+   "lastName": "Riahi",
+   "email": "nathan.riahi@aurora-industries.example",
+   "hireDate": "2022-07-07",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Électrotechnique",
+    "GMAO",
+    "Maintenance préventive"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 18,
+    "remaining": 7
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Maintenance",
+   "team": "Maintenance curative",
+   "jobTitle": "Électromécanicien",
+   "level": "Senior",
+   "managerRef": "EMP-0047"
+  },
+  {
+   "reference": "EMP-0054",
+   "firstName": "Moussa",
+   "lastName": "Leroy",
+   "email": "moussa.leroy@aurora-industries.example",
+   "hireDate": "2026-05-04",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Hydraulique",
+    "Automatisme",
+    "Maintenance préventive"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 16,
+    "remaining": 9
+   },
+   "sickDays": 2,
+   "persona": "chatty",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Maintenance",
+   "team": "Maintenance curative",
+   "jobTitle": "Électromécanicien",
+   "level": "Mid",
+   "managerRef": "EMP-0047"
+  },
+  {
+   "reference": "EMP-0055",
+   "firstName": "Thomas",
+   "lastName": "Sharma",
+   "email": "thomas.sharma@aurora-industries.example",
+   "hireDate": "2026-08-04",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": "2026-11-02",
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Électrotechnique"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 11,
+    "remaining": 14
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Maintenance",
+   "team": "Maintenance curative",
+   "jobTitle": "Électromécanicien",
+   "level": "Mid",
+   "managerRef": "EMP-0047"
+  },
+  {
+   "reference": "EMP-0056",
+   "firstName": "Alice",
+   "lastName": "Laurent",
+   "email": "alice.laurent@aurora-industries.example",
+   "hireDate": "2024-03-15",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "GMAO",
+    "Hydraulique",
+    "Automatisme"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 19,
+    "remaining": 6
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Maintenance",
+   "team": "Maintenance préventive",
+   "jobTitle": "Responsable Maintenance préventive",
+   "level": "Lead",
+   "managerRef": "EMP-0046"
+  },
+  {
+   "reference": "EMP-0057",
+   "firstName": "Rami",
+   "lastName": "Mensah",
+   "email": "rami.mensah@aurora-industries.example",
+   "hireDate": "2024-09-06",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Électrotechnique",
+    "GMAO"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 11,
+    "remaining": 14
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Maintenance",
+   "team": "Maintenance préventive",
+   "jobTitle": "Technicien de maintenance",
+   "level": "Senior",
+   "managerRef": "EMP-0056"
+  },
+  {
+   "reference": "EMP-0058",
+   "firstName": "Romain",
+   "lastName": "Bouaziz",
+   "email": "romain.bouaziz@aurora-industries.example",
+   "hireDate": "2023-05-29",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Automatisme",
+    "GMAO",
+    "Hydraulique"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 16,
+    "remaining": 9
+   },
+   "sickDays": 6,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Maintenance",
+   "team": "Maintenance préventive",
+   "jobTitle": "Automaticien",
+   "level": "Senior",
+   "managerRef": "EMP-0056"
+  },
+  {
+   "reference": "EMP-0059",
+   "firstName": "Maya",
+   "lastName": "Fournier",
+   "email": "maya.fournier@aurora-industries.example",
+   "hireDate": "2026-09-21",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": "2026-12-20",
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Électrotechnique",
+    "GMAO",
+    "Maintenance préventive"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 9,
+    "remaining": 16
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Maintenance",
+   "team": "Maintenance préventive",
+   "jobTitle": "Automaticien",
+   "level": "Mid",
+   "managerRef": "EMP-0056"
+  },
+  {
+   "reference": "EMP-0060",
+   "firstName": "Maya",
+   "lastName": "Amri",
+   "email": "maya.amri@aurora-industries.example",
+   "hireDate": "2020-01-21",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Électrotechnique",
+    "Maintenance préventive"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 9,
+    "remaining": 16
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Maintenance",
+   "team": "Maintenance préventive",
+   "jobTitle": "Technicien de maintenance",
+   "level": "Senior",
+   "managerRef": "EMP-0056"
+  },
+  {
+   "reference": "EMP-0061",
+   "firstName": "Mei",
+   "lastName": "Khelifi",
+   "email": "mei.khelifi@aurora-industries.example",
+   "hireDate": "2024-03-11",
+   "exitDate": "2026-09-29",
+   "exitReason": "Fin de contrat",
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Automatisme",
+    "Hydraulique"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 17,
+    "remaining": 8
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Maintenance",
+   "team": "Maintenance préventive",
+   "jobTitle": "Automaticien",
+   "level": "Mid",
+   "managerRef": "EMP-0056"
+  },
+  {
+   "reference": "EMP-0062",
+   "firstName": "Ali",
+   "lastName": "Rousseau",
+   "email": "ali.rousseau@aurora-industries.example",
+   "hireDate": "2014-11-17",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "8D",
+    "Métrologie",
+    "Audit"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 13,
+    "remaining": 12
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Qualité",
+   "team": "Contrôle qualité",
+   "jobTitle": "Responsable Qualité",
+   "level": "Head",
+   "managerRef": "EMP-0001"
+  },
+  {
+   "reference": "EMP-0063",
+   "firstName": "Diego",
+   "lastName": "Fernandes",
+   "email": "diego.fernandes@aurora-industries.example",
+   "hireDate": "2018-11-15",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDD",
+   "skills": [
+    "AMDEC",
+    "Métrologie"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 11,
+    "remaining": 14
+   },
+   "sickDays": 0,
+   "persona": "chatty",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Qualité",
+   "team": "Contrôle qualité",
+   "jobTitle": "Responsable Contrôle qualité",
+   "level": "Lead",
+   "managerRef": "EMP-0062"
+  },
+  {
+   "reference": "EMP-0064",
+   "firstName": "Walid",
+   "lastName": "Mercier",
+   "email": "walid.mercier@aurora-industries.example",
+   "hireDate": "2016-02-15",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Métrologie",
+    "Audit",
+    "8D"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 16,
+    "remaining": 9
+   },
+   "sickDays": 3,
+   "persona": "chatty",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Qualité",
+   "team": "Contrôle qualité",
+   "jobTitle": "Technicien métrologie",
+   "level": "Senior",
+   "managerRef": "EMP-0063"
+  },
+  {
+   "reference": "EMP-0065",
+   "firstName": "Rania",
+   "lastName": "Bonnet",
+   "email": "rania.bonnet@aurora-industries.example",
+   "hireDate": "2021-06-22",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Audit",
+    "ISO 9001"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 12,
+    "remaining": 13
+   },
+   "sickDays": 6,
+   "persona": "chatty",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Qualité",
+   "team": "Contrôle qualité",
+   "jobTitle": "Technicien métrologie",
+   "level": "Mid",
+   "managerRef": "EMP-0063"
+  },
+  {
+   "reference": "EMP-0066",
+   "firstName": "Lucía",
+   "lastName": "Bernard",
+   "email": "lucia.bernard@aurora-industries.example",
+   "hireDate": "2014-05-16",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "APPRENTICESHIP",
+   "skills": [
+    "AMDEC",
+    "8D"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 17,
+    "remaining": 8
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Qualité",
+   "team": "Contrôle qualité",
+   "jobTitle": "Technicien métrologie",
+   "level": "Apprentice",
+   "managerRef": "EMP-0063"
+  },
+  {
+   "reference": "EMP-0067",
+   "firstName": "Jules",
+   "lastName": "Ben Salah",
+   "email": "jules.bensalah@aurora-industries.example",
+   "hireDate": "2019-06-04",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "AMDEC",
+    "Audit",
+    "8D"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 12,
+    "remaining": 13
+   },
+   "sickDays": 3,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Qualité",
+   "team": "Contrôle qualité",
+   "jobTitle": "Technicien métrologie",
+   "level": "Mid",
+   "managerRef": "EMP-0063"
+  },
+  {
+   "reference": "EMP-0068",
+   "firstName": "Youssef",
+   "lastName": "Khelifi",
+   "email": "youssef.khelifi@aurora-industries.example",
+   "hireDate": "2018-08-15",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "AMDEC",
+    "8D"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 9,
+    "remaining": 16
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Qualité",
+   "team": "Contrôle qualité",
+   "jobTitle": "Technicien métrologie",
+   "level": "Junior",
+   "managerRef": "EMP-0063"
+  },
+  {
+   "reference": "EMP-0069",
+   "firstName": "Victor",
+   "lastName": "Laurent",
+   "email": "victor.laurent@aurora-industries.example",
+   "hireDate": "2012-06-15",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "8D",
+    "ISO 9001"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 14,
+    "remaining": 11
+   },
+   "sickDays": 2,
+   "persona": "chatty",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Qualité",
+   "team": "Contrôle qualité",
+   "jobTitle": "Contrôleur qualité",
+   "level": "Senior",
+   "managerRef": "EMP-0063"
+  },
+  {
+   "reference": "EMP-0070",
+   "firstName": "Omar",
+   "lastName": "Fernandes",
+   "email": "omar.fernandes@aurora-industries.example",
+   "hireDate": "2018-01-15",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDD",
+   "skills": [
+    "Métrologie",
+    "Audit",
+    "8D"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 14,
+    "remaining": 11
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Qualité",
+   "team": "Assurance qualité",
+   "jobTitle": "Responsable Assurance qualité",
+   "level": "Lead",
+   "managerRef": "EMP-0062"
+  },
+  {
+   "reference": "EMP-0071",
+   "firstName": "Chloé",
+   "lastName": "Lopez",
+   "email": "chloe.lopez@aurora-industries.example",
+   "hireDate": "2021-03-12",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Métrologie",
+    "AMDEC",
+    "ISO 9001"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 19,
+    "remaining": 6
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [
+    "Production",
+    "Logistique",
+    "R&D"
+   ],
+   "account": null,
+   "department": "Qualité",
+   "team": "Assurance qualité",
+   "jobTitle": "Ingénieur qualité fournisseurs",
+   "level": "Junior",
+   "managerRef": "EMP-0070"
+  },
+  {
+   "reference": "EMP-0072",
+   "firstName": "Anaïs",
+   "lastName": "Amri",
+   "email": "anais.amri@aurora-industries.example",
+   "hireDate": "2022-07-18",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDD",
+   "skills": [
+    "ISO 9001",
+    "Métrologie",
+    "8D"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 19,
+    "remaining": 6
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Qualité",
+   "team": "Assurance qualité",
+   "jobTitle": "Ingénieur qualité",
+   "level": "Mid",
+   "managerRef": "EMP-0070"
+  },
+  {
+   "reference": "EMP-0073",
+   "firstName": "Lina",
+   "lastName": "Gharbi",
+   "email": "lina.gharbi@aurora-industries.example",
+   "hireDate": "2026-02-23",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "8D",
+    "ISO 9001",
+    "Métrologie"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 18,
+    "remaining": 7
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Qualité",
+   "team": "Assurance qualité",
+   "jobTitle": "Ingénieur qualité",
+   "level": "Mid",
+   "managerRef": "EMP-0070"
+  },
+  {
+   "reference": "EMP-0074",
+   "firstName": "Amira",
+   "lastName": "Amri",
+   "email": "amira.amri@aurora-industries.example",
+   "hireDate": "2015-11-20",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "INTERIM",
+   "skills": [
+    "8D",
+    "Audit",
+    "Métrologie"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 21,
+    "remaining": 4
+   },
+   "sickDays": 2,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Qualité",
+   "team": "Assurance qualité",
+   "jobTitle": "Ingénieur qualité",
+   "level": "Mid",
+   "managerRef": "EMP-0070"
+  },
+  {
+   "reference": "EMP-0075",
+   "firstName": "Tomas",
+   "lastName": "Tanaka",
+   "email": "tomas.tanaka@aurora-industries.example",
+   "hireDate": "2020-04-01",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Douane",
+    "CACES",
+    "Planification"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 21,
+    "remaining": 4
+   },
+   "sickDays": 12,
+   "persona": "chatty",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Logistique",
+   "team": "Entrepôt",
+   "jobTitle": "Responsable Logistique",
+   "level": "Head",
+   "managerRef": "EMP-0001"
+  },
+  {
+   "reference": "EMP-0076",
+   "firstName": "Lucía",
+   "lastName": "Chaabane",
+   "email": "lucia.chaabane@aurora-industries.example",
+   "hireDate": "2024-05-01",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "WMS",
+    "CACES",
+    "Planification"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 10,
+    "remaining": 15
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Logistique",
+   "team": "Entrepôt",
+   "jobTitle": "Responsable Entrepôt",
+   "level": "Lead",
+   "managerRef": "EMP-0075"
+  },
+  {
+   "reference": "EMP-0077",
+   "firstName": "Hugo",
+   "lastName": "Chen",
+   "email": "hugo.chen@aurora-industries.example",
+   "hireDate": "2015-02-25",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "INTERIM",
+   "skills": [
+    "Planification",
+    "CACES",
+    "Supply chain"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 18,
+    "remaining": 7
+   },
+   "sickDays": 0,
+   "persona": "silent",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Logistique",
+   "team": "Entrepôt",
+   "jobTitle": "Cariste",
+   "level": "Junior",
+   "managerRef": "EMP-0076"
+  },
+  {
+   "reference": "EMP-0078",
+   "firstName": "Nour",
+   "lastName": "Tanaka",
+   "email": "nour.tanaka@aurora-industries.example",
+   "hireDate": "2022-02-16",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "WMS",
+    "Supply chain",
+    "CACES"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 19,
+    "remaining": 6
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Logistique",
+   "team": "Entrepôt",
+   "jobTitle": "Magasinier",
+   "level": "Mid",
+   "managerRef": "EMP-0076"
+  },
+  {
+   "reference": "EMP-0079",
+   "firstName": "Théo",
+   "lastName": "Muller",
+   "email": "theo.muller@aurora-industries.example",
+   "hireDate": "2023-04-03",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Douane",
+    "Planification",
+    "WMS"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 23,
+    "remaining": 2
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Logistique",
+   "team": "Entrepôt",
+   "jobTitle": "Cariste",
+   "level": "Mid",
+   "managerRef": "EMP-0076"
+  },
+  {
+   "reference": "EMP-0080",
+   "firstName": "Marie",
+   "lastName": "Roux",
+   "email": "marie.roux@aurora-industries.example",
+   "hireDate": "2017-10-30",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Douane",
+    "Supply chain"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 9,
+    "remaining": 16
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Logistique",
+   "team": "Entrepôt",
+   "jobTitle": "Préparateur de commandes",
+   "level": "Senior",
+   "managerRef": "EMP-0076"
+  },
+  {
+   "reference": "EMP-0081",
+   "firstName": "Farid",
+   "lastName": "Garnier",
+   "email": "farid.garnier@aurora-industries.example",
+   "hireDate": "2026-02-18",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "APPRENTICESHIP",
+   "skills": [
+    "WMS",
+    "Supply chain",
+    "Planification"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 11,
+    "remaining": 14
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Logistique",
+   "team": "Entrepôt",
+   "jobTitle": "Cariste",
+   "level": "Apprentice",
+   "managerRef": "EMP-0076"
+  },
+  {
+   "reference": "EMP-0082",
+   "firstName": "Anis",
+   "lastName": "Faure",
+   "email": "anis.faure@aurora-industries.example",
+   "hireDate": "2024-09-02",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Douane",
+    "Supply chain",
+    "CACES"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 12,
+    "remaining": 13
+   },
+   "sickDays": 0,
+   "persona": "silent",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Logistique",
+   "team": "Entrepôt",
+   "jobTitle": "Préparateur de commandes",
+   "level": "Mid",
+   "managerRef": "EMP-0076"
+  },
+  {
+   "reference": "EMP-0083",
+   "firstName": "Adam",
+   "lastName": "Sharma",
+   "email": "adam.sharma@aurora-industries.example",
+   "hireDate": "2013-11-28",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Douane",
+    "Supply chain",
+    "CACES"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 14,
+    "remaining": 11
+   },
+   "sickDays": 3,
+   "persona": "chatty",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Logistique",
+   "team": "Entrepôt",
+   "jobTitle": "Cariste",
+   "level": "Mid",
+   "managerRef": "EMP-0076"
+  },
+  {
+   "reference": "EMP-0084",
+   "firstName": "Salma",
+   "lastName": "Chen",
+   "email": "salma.chen@aurora-industries.example",
+   "hireDate": "2026-03-23",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Douane",
+    "Supply chain"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 16,
+    "remaining": 9
+   },
+   "sickDays": 1,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Logistique",
+   "team": "Entrepôt",
+   "jobTitle": "Cariste",
+   "level": "Junior",
+   "managerRef": "EMP-0076"
+  },
+  {
+   "reference": "EMP-0085",
+   "firstName": "Lucas",
+   "lastName": "Bernard",
+   "email": "lucas.bernard@aurora-industries.example",
+   "hireDate": "2017-09-06",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Supply chain",
+    "WMS"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 15,
+    "remaining": 10
+   },
+   "sickDays": 3,
+   "persona": "chatty",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Logistique",
+   "team": "Entrepôt",
+   "jobTitle": "Cariste",
+   "level": "Junior",
+   "managerRef": "EMP-0076"
+  },
+  {
+   "reference": "EMP-0086",
+   "firstName": "Jules",
+   "lastName": "Mercier",
+   "email": "jules.mercier@aurora-industries.example",
+   "hireDate": "2023-08-30",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Supply chain",
+    "WMS"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 17,
+    "remaining": 8
+   },
+   "sickDays": 0,
+   "persona": "silent",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Logistique",
+   "team": "Supply",
+   "jobTitle": "Responsable Supply",
+   "level": "Lead",
+   "managerRef": "EMP-0075"
+  },
+  {
+   "reference": "EMP-0087",
+   "firstName": "Marie",
+   "lastName": "Amri",
+   "email": "marie.amri@aurora-industries.example",
+   "hireDate": "2020-10-28",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDD",
+   "skills": [
+    "WMS",
+    "Supply chain"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 11,
+    "remaining": 14
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Logistique",
+   "team": "Supply",
+   "jobTitle": "Approvisionneur",
+   "level": "Junior",
+   "managerRef": "EMP-0086"
+  },
+  {
+   "reference": "EMP-0088",
+   "firstName": "Nina",
+   "lastName": "Silva",
+   "email": "nina.silva@aurora-industries.example",
+   "hireDate": "2024-10-07",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Planification",
+    "WMS"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 16,
+    "remaining": 9
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Logistique",
+   "team": "Supply",
+   "jobTitle": "Planificateur",
+   "level": "Mid",
+   "managerRef": "EMP-0086"
+  },
+  {
+   "reference": "EMP-0089",
+   "firstName": "Hugo",
+   "lastName": "Roux",
+   "email": "hugo.roux@aurora-industries.example",
+   "hireDate": "2022-11-30",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "APPRENTICESHIP",
+   "skills": [
+    "Supply chain",
+    "Douane"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 10,
+    "remaining": 15
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Logistique",
+   "team": "Supply",
+   "jobTitle": "Planificateur",
+   "level": "Apprentice",
+   "managerRef": "EMP-0086"
+  },
+  {
+   "reference": "EMP-0090",
+   "firstName": "Kenji",
+   "lastName": "Mejri",
+   "email": "kenji.mejri@aurora-industries.example",
+   "hireDate": "2013-02-01",
+   "exitDate": "2026-06-29",
+   "exitReason": "Mutation conjoint",
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Supply chain",
+    "CACES",
+    "Douane"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 10,
+    "remaining": 15
+   },
+   "sickDays": 0,
+   "persona": "silent",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Logistique",
+   "team": "Supply",
+   "jobTitle": "Planificateur",
+   "level": "Junior",
+   "managerRef": "EMP-0086"
+  },
+  {
+   "reference": "EMP-0091",
+   "firstName": "Nadia",
+   "lastName": "Bonnet",
+   "email": "nadia.bonnet@aurora-industries.example",
+   "hireDate": "2021-07-15",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Planification",
+    "CACES"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 11,
+    "remaining": 14
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [
+    "Production",
+    "Commercial"
+   ],
+   "account": null,
+   "department": "Logistique",
+   "team": "Supply",
+   "jobTitle": "Planificateur",
+   "level": "Senior",
+   "managerRef": "EMP-0086"
+  },
+  {
+   "reference": "EMP-0092",
+   "firstName": "Zeynep",
+   "lastName": "Novak",
+   "email": "zeynep.novak@aurora-industries.example",
+   "hireDate": "2025-07-21",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Négociation",
+    "CRM",
+    "Export"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 13,
+    "remaining": 12
+   },
+   "sickDays": 3,
+   "persona": "silent",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Commercial",
+   "team": "Ventes France",
+   "jobTitle": "Responsable Commercial",
+   "level": "Head",
+   "managerRef": "EMP-0001"
+  },
+  {
+   "reference": "EMP-0093",
+   "firstName": "Pauline",
+   "lastName": "Bonnet",
+   "email": "pauline.bonnet@aurora-industries.example",
+   "hireDate": "2012-03-22",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Paris",
+   "contractType": "CDI",
+   "skills": [
+    "Export",
+    "Prospection"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 17,
+    "remaining": 8
+   },
+   "sickDays": 0,
+   "persona": "silent",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Commercial",
+   "team": "Ventes France",
+   "jobTitle": "Responsable Ventes France",
+   "level": "Lead",
+   "managerRef": "EMP-0092"
+  },
+  {
+   "reference": "EMP-0094",
+   "firstName": "Giulia",
+   "lastName": "Mensah",
+   "email": "giulia.mensah@aurora-industries.example",
+   "hireDate": "2012-05-28",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Remote",
+   "contractType": "APPRENTICESHIP",
+   "skills": [
+    "CRM",
+    "Prospection"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 10,
+    "remaining": 15
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Commercial",
+   "team": "Ventes France",
+   "jobTitle": "Assistante ADV",
+   "level": "Apprentice",
+   "managerRef": "EMP-0093"
+  },
+  {
+   "reference": "EMP-0095",
+   "firstName": "Marco",
+   "lastName": "Dubois",
+   "email": "marco.dubois@aurora-industries.example",
+   "hireDate": "2015-10-02",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Paris",
+   "contractType": "CDD",
+   "skills": [
+    "CRM",
+    "ADV",
+    "Prospection"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 23,
+    "remaining": 2
+   },
+   "sickDays": 1,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Commercial",
+   "team": "Ventes France",
+   "jobTitle": "Assistante ADV",
+   "level": "Senior",
+   "managerRef": "EMP-0093"
+  },
+  {
+   "reference": "EMP-0096",
+   "firstName": "Marco",
+   "lastName": "Silva",
+   "email": "marco.silva@aurora-industries.example",
+   "hireDate": "2023-03-02",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Paris",
+   "contractType": "CDI",
+   "skills": [
+    "Prospection",
+    "CRM"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 9,
+    "remaining": 16
+   },
+   "sickDays": 0,
+   "persona": "silent",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Commercial",
+   "team": "Ventes France",
+   "jobTitle": "Chargé d'affaires",
+   "level": "Senior",
+   "managerRef": "EMP-0093"
+  },
+  {
+   "reference": "EMP-0097",
+   "firstName": "Yasmine",
+   "lastName": "Chevalier",
+   "email": "yasmine.chevalier@aurora-industries.example",
+   "hireDate": "2016-03-01",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Paris",
+   "contractType": "CDI",
+   "skills": [
+    "ADV",
+    "Négociation",
+    "CRM"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 9,
+    "remaining": 16
+   },
+   "sickDays": 0,
+   "persona": "silent",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Commercial",
+   "team": "Ventes France",
+   "jobTitle": "Chargé d'affaires",
+   "level": "Mid",
+   "managerRef": "EMP-0093"
+  },
+  {
+   "reference": "EMP-0098",
+   "firstName": "Manon",
+   "lastName": "Hamdi",
+   "email": "manon.hamdi@aurora-industries.example",
+   "hireDate": "2018-02-12",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Paris",
+   "contractType": "CDI",
+   "skills": [
+    "CRM",
+    "ADV"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 18,
+    "remaining": 7
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [
+    "Logistique",
+    "Finance"
+   ],
+   "account": null,
+   "department": "Commercial",
+   "team": "Ventes France",
+   "jobTitle": "Assistante ADV",
+   "level": "Senior",
+   "managerRef": "EMP-0093"
+  },
+  {
+   "reference": "EMP-0099",
+   "firstName": "Manon",
+   "lastName": "Tanaka",
+   "email": "manon.tanaka@aurora-industries.example",
+   "hireDate": "2026-10-12",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": "2027-01-10",
+   "location": "Paris",
+   "contractType": "CDI",
+   "skills": [
+    "Export",
+    "ADV"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 12,
+    "remaining": 13
+   },
+   "sickDays": 0,
+   "persona": "silent",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Commercial",
+   "team": "Ventes France",
+   "jobTitle": "Ingénieur commercial",
+   "level": "Mid",
+   "managerRef": "EMP-0093"
+  },
+  {
+   "reference": "EMP-0100",
+   "firstName": "Laura",
+   "lastName": "Traoré",
+   "email": "laura.traore@aurora-industries.example",
+   "hireDate": "2020-11-30",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "ADV",
+    "CRM"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 16,
+    "remaining": 9
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Commercial",
+   "team": "Ventes France",
+   "jobTitle": "Chargé d'affaires",
+   "level": "Mid",
+   "managerRef": "EMP-0093"
+  },
+  {
+   "reference": "EMP-0101",
+   "firstName": "Emma",
+   "lastName": "Petit",
+   "email": "emma.petit@aurora-industries.example",
+   "hireDate": "2020-08-17",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Remote",
+   "contractType": "CDI",
+   "skills": [
+    "CRM",
+    "Prospection",
+    "Négociation"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 19,
+    "remaining": 6
+   },
+   "sickDays": 0,
+   "persona": "chatty",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Commercial",
+   "team": "Ventes France",
+   "jobTitle": "Ingénieur commercial",
+   "level": "Junior",
+   "managerRef": "EMP-0093"
+  },
+  {
+   "reference": "EMP-0102",
+   "firstName": "Nathan",
+   "lastName": "Vincent",
+   "email": "nathan.vincent@aurora-industries.example",
+   "hireDate": "2018-07-18",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Paris",
+   "contractType": "INTERIM",
+   "skills": [
+    "Prospection",
+    "Export"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 19,
+    "remaining": 6
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Commercial",
+   "team": "Export",
+   "jobTitle": "Responsable Export",
+   "level": "Lead",
+   "managerRef": "EMP-0092"
+  },
+  {
+   "reference": "EMP-0103",
+   "firstName": "Nina",
+   "lastName": "Trabelsi",
+   "email": "nina.trabelsi@aurora-industries.example",
+   "hireDate": "2012-08-13",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Paris",
+   "contractType": "CDI",
+   "skills": [
+    "ADV"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 15,
+    "remaining": 10
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Commercial",
+   "team": "Export",
+   "jobTitle": "Responsable de zone export",
+   "level": "Mid",
+   "managerRef": "EMP-0102"
+  },
+  {
+   "reference": "EMP-0104",
+   "firstName": "Ali",
+   "lastName": "Traoré",
+   "email": "ali.traore@aurora-industries.example",
+   "hireDate": "2025-05-19",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Remote",
+   "contractType": "CDD",
+   "skills": [
+    "Prospection",
+    "Export"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 11,
+    "remaining": 14
+   },
+   "sickDays": 0,
+   "persona": "silent",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Commercial",
+   "team": "Export",
+   "jobTitle": "Chargé d'affaires export",
+   "level": "Mid",
+   "managerRef": "EMP-0102"
+  },
+  {
+   "reference": "EMP-0105",
+   "firstName": "Salma",
+   "lastName": "Mercier",
+   "email": "salma.mercier@aurora-industries.example",
+   "hireDate": "2026-05-07",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "CRM",
+    "ADV"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 10,
+    "remaining": 15
+   },
+   "sickDays": 0,
+   "persona": "silent",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Commercial",
+   "team": "Export",
+   "jobTitle": "Chargé d'affaires export",
+   "level": "Mid",
+   "managerRef": "EMP-0102"
+  },
+  {
+   "reference": "EMP-0106",
+   "firstName": "Maya",
+   "lastName": "Mansour",
+   "email": "maya.mansour@aurora-industries.example",
+   "hireDate": "2014-09-08",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Paris",
+   "contractType": "CDI",
+   "skills": [
+    "Prospection",
+    "ADV"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 13,
+    "remaining": 12
+   },
+   "sickDays": 0,
+   "persona": "silent",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Commercial",
+   "team": "Export",
+   "jobTitle": "Chargé d'affaires export",
+   "level": "Senior",
+   "managerRef": "EMP-0102"
+  },
+  {
+   "reference": "EMP-0107",
+   "firstName": "Pauline",
+   "lastName": "Roux",
+   "email": "pauline.roux@aurora-industries.example",
+   "hireDate": "2018-09-17",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Export",
+    "ADV"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 19,
+    "remaining": 6
+   },
+   "sickDays": 2,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Commercial",
+   "team": "Export",
+   "jobTitle": "Chargé d'affaires export",
+   "level": "Senior",
+   "managerRef": "EMP-0102"
+  },
+  {
+   "reference": "EMP-0108",
+   "firstName": "Laura",
+   "lastName": "Girard",
+   "email": "laura.girard@aurora-industries.example",
+   "hireDate": "2022-11-30",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Négociation",
+    "CRM"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 16,
+    "remaining": 9
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Commercial",
+   "team": "Export",
+   "jobTitle": "Chargé d'affaires export",
+   "level": "Mid",
+   "managerRef": "EMP-0102"
+  },
+  {
+   "reference": "EMP-0109",
+   "firstName": "Adam",
+   "lastName": "Fontaine",
+   "email": "adam.fontaine@aurora-industries.example",
+   "hireDate": "2022-08-10",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Remote",
+   "contractType": "CDI",
+   "skills": [
+    "Électronique",
+    "Simulation",
+    "Prototypage"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 17,
+    "remaining": 8
+   },
+   "sickDays": 1,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "R&D",
+   "team": "Mécanique",
+   "jobTitle": "Responsable R&D",
+   "level": "Head",
+   "managerRef": "EMP-0001"
+  },
+  {
+   "reference": "EMP-0110",
+   "firstName": "Omar",
+   "lastName": "Rousseau",
+   "email": "omar.rousseau@aurora-industries.example",
+   "hireDate": "2020-11-10",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Prototypage",
+    "Simulation",
+    "SolidWorks"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 11,
+    "remaining": 14
+   },
+   "sickDays": 1,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "R&D",
+   "team": "Mécanique",
+   "jobTitle": "Responsable Mécanique",
+   "level": "Lead",
+   "managerRef": "EMP-0109"
+  },
+  {
+   "reference": "EMP-0111",
+   "firstName": "Élodie",
+   "lastName": "Mensah",
+   "email": "elodie.mensah@aurora-industries.example",
+   "hireDate": "2020-05-25",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Prototypage",
+    "CAO",
+    "SolidWorks"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 18,
+    "remaining": 7
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "R&D",
+   "team": "Mécanique",
+   "jobTitle": "Dessinateur projeteur",
+   "level": "Mid",
+   "managerRef": "EMP-0110"
+  },
+  {
+   "reference": "EMP-0112",
+   "firstName": "Eva",
+   "lastName": "Bouaziz",
+   "email": "eva.bouaziz@aurora-industries.example",
+   "hireDate": "2016-02-10",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "CAO",
+    "Simulation",
+    "Prototypage"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 21,
+    "remaining": 4
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "R&D",
+   "team": "Mécanique",
+   "jobTitle": "Dessinateur projeteur",
+   "level": "Mid",
+   "managerRef": "EMP-0110"
+  },
+  {
+   "reference": "EMP-0113",
+   "firstName": "Mehdi",
+   "lastName": "Blanc",
+   "email": "mehdi.blanc@aurora-industries.example",
+   "hireDate": "2016-01-18",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "CAO",
+    "Électronique",
+    "SolidWorks"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 14,
+    "remaining": 11
+   },
+   "sickDays": 3,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "R&D",
+   "team": "Mécanique",
+   "jobTitle": "Dessinateur projeteur",
+   "level": "Junior",
+   "managerRef": "EMP-0110"
+  },
+  {
+   "reference": "EMP-0114",
+   "firstName": "Nadia",
+   "lastName": "Cherif",
+   "email": "nadia.cherif@aurora-industries.example",
+   "hireDate": "2024-03-27",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "INTERNSHIP",
+   "skills": [
+    "Prototypage",
+    "SolidWorks"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 9,
+    "remaining": 16
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "R&D",
+   "team": "Mécanique",
+   "jobTitle": "Ingénieur R&D",
+   "level": "Intern",
+   "managerRef": "EMP-0110"
+  },
+  {
+   "reference": "EMP-0115",
+   "firstName": "Youssef",
+   "lastName": "Demir",
+   "email": "youssef.demir@aurora-industries.example",
+   "hireDate": "2023-11-13",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "SolidWorks",
+    "Électronique",
+    "Simulation"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 9,
+    "remaining": 16
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "R&D",
+   "team": "Mécanique",
+   "jobTitle": "Ingénieur R&D",
+   "level": "Mid",
+   "managerRef": "EMP-0110"
+  },
+  {
+   "reference": "EMP-0116",
+   "firstName": "Nicolas",
+   "lastName": "Garcia",
+   "email": "nicolas.garcia@aurora-industries.example",
+   "hireDate": "2020-09-03",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Électronique",
+    "SolidWorks",
+    "CAO"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 16,
+    "remaining": 9
+   },
+   "sickDays": 2,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "R&D",
+   "team": "Mécanique",
+   "jobTitle": "Ingénieur R&D",
+   "level": "Junior",
+   "managerRef": "EMP-0110"
+  },
+  {
+   "reference": "EMP-0117",
+   "firstName": "Nina",
+   "lastName": "Demir",
+   "email": "nina.demir@aurora-industries.example",
+   "hireDate": "2024-11-12",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "SolidWorks",
+    "CAO",
+    "Électronique"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 20,
+    "remaining": 5
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [
+    "Production",
+    "Qualité"
+   ],
+   "account": null,
+   "department": "R&D",
+   "team": "Mécanique",
+   "jobTitle": "Ingénieur industrialisation",
+   "level": "Mid",
+   "managerRef": "EMP-0110"
+  },
+  {
+   "reference": "EMP-0118",
+   "firstName": "Nicolas",
+   "lastName": "Traoré",
+   "email": "nicolas.traore@aurora-industries.example",
+   "hireDate": "2014-08-28",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Remote",
+   "contractType": "CDI",
+   "skills": [
+    "CAO",
+    "Prototypage"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 15,
+    "remaining": 10
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "R&D",
+   "team": "Électronique",
+   "jobTitle": "Responsable Électronique",
+   "level": "Lead",
+   "managerRef": "EMP-0109"
+  },
+  {
+   "reference": "EMP-0119",
+   "firstName": "Bilel",
+   "lastName": "Lefebvre",
+   "email": "bilel.lefebvre@aurora-industries.example",
+   "hireDate": "2020-08-14",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Simulation",
+    "Électronique"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 18,
+    "remaining": 7
+   },
+   "sickDays": 3,
+   "persona": "chatty",
+   "bridgeTo": [],
+   "account": null,
+   "department": "R&D",
+   "team": "Électronique",
+   "jobTitle": "Technicien d'essais",
+   "level": "Mid",
+   "managerRef": "EMP-0118"
+  },
+  {
+   "reference": "EMP-0120",
+   "firstName": "Rami",
+   "lastName": "Dubois",
+   "email": "rami.dubois@aurora-industries.example",
+   "hireDate": "2015-10-26",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Électronique",
+    "SolidWorks",
+    "Prototypage"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 19,
+    "remaining": 6
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "R&D",
+   "team": "Électronique",
+   "jobTitle": "Technicien d'essais",
+   "level": "Mid",
+   "managerRef": "EMP-0118"
+  },
+  {
+   "reference": "EMP-0121",
+   "firstName": "Priya",
+   "lastName": "Ben Salah",
+   "email": "priya.bensalah@aurora-industries.example",
+   "hireDate": "2026-07-13",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": "2026-10-11",
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Simulation",
+    "CAO"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 17,
+    "remaining": 8
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "R&D",
+   "team": "Électronique",
+   "jobTitle": "Technicien d'essais",
+   "level": "Senior",
+   "managerRef": "EMP-0118"
+  },
+  {
+   "reference": "EMP-0122",
+   "firstName": "Nicolas",
+   "lastName": "Muller",
+   "email": "nicolas.muller@aurora-industries.example",
+   "hireDate": "2018-06-11",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "CAO",
+    "Simulation",
+    "Prototypage"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 13,
+    "remaining": 12
+   },
+   "sickDays": 3,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "R&D",
+   "team": "Électronique",
+   "jobTitle": "Ingénieur électronique",
+   "level": "Junior",
+   "managerRef": "EMP-0118"
+  },
+  {
+   "reference": "EMP-0123",
+   "firstName": "Giulia",
+   "lastName": "Robin",
+   "email": "giulia.robin@aurora-industries.example",
+   "hireDate": "2021-07-15",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Remote",
+   "contractType": "CDI",
+   "skills": [
+    "Simulation"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 14,
+    "remaining": 11
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "R&D",
+   "team": "Électronique",
+   "jobTitle": "Ingénieur électronique",
+   "level": "Senior",
+   "managerRef": "EMP-0118"
+  },
+  {
+   "reference": "EMP-0124",
+   "firstName": "Julien",
+   "lastName": "Fournier",
+   "email": "julien.fournier@aurora-industries.example",
+   "hireDate": "2025-04-01",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Excel",
+    "Trésorerie",
+    "IFRS"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 16,
+    "remaining": 9
+   },
+   "sickDays": 0,
+   "persona": "silent",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Finance",
+   "team": "Comptabilité",
+   "jobTitle": "Responsable Finance",
+   "level": "Head",
+   "managerRef": "EMP-0001"
+  },
+  {
+   "reference": "EMP-0125",
+   "firstName": "Lucía",
+   "lastName": "Leroy",
+   "email": "lucia.leroy@aurora-industries.example",
+   "hireDate": "2025-10-13",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Contrôle de gestion",
+    "Excel",
+    "Comptabilité"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 17,
+    "remaining": 8
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Finance",
+   "team": "Comptabilité",
+   "jobTitle": "Responsable Comptabilité",
+   "level": "Lead",
+   "managerRef": "EMP-0124"
+  },
+  {
+   "reference": "EMP-0126",
+   "firstName": "Clara",
+   "lastName": "Novak",
+   "email": "clara.novak@aurora-industries.example",
+   "hireDate": "2012-06-01",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Contrôle de gestion",
+    "IFRS",
+    "Trésorerie"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 20,
+    "remaining": 5
+   },
+   "sickDays": 1,
+   "persona": "chatty",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Finance",
+   "team": "Comptabilité",
+   "jobTitle": "Comptable fournisseurs",
+   "level": "Mid",
+   "managerRef": "EMP-0125"
+  },
+  {
+   "reference": "EMP-0127",
+   "firstName": "Lucía",
+   "lastName": "Sharma",
+   "email": "lucia.sharma@aurora-industries.example",
+   "hireDate": "2026-07-20",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": "2026-10-18",
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Contrôle de gestion",
+    "Excel"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 13,
+    "remaining": 12
+   },
+   "sickDays": 0,
+   "persona": "chatty",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Finance",
+   "team": "Comptabilité",
+   "jobTitle": "Comptable fournisseurs",
+   "level": "Mid",
+   "managerRef": "EMP-0125"
+  },
+  {
+   "reference": "EMP-0128",
+   "firstName": "Élodie",
+   "lastName": "Bianchi",
+   "email": "elodie.bianchi@aurora-industries.example",
+   "hireDate": "2013-11-01",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "IFRS",
+    "Comptabilité"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 14,
+    "remaining": 11
+   },
+   "sickDays": 3,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Finance",
+   "team": "Comptabilité",
+   "jobTitle": "Comptable",
+   "level": "Junior",
+   "managerRef": "EMP-0125"
+  },
+  {
+   "reference": "EMP-0129",
+   "firstName": "Emre",
+   "lastName": "Demir",
+   "email": "emre.demir@aurora-industries.example",
+   "hireDate": "2025-12-22",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "IFRS",
+    "Contrôle de gestion",
+    "Comptabilité"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 15,
+    "remaining": 10
+   },
+   "sickDays": 0,
+   "persona": "silent",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Finance",
+   "team": "Comptabilité",
+   "jobTitle": "Comptable",
+   "level": "Senior",
+   "managerRef": "EMP-0125"
+  },
+  {
+   "reference": "EMP-0130",
+   "firstName": "Romain",
+   "lastName": "Saidi",
+   "email": "romain.saidi@aurora-industries.example",
+   "hireDate": "2026-08-03",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": "2026-11-01",
+   "location": "Lyon",
+   "contractType": "CDD",
+   "skills": [
+    "Trésorerie",
+    "Comptabilité"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 13,
+    "remaining": 12
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Finance",
+   "team": "Comptabilité",
+   "jobTitle": "Comptable",
+   "level": "Mid",
+   "managerRef": "EMP-0125"
+  },
+  {
+   "reference": "EMP-0131",
+   "firstName": "Arthur",
+   "lastName": "Saidi",
+   "email": "arthur.saidi@aurora-industries.example",
+   "hireDate": "2020-02-03",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "INTERIM",
+   "skills": [
+    "Trésorerie",
+    "Excel",
+    "IFRS"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 12,
+    "remaining": 13
+   },
+   "sickDays": 2,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Finance",
+   "team": "Contrôle de gestion",
+   "jobTitle": "Responsable Contrôle de gestion",
+   "level": "Lead",
+   "managerRef": "EMP-0124"
+  },
+  {
+   "reference": "EMP-0132",
+   "firstName": "Nina",
+   "lastName": "Novak",
+   "email": "nina.novak@aurora-industries.example",
+   "hireDate": "2015-04-13",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Contrôle de gestion",
+    "Excel",
+    "Trésorerie"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 16,
+    "remaining": 9
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [
+    "Production",
+    "Commercial"
+   ],
+   "account": null,
+   "department": "Finance",
+   "team": "Contrôle de gestion",
+   "jobTitle": "Contrôleur de gestion industriel",
+   "level": "Mid",
+   "managerRef": "EMP-0131"
+  },
+  {
+   "reference": "EMP-0133",
+   "firstName": "Clara",
+   "lastName": "Sharma",
+   "email": "clara.sharma@aurora-industries.example",
+   "hireDate": "2024-05-13",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Comptabilité",
+    "Contrôle de gestion",
+    "IFRS"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 16,
+    "remaining": 9
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Finance",
+   "team": "Contrôle de gestion",
+   "jobTitle": "Contrôleur de gestion",
+   "level": "Mid",
+   "managerRef": "EMP-0131"
+  },
+  {
+   "reference": "EMP-0134",
+   "firstName": "Diego",
+   "lastName": "Durand",
+   "email": "diego.durand@aurora-industries.example",
+   "hireDate": "2020-10-08",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Contrôle de gestion",
+    "Comptabilité",
+    "Trésorerie"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 13,
+    "remaining": 12
+   },
+   "sickDays": 1,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Finance",
+   "team": "Contrôle de gestion",
+   "jobTitle": "Contrôleur de gestion",
+   "level": "Junior",
+   "managerRef": "EMP-0131"
+  },
+  {
+   "reference": "EMP-0135",
+   "firstName": "Lucas",
+   "lastName": "Fernandes",
+   "email": "lucas.fernandes@aurora-industries.example",
+   "hireDate": "2019-08-09",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Cybersécurité",
+    "Réseau",
+    "Support"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 13,
+    "remaining": 12
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Informatique",
+   "team": "Infrastructure & support",
+   "jobTitle": "Responsable Informatique",
+   "level": "Head",
+   "managerRef": "EMP-0001"
+  },
+  {
+   "reference": "EMP-0136",
+   "firstName": "Thomas",
+   "lastName": "Blanc",
+   "email": "thomas.blanc@aurora-industries.example",
+   "hireDate": "2021-09-14",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Cybersécurité",
+    "ERP",
+    "Support"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 19,
+    "remaining": 6
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Informatique",
+   "team": "Infrastructure & support",
+   "jobTitle": "Responsable Infrastructure & support",
+   "level": "Lead",
+   "managerRef": "EMP-0135"
+  },
+  {
+   "reference": "EMP-0137",
+   "firstName": "Laura",
+   "lastName": "Mejri",
+   "email": "laura.mejri@aurora-industries.example",
+   "hireDate": "2015-08-03",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Remote",
+   "contractType": "CDI",
+   "skills": [
+    "Support",
+    "Cybersécurité"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 11,
+    "remaining": 14
+   },
+   "sickDays": 2,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Informatique",
+   "team": "Infrastructure & support",
+   "jobTitle": "Technicien support",
+   "level": "Mid",
+   "managerRef": "EMP-0136"
+  },
+  {
+   "reference": "EMP-0138",
+   "firstName": "Rami",
+   "lastName": "Lambert",
+   "email": "rami.lambert@aurora-industries.example",
+   "hireDate": "2024-04-15",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Support",
+    "Cybersécurité",
+    "ERP"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 18,
+    "remaining": 7
+   },
+   "sickDays": 0,
+   "persona": "chatty",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Informatique",
+   "team": "Infrastructure & support",
+   "jobTitle": "Administrateur systèmes et réseaux",
+   "level": "Junior",
+   "managerRef": "EMP-0136"
+  },
+  {
+   "reference": "EMP-0139",
+   "firstName": "Eva",
+   "lastName": "Sharma",
+   "email": "eva.sharma@aurora-industries.example",
+   "hireDate": "2016-10-31",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Cybersécurité",
+    "Support",
+    "ERP"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 12,
+    "remaining": 13
+   },
+   "sickDays": 1,
+   "persona": "chatty",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Informatique",
+   "team": "Infrastructure & support",
+   "jobTitle": "Technicien support",
+   "level": "Mid",
+   "managerRef": "EMP-0136"
+  },
+  {
+   "reference": "EMP-0140",
+   "firstName": "Julien",
+   "lastName": "Girard",
+   "email": "julien.girard@aurora-industries.example",
+   "hireDate": "2025-12-08",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Microsoft 365",
+    "Cybersécurité",
+    "Réseau"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 19,
+    "remaining": 6
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Informatique",
+   "team": "Infrastructure & support",
+   "jobTitle": "Administrateur systèmes et réseaux",
+   "level": "Mid",
+   "managerRef": "EMP-0136"
+  },
+  {
+   "reference": "EMP-0141",
+   "firstName": "Salma",
+   "lastName": "Roux",
+   "email": "salma.roux@aurora-industries.example",
+   "hireDate": "2022-03-28",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": null,
+   "location": "Lyon",
+   "contractType": "CDI",
+   "skills": [
+    "Cybersécurité",
+    "ERP",
+    "Microsoft 365"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 17,
+    "remaining": 8
+   },
+   "sickDays": 0,
+   "persona": "normal",
+   "bridgeTo": [
+    "Finance",
+    "Logistique",
+    "Ressources humaines"
+   ],
+   "account": null,
+   "department": "Informatique",
+   "team": "Infrastructure & support",
+   "jobTitle": "Administrateur ERP",
+   "level": "Senior",
+   "managerRef": "EMP-0136"
+  },
+  {
+   "reference": "EMP-0142",
+   "firstName": "Alice",
+   "lastName": "Robin",
+   "email": "alice.robin@aurora-industries.example",
+   "hireDate": "2026-07-20",
+   "exitDate": null,
+   "exitReason": null,
+   "trialEndDate": "2026-10-18",
+   "location": "Lyon",
+   "contractType": "APPRENTICESHIP",
+   "skills": [
+    "ERP",
+    "Cybersécurité",
+    "Réseau"
+   ],
+   "leave": {
+    "annual": 25,
+    "taken": 20,
+    "remaining": 5
+   },
+   "sickDays": 0,
+   "persona": "chatty",
+   "bridgeTo": [],
+   "account": null,
+   "department": "Informatique",
+   "team": "Infrastructure & support",
+   "jobTitle": "Administrateur systèmes et réseaux",
+   "level": "Apprentice",
+   "managerRef": "EMP-0136"
+  }
+ ]
+}
