@@ -12,6 +12,7 @@ export const RESOURCES = [
   'competency-evaluations',
   'hr-trainings',
   'hr-surveys',
+  'recruiting',
   'audit-log',
   'notifications',
 ] as const;
@@ -41,6 +42,7 @@ export const RESOURCE_ACTIONS: Record<Resource, readonly Action[]> = {
   'competency-evaluations': ['read', 'update', 'delete'],
   'hr-trainings': ['read', 'create', 'update', 'delete'],
   'hr-surveys': ['read', 'create', 'update', 'delete'],
+  'recruiting': ['read', 'create', 'update', 'delete', 'approve'],
   'audit-log': ['read'],
   'notifications': ['read'],
 };
@@ -58,6 +60,8 @@ export const resourceSupports = (resource: string, action: string): boolean =>
 const ALL_MODULE_RESOURCES: Resource[] = RESOURCES.filter(
   (r) => !['organization', 'users', 'roles', 'audit-log'].includes(r),
 ) as Resource[];
+/** Candidate files: only roles that recruit see them by default (not managers / viewers). */
+const BROAD_RESOURCES = ALL_MODULE_RESOURCES.filter((r) => r !== 'recruiting');
 
 const crud = (r: Resource): PermissionKey[] => [
   `${r}:read`,
@@ -86,11 +90,11 @@ const ROLE_GRANTS: Record<string, PermissionKey[]> = {
     'audit-log:read',
   ],
   manager: [
-    ...ALL_MODULE_RESOURCES.flatMap((r) => read(r)),
+    ...BROAD_RESOURCES.flatMap((r) => read(r)),
     ...HR_RESOURCES.flatMap((r) => crud(r)),
   ],
   employee: ['dashboard:read', 'skills:read', 'hr-trainings:read', 'notifications:read'],
-  viewer: [...ALL_MODULE_RESOURCES.flatMap((r) => read(r))],
+  viewer: [...BROAD_RESOURCES.flatMap((r) => read(r))],
 };
 
 export const DEFAULT_ROLE_PERMISSIONS: Record<string, PermissionKey[]> = Object.fromEntries(
