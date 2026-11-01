@@ -1,5 +1,5 @@
 import { redactName, sanitizeCv } from './guard';
-import { CandidateProfile, Criterion, hardFilter, rankAndCut, verifyEvidence, weightedScore } from './rules';
+import { CandidateProfile, Criterion, hardFilter, languageKey, languageLevel, rankAndCut, verifyEvidence, weightedScore } from './rules';
 
 const profile: CandidateProfile = {
   skills: ['JavaScript', 'PostgreSQL', 'Node.js'],
@@ -39,6 +39,42 @@ describe('hard filters', () => {
     // an extractor miss is rescued by the CV text; nice-to-haves never filter
     expect(hardFilter([crit({ value: 'Docker' })], profile, 'Ran Docker in prod')).toEqual([]);
     expect(hardFilter([crit({ mustHave: false, value: 'Rust' })], profile, '')).toEqual([]);
+  });
+});
+
+describe('language must-haves', () => {
+  const lang = (value: string, label = value) => crit({ kind: 'LANGUAGE', value, label });
+  const withLangs = (languages: string[]): CandidateProfile => ({ ...profile, languages });
+
+  it('matches a language under any of its names', () => {
+    expect(languageKey('Anglais : courant')).toBe('english');
+    expect(languageKey('Inglés (B2)')).toBe('english');
+    expect(languageKey('Deutsch')).toBe('german');
+    expect(hardFilter([lang('English')], withLangs(['Anglais (C1)']), '')).toEqual([]);
+    expect(hardFilter([lang('Allemand')], withLangs(['German, fluent']), '')).toEqual([]);
+    expect(hardFilter([lang('English')], withLangs(['Français (natif)']), '')).toEqual(['English']);
+  });
+
+  it('reads levels from CEFR codes and common wording', () => {
+    expect(languageLevel('Anglais : quelques mots')).toBe(2);
+    expect(languageLevel('Arabe : bon niveau')).toBe(4);
+    expect(languageLevel('Anglais : très bon niveau')).toBe(5);
+    expect(languageLevel('English (C1)')).toBe(5);
+    expect(languageLevel('Français, langue maternelle')).toBe(6);
+    expect(languageLevel('Anglais')).toBeNull();
+  });
+
+  it('rejects a level below the requirement, never an unstated one', () => {
+    const fluent = lang('English', 'Anglais courant');
+    expect(hardFilter([fluent], withLangs(['Anglais : quelques mots']), '')).toEqual(['Anglais courant (CV : Anglais : quelques mots)']);
+    expect(hardFilter([fluent], withLangs(['Anglais : bilingue']), '')).toEqual([]);
+    expect(hardFilter([fluent], withLangs(['Anglais']), '')).toEqual([]);
+    expect(hardFilter([lang('English', 'Anglais')], withLangs(['Anglais : notions']), '')).toEqual([]);
+  });
+
+  it('is rescued by the CV text when the extractor missed the language', () => {
+    expect(hardFilter([lang('English')], withLangs([]), 'Langues : anglais lu, écrit, parlé')).toEqual([]);
+    expect(hardFilter([lang('English')], withLangs([]), 'Langues : espagnol')).toEqual(['English']);
   });
 });
 
