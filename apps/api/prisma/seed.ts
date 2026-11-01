@@ -344,7 +344,7 @@ Profil : Bac+3 à Bac+5 en logistique, 5 ans d'expérience dont 2 en management 
 async function seedRecruitingOpenings() {
   const org = await prisma.organization.findFirst({ where: { slug: 'aurora-industries' } });
   if (!org) return;
-  if (await prisma.jobOpening.count({ where: { organizationId: org.id } })) {
+  if (await prisma.jobOpening.count({ where: { organizationId: org.id, deletedAt: null } })) {
     console.log('Recruiting openings already seeded');
     return;
   }

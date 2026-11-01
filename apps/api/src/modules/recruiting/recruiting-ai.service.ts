@@ -1,5 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk';
-import { Injectable } from '@nestjs/common';
+import { Injectable, ServiceUnavailableException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 const CLAUDE_MODEL = 'claude-opus-5-5';
@@ -25,6 +25,7 @@ export class RecruitingAiService {
 
   // lazy: the API boots without ANTHROPIC_API_KEY; only the pipeline needs it
   private get claude() {
+    if (!this.config.get('ANTHROPIC_API_KEY')) throw new ServiceUnavailableException('IA de recrutement non configurée (ANTHROPIC_API_KEY)');
     return (this.claudeClient ??= new Anthropic());
   }
 
@@ -47,12 +48,18 @@ export class RecruitingAiService {
     return JSON.parse(text.text) as T;
   }
 
+  private openAiKey() {
+    const key = this.config.get<string>('OPENAI_API_KEY');
+    if (!key) throw new ServiceUnavailableException('Embeddings non configurés (OPENAI_API_KEY)');
+    return key;
+  }
+
   async embed(input: string): Promise<number[]> {
     const res = await fetch('https://api.openai.com/v1/embeddings', {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
-        authorization: `Bearer ${this.config.getOrThrow<string>('OPENAI_API_KEY')}`,
+        authorization: `Bearer ${this.openAiKey()}`,
       },
       body: JSON.stringify({ model: this.config.get('OPENAI_EMBEDDING_MODEL', 'text-embedding-3-small'), input }),
     });
