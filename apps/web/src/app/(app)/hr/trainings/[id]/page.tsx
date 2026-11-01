@@ -1,5 +1,6 @@
 'use client';
 
+import { RecordNotFound } from '@/components/layout/no-access';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft, Check, Copy, ExternalLink, Pencil, X } from 'lucide-react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
@@ -136,7 +137,7 @@ export default function TrainingDetailPage() {
   });
 
   if (isLoading) return <div className="p-4 sm:p-6"><Skeleton className="h-96" /></div>;
-  if (!tr) return null;
+  if (!tr) return <RecordNotFound />;
 
   const fmt = (d: string | null) => (d ? format(new Date(d), 'dd MMM yyyy', { locale: dl }) : '—');
 
