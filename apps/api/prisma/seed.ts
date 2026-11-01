@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { PrismaClient } from '@prisma/client';
 import * as argon2 from 'argon2';
-import { randomBytes } from 'crypto';
+import { randomBytes, randomUUID } from 'crypto';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import {
@@ -230,6 +230,143 @@ async function seedDemoOrg() {
   console.log('Demo org "Aurora Industries" seeded (admin@demo.astro.app — password documented in the README)');
 }
 
+// ── Recruiting: demo job openings (pipeline 1) ──────────────────────────────────
+type SeedCriterion = { label: string; weight: number; mustHave: boolean; kind: 'SKILL' | 'LANGUAGE' | 'YEARS' | 'OTHER'; value?: string | number };
+const OPENINGS: { title: string; status?: 'OPEN' | 'CLOSED'; retrievalSize?: number; shortlistSize?: number; description: string; criteria: SeedCriterion[] }[] = [
+  {
+    title: 'Technicien de maintenance industrielle (H/F)',
+    description: `Rattaché(e) au responsable Maintenance du site de Lyon, vous assurez la maintenance préventive et curative des lignes de production (presses, convoyeurs, robots de soudure).
+
+Missions :
+- Diagnostiquer et réparer les pannes électriques, mécaniques, pneumatiques et hydrauliques
+- Réaliser les plans de maintenance préventive et tenir à jour la GMAO
+- Proposer des améliorations pour réduire les arrêts (analyse des causes, AMDEC)
+- Travailler en 3x8 avec les équipes de production
+
+Profil : Bac+2 (BTS MS, DUT GIM) ou équivalent, 3 ans d'expérience minimum en maintenance industrielle. Habilitation électrique B2V/BR exigée. La connaissance des automates Siemens S7 est un vrai plus.`,
+    criteria: [
+      { label: 'Maintenance industrielle', weight: 5, mustHave: false, kind: 'SKILL', value: 'maintenance' },
+      { label: "Au moins 3 ans d'expérience", weight: 4, mustHave: true, kind: 'YEARS', value: 3 },
+      { label: 'Habilitation électrique B2V/BR', weight: 5, mustHave: false, kind: 'OTHER' },
+      { label: 'Automates Siemens S7', weight: 3, mustHave: false, kind: 'SKILL', value: 'Siemens' },
+      { label: 'GMAO', weight: 2, mustHave: false, kind: 'SKILL', value: 'GMAO' },
+      { label: 'Travail en 3x8', weight: 2, mustHave: false, kind: 'OTHER' },
+    ],
+  },
+  {
+    title: 'Ingénieur(e) qualité fournisseurs',
+    description: `Au sein du service Qualité (13 personnes), vous pilotez la performance qualité de notre panel de fournisseurs de pièces mécaniques et électroniques.
+
+Missions :
+- Mener les audits fournisseurs (processus, produit) et suivre les plans d'actions
+- Animer le traitement des non-conformités (8D, Ishikawa, 5 pourquoi)
+- Valider les nouvelles pièces (PPAP, AMDEC, plans de surveillance)
+- Suivre les indicateurs (PPM, taux de service) et présenter les revues fournisseurs
+
+Profil : ingénieur(e) généraliste ou qualité, 5 ans d'expérience en qualité fournisseurs, idéalement dans l'automobile ou l'aéronautique. Maîtrise de l'ISO 9001 et de l'IATF 16949. Anglais courant indispensable (fournisseurs en Europe et en Asie). Déplacements 30 %.`,
+    criteria: [
+      { label: "Au moins 5 ans d'expérience", weight: 4, mustHave: true, kind: 'YEARS', value: 5 },
+      { label: 'Anglais courant', weight: 5, mustHave: true, kind: 'LANGUAGE', value: 'English' },
+      { label: 'ISO 9001 / IATF 16949', weight: 4, mustHave: false, kind: 'SKILL', value: 'ISO 9001' },
+      { label: 'Audits fournisseurs', weight: 5, mustHave: false, kind: 'SKILL', value: 'audit' },
+      { label: 'Résolution de problèmes (8D)', weight: 3, mustHave: false, kind: 'SKILL', value: '8D' },
+      { label: 'PPAP / AMDEC', weight: 3, mustHave: false, kind: 'SKILL', value: 'AMDEC' },
+      { label: 'Expérience automobile ou aéronautique', weight: 2, mustHave: false, kind: 'OTHER' },
+    ],
+  },
+  {
+    title: 'Développeur(se) full-stack TypeScript',
+    retrievalSize: 30,
+    shortlistSize: 5,
+    description: `L'équipe Informatique (8 personnes) développe les outils internes d'Aurora : suivi de production, portail fournisseurs et tableaux de bord pour la direction.
+
+Missions :
+- Concevoir et développer des fonctionnalités de bout en bout (API NestJS, front React / Next.js)
+- Modéliser les données (PostgreSQL) et écrire les tests
+- Participer aux revues de code et à l'amélioration continue de la CI/CD
+- Échanger directement avec les utilisateurs en atelier
+
+Profil : 2 ans d'expérience minimum en développement web, à l'aise avec TypeScript, React et Node.js. Une connaissance de Docker et de PostgreSQL est appréciée. Télétravail 2 jours par semaine.`,
+    criteria: [
+      { label: 'TypeScript', weight: 5, mustHave: true, kind: 'SKILL', value: 'TypeScript' },
+      { label: 'React / Next.js', weight: 4, mustHave: false, kind: 'SKILL', value: 'React' },
+      { label: 'Node.js / NestJS', weight: 4, mustHave: false, kind: 'SKILL', value: 'Node.js' },
+      { label: "Au moins 2 ans d'expérience", weight: 3, mustHave: true, kind: 'YEARS', value: 2 },
+      { label: 'PostgreSQL', weight: 3, mustHave: false, kind: 'SKILL', value: 'PostgreSQL' },
+      { label: 'Docker', weight: 2, mustHave: false, kind: 'SKILL', value: 'Docker' },
+      { label: 'Tests automatisés', weight: 2, mustHave: false, kind: 'OTHER' },
+    ],
+  },
+  {
+    title: 'Chargé(e) de développement commercial export',
+    description: `Rattaché(e) au directeur Commercial, vous développez nos ventes de sous-ensembles industriels en Allemagne, en Italie et en Espagne.
+
+Missions :
+- Prospecter de nouveaux clients industriels et suivre un portefeuille existant
+- Construire les offres techniques et commerciales avec le bureau d'études
+- Négocier les contrats et suivre la marge
+- Représenter Aurora sur les salons professionnels
+
+Profil : école de commerce ou d'ingénieur, 3 ans d'expérience en vente B2B industrielle. Anglais courant exigé, l'allemand ou l'italien est un atout fort. Maîtrise d'un CRM (Salesforce, HubSpot). Déplacements fréquents en Europe.`,
+    criteria: [
+      { label: 'Vente B2B industrielle', weight: 5, mustHave: false, kind: 'OTHER' },
+      { label: "Au moins 3 ans d'expérience", weight: 4, mustHave: true, kind: 'YEARS', value: 3 },
+      { label: 'Anglais courant', weight: 5, mustHave: true, kind: 'LANGUAGE', value: 'English' },
+      { label: 'Allemand', weight: 3, mustHave: false, kind: 'LANGUAGE', value: 'German' },
+      { label: 'Italien', weight: 2, mustHave: false, kind: 'LANGUAGE', value: 'Italian' },
+      { label: 'CRM (Salesforce, HubSpot)', weight: 2, mustHave: false, kind: 'SKILL', value: 'CRM' },
+      { label: 'Négociation de contrats', weight: 3, mustHave: false, kind: 'SKILL', value: 'négociation' },
+    ],
+  },
+  {
+    title: 'Responsable logistique entrepôt',
+    status: 'CLOSED',
+    description: `Vous managez l'équipe Logistique (17 personnes) et garantissez la réception, le stockage et l'expédition des pièces pour les clients et la production.
+
+Missions :
+- Encadrer les chefs d'équipe et organiser les plannings
+- Piloter les flux et les stocks dans l'ERP (SAP)
+- Suivre les indicateurs (taux de service, précision des stocks, sécurité)
+- Mener les projets d'amélioration (Lean, 5S, implantation)
+
+Profil : Bac+3 à Bac+5 en logistique, 5 ans d'expérience dont 2 en management d'équipe. Maîtrise de SAP et des méthodes Lean. CACES apprécié.`,
+    criteria: [
+      { label: "Au moins 5 ans d'expérience", weight: 4, mustHave: true, kind: 'YEARS', value: 5 },
+      { label: "Management d'équipe", weight: 5, mustHave: false, kind: 'OTHER' },
+      { label: 'SAP', weight: 4, mustHave: false, kind: 'SKILL', value: 'SAP' },
+      { label: 'Lean / 5S', weight: 3, mustHave: false, kind: 'SKILL', value: 'Lean' },
+      { label: 'Gestion des stocks', weight: 3, mustHave: false, kind: 'SKILL', value: 'stocks' },
+    ],
+  },
+];
+
+/** Separate from seedDemoOrg so it also fills an org seeded before recruiting existed. */
+async function seedRecruitingOpenings() {
+  const org = await prisma.organization.findFirst({ where: { slug: 'aurora-industries' } });
+  if (!org) return;
+  if (await prisma.jobOpening.count({ where: { organizationId: org.id } })) {
+    console.log('Recruiting openings already seeded');
+    return;
+  }
+  const hr = await prisma.user.findUnique({ where: { email: 'hr@demo.astro.app' } });
+  for (const o of OPENINGS) {
+    await prisma.jobOpening.create({
+      data: {
+        organizationId: org.id,
+        title: o.title,
+        description: o.description,
+        status: o.status ?? 'OPEN',
+        retrievalSize: o.retrievalSize ?? 50,
+        shortlistSize: o.shortlistSize ?? 10,
+        criteria: o.criteria.map((c) => ({ id: randomUUID(), ...c, value: c.value ?? null })),
+        createdById: hr?.id,
+        updatedById: hr?.id,
+      },
+    });
+  }
+  console.log(`Recruiting openings: ${OPENINGS.length}`);
+}
+
 /**
  * Backfill newly-introduced default role grants for already-seeded orgs. Grants an admin
  * removed are never re-added (see src/core/rbac/sync-role-permissions.ts).
@@ -301,8 +438,10 @@ async function main() {
   if (SELF_HOSTED) console.log('Super admin skipped (self-hosted)');
   else await seedSuperAdmin();
   // Demo org ships well-known credentials: never in production unless forced.
-  if (!IS_PROD || process.env.SEED_DEMO === 'true') await seedDemoOrg();
-  else console.log('Demo org skipped (production; set SEED_DEMO=true to force)');
+  if (!IS_PROD || process.env.SEED_DEMO === 'true') {
+    await seedDemoOrg();
+    await seedRecruitingOpenings();
+  } else console.log('Demo org skipped (production; set SEED_DEMO=true to force)');
   await backfillSubscriptions();
   await syncSystemRolePermissions();
 }
