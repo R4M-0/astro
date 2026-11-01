@@ -1,12 +1,14 @@
 // Renders Gus's animations into PPM frames with the real sprite painter (docs/assets/gus.gif).
-// node apps/web/scripts/render-gus-gif.mjs <frames-dir> && magick -delay 9 -loop 0 <frames-dir>/f*.ppm -layers Optimize docs/assets/gus.gif
+// node apps/web/scripts/render-gus-gif.mjs <frames-dir> && magick -dispose background -delay 9 -loop 0 <frames-dir>/f*.ppm -transparent '#ff00ff' -layers Optimize docs/assets/gus.gif
 import { writeFileSync } from 'node:fs';
 import { paintFrame, SPRITE_W, SPRITE_H } from '../src/components/mascot/sprite.ts';
 
 const OUT = process.argv[2];
-const SW = 60, SH = 80, S = 7; // portrait scene in pixel units, upscaled ×7 → 420×560
+const SW = 60, SH = 80, S = 6; // portrait scene in pixel units, upscaled ×6 → 360×480
 const FLOOR = 62; // floor-tape row: keeps Gus and his bubbles vertically centred
-const BG = [238, 240, 244], INK = [27, 30, 37], YEL = [245, 203, 31], WHITE = [255, 255, 255], SHADOW = [200, 204, 212];
+// BG is a key colour made transparent when the GIF is assembled (`-transparent '#ff00ff'`);
+// everything else stays legible on both GitHub's light and dark themes
+const BG = [255, 0, 255], INK = [27, 30, 37], YEL = [245, 203, 31], WHITE = [255, 255, 255], SHADOW = [128, 134, 148], BLUE = [47, 94, 192];
 const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
 
 function sprite(pose, facing) {
@@ -55,7 +57,7 @@ const heart = (put, x, top) => {
   const R = [214, 64, 80];
   [[1,0],[2,0],[4,0],[5,0],[0,1],[1,1],[2,1],[3,1],[4,1],[5,1],[6,1],[1,2],[2,2],[3,2],[4,2],[5,2],[2,3],[3,3],[4,3],[3,4]].forEach(([i, j]) => put(x + 14 + i, top - 7 + j, R));
 };
-const Z = (put, X, Y, s) => { for (let i = 0; i < s; i++) { put(X + i, Y, INK); put(X + i, Y + s - 1, INK); put(X + s - 1 - i, Y + i, INK); } };
+const Z = (put, X, Y, s) => { for (let i = 0; i < s; i++) { put(X + i, Y, BLUE); put(X + i, Y + s - 1, BLUE); put(X + s - 1 - i, Y + i, BLUE); } };
 const zzz = (k) => (put, x, top) => { const r = k % 12; if (r > 1) Z(put, x + 13, top - 2, 4); if (r > 4) Z(put, x + 18, top - 8, 5); if (r > 7) Z(put, x + 24, top - 15, 6); };
 const ha = (put, x, top) => {
   // "HA" in a 3×5 pixel font
