@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { BookOpenCheck, Briefcase, CalendarClock, GraduationCap, LogIn, Sparkles, Target, UserRound } from 'lucide-react';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
+import { AskHr } from '@/components/galaxy/ask-hr';
 import { EmptyState } from '@/components/layout/empty-state';
 import { PageHeader } from '@/components/layout/page-header';
 import { Panel, StatTile } from '@/components/layout/stat';
@@ -123,6 +124,8 @@ export default function MySpacePage() {
   return (
     <div className="mx-auto flex max-w-[1200px] flex-col gap-5 p-4 sm:p-6">
       <PageHeader title={t('hello', { name: e.firstName })} description={t('desc')} />
+
+      <AskHr />
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <StatTile s={{ label: t('tiles.skillsMet'), value: required.length ? `${met}/${required.length}` : '—', icon: Target, hint: toImprove ? t('tiles.toImprove', { count: toImprove }) : notEvaluated ? t('tiles.notEvaluated', { count: notEvaluated }) : undefined, hintTone: toImprove ? 'warn' : 'muted' }} />
