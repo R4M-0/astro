@@ -68,7 +68,12 @@
     "switchToDark": "Passer en thème sombre",
     "switchToLight": "Passer en thème clair",
     "addonModules": "Modules QSE",
-    "viewAllNotifications": "Voir toutes les notifications"
+    "viewAllNotifications": "Voir toutes les notifications",
+    "noAccessTitle": "Accès non autorisé",
+    "noAccessDesc": "Votre rôle ne permet pas d’ouvrir cette page. Contactez votre administrateur si vous pensez qu’il s’agit d’une erreur.",
+    "notFoundTitle": "Élément introuvable",
+    "notFoundDesc": "Cet élément n’existe pas, a été supprimé ou ne fait pas partie de votre périmètre.",
+    "backHome": "Retour au tableau de bord"
   },
   "nav": {
     "dashboard": "Tableau de bord",

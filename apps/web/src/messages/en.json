@@ -68,7 +68,12 @@
     "switchToDark": "Switch to dark theme",
     "switchToLight": "Switch to light theme",
     "addonModules": "QHSE modules",
-    "viewAllNotifications": "View all notifications"
+    "viewAllNotifications": "View all notifications",
+    "noAccessTitle": "Access denied",
+    "noAccessDesc": "Your role cannot open this page. Contact your administrator if you think this is a mistake.",
+    "notFoundTitle": "Item not found",
+    "notFoundDesc": "This item does not exist, was deleted or is outside your scope.",
+    "backHome": "Back to dashboard"
   },
   "nav": {
     "dashboard": "Dashboard",
