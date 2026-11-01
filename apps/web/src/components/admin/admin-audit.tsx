@@ -8,9 +8,12 @@ import {
   ChevronLeft,
   ChevronRight,
   Download,
+  Eye,
+  Link2,
   PencilLine,
   Plus,
   Search,
+  ShieldCheck,
   Trash2,
 } from 'lucide-react';
 import { Fragment, useState } from 'react';
@@ -28,7 +31,7 @@ import { useMembers } from '@/components/hr/use-members';
 /** A display value: text, or a date formatted in the viewer's own time zone. */
 type Val = { t: string } | { d: string; time: boolean };
 
-type Category = 'create' | 'update' | 'delete' | 'workflow' | 'export' | 'other';
+type Category = 'create' | 'update' | 'delete' | 'workflow' | 'export' | 'access' | 'compliance' | 'other';
 
 interface AuditEntry {
   id: string;
@@ -42,6 +45,8 @@ interface AuditEntry {
   changes: { label: string; from: Val; to: Val }[];
   related: string[];
   technical: { method: string; route: string; ip: string | null; device: string | null };
+  /** tamper evidence: position in the organization's hash chain */
+  integrity?: { seq: number | null; hash: string | null; redacted: boolean };
 }
 
 const PAGE_SIZE = 25;
@@ -53,6 +58,8 @@ const CATEGORY_META: Record<Category, { icon: typeof Plus; cls: string }> = {
   delete: { icon: Trash2, cls: 'bg-destructive/15 text-destructive' },
   workflow: { icon: ArrowRightLeft, cls: 'bg-chart-4/15 text-chart-4' },
   export: { icon: Download, cls: 'bg-warning/20 text-warning-ink' },
+  access: { icon: Eye, cls: 'bg-info/10 text-info' },
+  compliance: { icon: ShieldCheck, cls: 'bg-chart-2/15 text-chart-2' },
   other: { icon: Activity, cls: 'bg-muted text-muted-foreground' },
 };
 
@@ -136,7 +143,7 @@ export function AdminAudit() {
           <SelectTrigger className="w-48"><SelectValue /></SelectTrigger>
           <SelectContent>
             <SelectItem value={ALL}>{t('allTypes')}</SelectItem>
-            {(['create', 'update', 'delete', 'workflow', 'export'] as const).map((c) => (
+            {(['create', 'update', 'delete', 'workflow', 'export', 'access', 'compliance'] as const).map((c) => (
               <SelectItem key={c} value={c}>{t(`categories.${c}`)}</SelectItem>
             ))}
           </SelectContent>
@@ -270,6 +277,13 @@ export function AdminAudit() {
                         <p className="mt-0.5 font-mono text-[10px] opacity-60">
                           {t('technicalRef')} : {e.technical.method} {e.technical.route}
                         </p>
+                        {e.integrity?.seq != null && (
+                          <p className="mt-0.5 flex items-center gap-1 font-mono text-[10px] opacity-60">
+                            <Link2 className="size-3" />
+                            {t('chain', { seq: e.integrity.seq })} · {e.integrity.hash?.slice(0, 16)}…
+                            {e.integrity.redacted && <> · {t('redacted')}</>}
+                          </p>
+                        )}
                       </section>
                     </div>
                   )}
