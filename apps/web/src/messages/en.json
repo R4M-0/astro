@@ -1896,7 +1896,9 @@
       "title": "Job title",
       "description": "Job offer text",
       "retrievalSize": "Candidates retrieved (top-N)",
-      "shortlistSize": "Shortlist size (top-K)"
+      "shortlistSize": "Shortlist size (top-K)",
+      "reminderDays": "Remind if no answer after (days)",
+      "closeDays": "Close as no-response after (days)"
     },
     "created": "Opening created",
     "saved": "Opening saved",
@@ -1904,7 +1906,9 @@
     "deleteConfirm": "Delete the opening “{name}” and its applications?",
     "tabs": {
       "candidates": "Candidates",
-      "criteria": "Criteria"
+      "criteria": "Criteria",
+      "interviews": "Interviews",
+      "messages": "Messages"
     },
     "upload": "Upload CVs",
     "uploadHint": "PDF, DOCX or TXT — 10 MB max. per file",
@@ -1972,6 +1976,108 @@
       "dimsHint": "Contribution of each embedding dimension to the similarity score (XQdrant explainability).",
       "cvText": "Anonymized text seen by the models",
       "notRanked": "Not ranked yet (outside top-N, or ranking to rerun)."
+    },
+    "interviews": {
+      "slots": "Interview slots",
+      "slotsDesc": "Your availability. Candidates pick a free slot through their link; a slot can only be booked once.",
+      "startsAt": "Start",
+      "duration": "Duration (min)",
+      "location": "Place / video link",
+      "locationHint": "Room, address or link",
+      "interviewer": "Interviewer",
+      "addSlot": "Add",
+      "noSlots": "No slots.",
+      "bookedBy": "Booked by",
+      "free": "Free",
+      "invitations": "Invitations",
+      "invitationsDesc": "The agent drafts one invitation per approved candidate and one rejection per rejected candidate. Nothing is sent until you approve it in the Messages tab.",
+      "draftInvitations": "Draft invitations",
+      "draftRejections": "Draft rejections",
+      "needSlots": "Add at least one upcoming free slot before inviting.",
+      "nothingToDraft": "No one to write to (already invited, no e-mail, or a draft is pending).",
+      "drafting": "{count, plural, one {# draft being written} other {# drafts being written}}",
+      "noDecisions": "No approved or rejected candidates yet: decide from the candidate page.",
+      "invitation": "Invitation",
+      "interview": "Interview",
+      "noEmail": "No e-mail in the CV",
+      "inviteStatuses": {
+        "NONE": "Not invited",
+        "INVITED": "Invited",
+        "BOOKED": "Booked",
+        "DECLINED": "Withdrew",
+        "NO_RESPONSE": "No response"
+      }
+    },
+    "messages": {
+      "drafts": "To approve ({count})",
+      "draftsDesc": "Drafts written by the agent. Review, edit if needed, then approve one by one or as a batch: only approved messages are sent.",
+      "noDrafts": "No pending drafts.",
+      "select": "Select",
+      "selectAll": "Select all",
+      "selectNone": "Select none",
+      "approveSelected": "Approve and send ({count})",
+      "approveSend": "Approve and send",
+      "discard": "Discard",
+      "approved": "{count, plural, one {# message approved} other {# messages approved}} — sending",
+      "linkAppended": "The personal booking link is added below the text when sent.",
+      "inbound": "Candidate replies",
+      "inboundDesc": "Triaged by the agent. It drafts an answer when it can; anything that needs a decision is flagged for you.",
+      "triaging": "Triaging…",
+      "needsHuman": "Needs you",
+      "flagged": "Suspicious instructions detected in this message (not followed).",
+      "writeReply": "Write a reply",
+      "saveReplyDraft": "Save as draft",
+      "replyDrafted": "Reply added to drafts",
+      "history": "History",
+      "kinds": {
+        "INVITATION": "Invitation",
+        "REMINDER": "Reminder",
+        "REJECTION": "Rejection",
+        "REPLY": "Reply",
+        "INBOUND": "Received"
+      },
+      "statuses": {
+        "DRAFT": "Draft",
+        "APPROVED": "Approved",
+        "SENDING": "Sending…",
+        "SENT": "Sent",
+        "DISCARDED": "Discarded",
+        "RECEIVED": "Received"
+      },
+      "intents": {
+        "CONFIRM": "Confirmation",
+        "QUESTION": "Question",
+        "RESCHEDULE": "Reschedule",
+        "DECLINE": "Withdrawal",
+        "NONE_FIT": "No slot fits",
+        "OTHER": "Other"
+      }
     }
+  },
+  "booking": {
+    "hello": "Hello {name}, pick a time for your interview.",
+    "helloAnon": "Hello, pick a time for your interview.",
+    "pickTitle": "Available slots",
+    "pickBody": "Times are shown in your time zone.",
+    "noSlots": "No free slot right now. Write to us below and we will offer other times.",
+    "bookedTitle": "Interview confirmed",
+    "duration": "{minutes} min",
+    "change": "Change slot",
+    "keep": "Keep my slot",
+    "slotTaken": "This slot was just taken. Please pick another one.",
+    "writeTitle": "Write to the recruiting team",
+    "writeBody": "A question, or none of the slots work? Let us know.",
+    "send": "Send",
+    "sent": "Message sent. The team will answer by e-mail.",
+    "decline": "I no longer wish to continue my application",
+    "declineConfirm": "Withdraw your application? Your slot will be released.",
+    "closedTitle": "Invitation closed",
+    "closedBody": "This link is no longer active. Contact the recruiting team if needed.",
+    "notFoundTitle": "Link not found",
+    "notFoundBody": "Check the link you received by e-mail.",
+    "errorTitle": "Something went wrong",
+    "error": "Please try again in a moment.",
+    "tooMany": "Too many attempts, try again in a minute.",
+    "retry": "Retry"
   }
 }

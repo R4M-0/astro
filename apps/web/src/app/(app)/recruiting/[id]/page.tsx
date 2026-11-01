@@ -22,6 +22,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Field } from '@/components/ui/form-dialog';
+import { InterviewsTab } from '@/components/recruiting/interviews-tab';
+import { MessagesTab } from '@/components/recruiting/messages-tab';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -39,6 +41,8 @@ interface Opening {
   criteria: Criterion[];
   retrievalSize: number;
   shortlistSize: number;
+  reminderDays: number;
+  closeDays: number;
   status: 'OPEN' | 'CLOSED';
   rankingStatus: RankingStatus;
   rankingError: string | null;
@@ -46,9 +50,9 @@ interface Opening {
   candidates: CandidateRow[];
 }
 
-type Draft = Pick<Opening, 'title' | 'description' | 'criteria' | 'retrievalSize' | 'shortlistSize' | 'status'>;
+type Draft = Pick<Opening, 'title' | 'description' | 'criteria' | 'retrievalSize' | 'shortlistSize' | 'reminderDays' | 'closeDays' | 'status'>;
 
-const TABS = ['candidates', 'criteria'] as const;
+const TABS = ['candidates', 'interviews', 'messages', 'criteria'] as const;
 
 export default function OpeningPage() {
   const { id } = useParams<{ id: string }>();
@@ -86,6 +90,8 @@ export default function OpeningPage() {
       criteria: opening.criteria,
       retrievalSize: opening.retrievalSize,
       shortlistSize: opening.shortlistSize,
+      reminderDays: opening.reminderDays,
+      closeDays: opening.closeDays,
       status: opening.status,
     });
 
@@ -227,6 +233,11 @@ export default function OpeningPage() {
               {t('tabs.candidates')}
               <Badge variant="secondary" className="ml-1.5 text-[10px]">{opening.candidates.length}</Badge>
             </TabsTrigger>
+            <TabsTrigger value="interviews">
+              {t('tabs.interviews')}
+              <Badge variant="secondary" className="ml-1.5 text-[10px]">{opening.candidates.filter((c) => c.decision === 'APPROVED').length}</Badge>
+            </TabsTrigger>
+            <TabsTrigger value="messages">{t('tabs.messages')}</TabsTrigger>
             <TabsTrigger value="criteria">
               {t('tabs.criteria')}
               <Badge variant="secondary" className="ml-1.5 text-[10px]">{opening.criteria.length}</Badge>
@@ -302,6 +313,21 @@ export default function OpeningPage() {
             )}
           </TabsContent>
 
+          <TabsContent value="interviews" className="mt-4">
+            <InterviewsTab
+              openingId={id}
+              candidates={opening.candidates}
+              onDrafted={() => {
+                setTab('messages');
+                router.replace(`/recruiting/${id}?tab=messages`, { scroll: false });
+              }}
+            />
+          </TabsContent>
+
+          <TabsContent value="messages" className="mt-4">
+            <MessagesTab openingId={id} />
+          </TabsContent>
+
           <TabsContent value="criteria" className="mt-4">
             {draft && (
               <Card>
@@ -318,6 +344,12 @@ export default function OpeningPage() {
                     </Field>
                     <Field label={t('fields.shortlistSize')}>
                       <Input type="number" min={1} max={100} value={draft.shortlistSize} disabled={!canEdit} onChange={(e) => setDraft({ ...draft, shortlistSize: Number(e.target.value) || 1 })} />
+                    </Field>
+                    <Field label={t('fields.reminderDays')}>
+                      <Input type="number" min={1} max={30} value={draft.reminderDays} disabled={!canEdit} onChange={(e) => setDraft({ ...draft, reminderDays: Number(e.target.value) || 1 })} />
+                    </Field>
+                    <Field label={t('fields.closeDays')}>
+                      <Input type="number" min={1} max={60} value={draft.closeDays} disabled={!canEdit} onChange={(e) => setDraft({ ...draft, closeDays: Number(e.target.value) || 1 })} />
                     </Field>
                     <Field label={t('cols.status')}>
                       <Select value={draft.status} disabled={!canEdit} onValueChange={(v) => setDraft({ ...draft, status: v as Draft['status'] })}>

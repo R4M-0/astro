@@ -1896,7 +1896,9 @@
       "title": "Intitulé du poste",
       "description": "Texte de l'offre",
       "retrievalSize": "Candidats récupérés (top-N)",
-      "shortlistSize": "Taille de la présélection (top-K)"
+      "shortlistSize": "Taille de la présélection (top-K)",
+      "reminderDays": "Relance si pas de réponse après (jours)",
+      "closeDays": "Clôture sans réponse après (jours)"
     },
     "created": "Offre créée",
     "saved": "Offre enregistrée",
@@ -1904,7 +1906,9 @@
     "deleteConfirm": "Supprimer l'offre « {name} » et ses candidatures ?",
     "tabs": {
       "candidates": "Candidats",
-      "criteria": "Critères"
+      "criteria": "Critères",
+      "interviews": "Entretiens",
+      "messages": "Messages"
     },
     "upload": "Déposer des CV",
     "uploadHint": "PDF, DOCX ou TXT — 10 Mo max. par fichier",
@@ -1972,6 +1976,108 @@
       "dimsHint": "Contribution de chaque dimension d'embedding au score de similarité (explicabilité XQdrant).",
       "cvText": "Texte anonymisé vu par les modèles",
       "notRanked": "Pas encore classé (hors top-N ou classement à relancer)."
+    },
+    "interviews": {
+      "slots": "Créneaux d'entretien",
+      "slotsDesc": "Vos disponibilités. Le candidat choisit un créneau libre via son lien ; un créneau ne peut être réservé qu'une fois.",
+      "startsAt": "Début",
+      "duration": "Durée (min)",
+      "location": "Lieu / lien visio",
+      "locationHint": "Salle, adresse ou lien",
+      "interviewer": "Recruteur",
+      "addSlot": "Ajouter",
+      "noSlots": "Aucun créneau.",
+      "bookedBy": "Réservé par",
+      "free": "Libre",
+      "invitations": "Invitations",
+      "invitationsDesc": "L'agent rédige une invitation par candidat retenu et un refus par candidat écarté. Rien n'est envoyé avant votre validation dans l'onglet Messages.",
+      "draftInvitations": "Préparer les invitations",
+      "draftRejections": "Préparer les refus",
+      "needSlots": "Ajoutez au moins un créneau libre à venir avant d'inviter.",
+      "nothingToDraft": "Aucun candidat à qui écrire (déjà invité, sans e-mail ou brouillon en attente).",
+      "drafting": "{count, plural, one {# brouillon en cours de rédaction} other {# brouillons en cours de rédaction}}",
+      "noDecisions": "Aucun candidat retenu ou écarté pour l'instant : décidez depuis la fiche candidat.",
+      "invitation": "Invitation",
+      "interview": "Entretien",
+      "noEmail": "Pas d’e-mail dans le CV",
+      "inviteStatuses": {
+        "NONE": "Non invité",
+        "INVITED": "Invité",
+        "BOOKED": "Réservé",
+        "DECLINED": "Désisté",
+        "NO_RESPONSE": "Sans réponse"
+      }
+    },
+    "messages": {
+      "drafts": "À valider ({count})",
+      "draftsDesc": "Brouillons rédigés par l'agent. Relisez, modifiez si besoin, puis validez un par un ou en lot : seul un message validé part.",
+      "noDrafts": "Aucun brouillon en attente.",
+      "select": "Sélectionner",
+      "selectAll": "Tout sélectionner",
+      "selectNone": "Tout désélectionner",
+      "approveSelected": "Valider et envoyer ({count})",
+      "approveSend": "Valider et envoyer",
+      "discard": "Écarter",
+      "approved": "{count, plural, one {# message validé} other {# messages validés}} — envoi en cours",
+      "linkAppended": "Le lien de réservation personnel est ajouté sous le texte à l’envoi.",
+      "inbound": "Réponses des candidats",
+      "inboundDesc": "Triées par l'agent. Il prépare une réponse quand il le peut ; ce qui demande une décision vous est signalé.",
+      "triaging": "Tri en cours…",
+      "needsHuman": "À traiter",
+      "flagged": "Instructions suspectes détectées dans ce message (non suivies).",
+      "writeReply": "Rédiger une réponse",
+      "saveReplyDraft": "Enregistrer en brouillon",
+      "replyDrafted": "Réponse ajoutée aux brouillons",
+      "history": "Historique",
+      "kinds": {
+        "INVITATION": "Invitation",
+        "REMINDER": "Relance",
+        "REJECTION": "Refus",
+        "REPLY": "Réponse",
+        "INBOUND": "Reçu"
+      },
+      "statuses": {
+        "DRAFT": "Brouillon",
+        "APPROVED": "Validé",
+        "SENDING": "Envoi…",
+        "SENT": "Envoyé",
+        "DISCARDED": "Écarté",
+        "RECEIVED": "Reçu"
+      },
+      "intents": {
+        "CONFIRM": "Confirmation",
+        "QUESTION": "Question",
+        "RESCHEDULE": "Report",
+        "DECLINE": "Désistement",
+        "NONE_FIT": "Aucun créneau ne convient",
+        "OTHER": "Autre"
+      }
     }
+  },
+  "booking": {
+    "hello": "Bonjour {name}, choisissez le créneau de votre entretien.",
+    "helloAnon": "Bonjour, choisissez le créneau de votre entretien.",
+    "pickTitle": "Créneaux disponibles",
+    "pickBody": "Les horaires sont affichés dans votre fuseau horaire.",
+    "noSlots": "Aucun créneau libre pour l'instant. Écrivez-nous ci-dessous, nous vous proposerons d'autres horaires.",
+    "bookedTitle": "Entretien confirmé",
+    "duration": "{minutes} min",
+    "change": "Changer de créneau",
+    "keep": "Garder mon créneau",
+    "slotTaken": "Ce créneau vient d’être pris. Choisissez-en un autre.",
+    "writeTitle": "Écrire à l'équipe recrutement",
+    "writeBody": "Une question, ou aucun créneau ne vous convient ? Dites-le nous.",
+    "send": "Envoyer",
+    "sent": "Message envoyé. L’équipe vous répondra par e-mail.",
+    "decline": "Je ne souhaite plus poursuivre ma candidature",
+    "declineConfirm": "Retirer votre candidature ? Votre créneau sera libéré.",
+    "closedTitle": "Invitation close",
+    "closedBody": "Ce lien n'est plus actif. Contactez l'équipe recrutement si besoin.",
+    "notFoundTitle": "Lien introuvable",
+    "notFoundBody": "Vérifiez le lien reçu par e-mail.",
+    "errorTitle": "Une erreur est survenue",
+    "error": "Réessayez dans un instant.",
+    "tooMany": "Trop de tentatives, réessayez dans une minute.",
+    "retry": "Réessayer"
   }
 }
