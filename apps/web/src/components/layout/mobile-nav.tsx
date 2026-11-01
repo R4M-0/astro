@@ -32,25 +32,17 @@ function MobileRow({
       aria-current={active ? 'page' : undefined}
       style={{ '--grp': group.color } as React.CSSProperties}
       className={cn(
-        'group/item relative flex min-h-11 items-center gap-3 rounded-lg px-2 py-1.5 text-sm transition-colors',
+        'group/item relative flex min-h-11 items-center gap-2.5 rounded-[3px] px-1.5 py-1 text-sm transition-colors',
         active
-          ? 'bg-[color-mix(in_oklab,var(--grp)_18%,transparent)] font-medium text-foreground'
-          : 'text-muted-foreground hover:bg-[color-mix(in_oklab,var(--grp)_10%,transparent)] hover:text-foreground',
+          ? 'bg-[var(--grp)] font-semibold text-sidebar-primary-foreground'
+          : 'text-sidebar-foreground/78 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
       )}
     >
       <span
-        className={cn(
-          'absolute inset-y-2 left-0 w-0.5 rounded-full bg-[var(--grp)]',
-          active ? 'opacity-100' : 'opacity-0',
-        )}
-      />
-      <span
         aria-hidden
         className={cn(
-          'flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors',
-          active
-            ? 'bg-[var(--grp)] text-white shadow-sm'
-            : 'bg-[color-mix(in_oklab,var(--grp)_13%,transparent)] text-[var(--grp)]',
+          'flex size-8 shrink-0 items-center justify-center',
+          active ? 'text-sidebar-primary-foreground' : 'text-[var(--grp)]',
         )}
       >
         <Icon className="size-[18px]" />
@@ -91,7 +83,7 @@ export function MobileNav() {
           <Menu className="size-5" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="w-72 p-0">
+      <SheetContent side="left" className="w-72 border-sidebar-border bg-sidebar p-0 text-sidebar-foreground [color-scheme:dark]">
         <SheetHeader className="border-b px-4 py-3">
           <SheetTitle className="flex items-center gap-2 text-sm">
             <span className="flex size-6 items-center justify-center overflow-hidden rounded-md">
@@ -107,7 +99,7 @@ export function MobileNav() {
               <>
                 {favorites.length > 0 && (
                   <>
-                    <div className="flex items-center gap-1.5 px-2 py-1.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+                    <div className="flex items-center gap-1.5 px-2 py-1.5 text-[11px] plate-label text-sidebar-foreground/55">
                       <Star className="size-3 fill-current text-amber-500" />
                       {tc('favorites')}
                     </div>
@@ -120,7 +112,7 @@ export function MobileNav() {
                         onNavigate={close}
                       />
                     ))}
-                    <div className="my-1 border-t" />
+                    <div className="my-1 border-t border-sidebar-border" />
                   </>
                 )}
                 {groups.map((g, gi) => {
@@ -128,13 +120,13 @@ export function MobileNav() {
                   const boundary = !!prev && !prev.group.key !== !g.group.key;
                   const addonStart = !!prev && !!g.group.addon && !prev.group.addon;
                   const divider = addonStart ? (
-                    <div key={`sep:${g.key}`} className="mt-2 border-t pt-2">
-                      <div className="px-2 pb-1 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+                    <div key={`sep:${g.key}`} className="mt-2 border-t border-sidebar-border pt-2">
+                      <div className="px-2 pb-1 text-[11px] plate-label text-sidebar-foreground/55">
                         {tc('addonModules')}
                       </div>
                     </div>
                   ) : boundary ? (
-                    <div key={`sep:${g.key}`} className="my-1.5 border-t" />
+                    <div key={`sep:${g.key}`} className="my-1.5 border-t border-sidebar-border" />
                   ) : null;
 
                   if (g.group.key) {

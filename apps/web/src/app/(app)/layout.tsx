@@ -7,6 +7,7 @@ import { AddonLocked } from '@/components/billing/addons';
 import { CommandPalette } from '@/components/layout/command-palette';
 import { ImpersonationBanner } from '@/components/layout/impersonation-banner';
 import { LicenseBanner } from '@/components/license/license-banner';
+import { useMascotHidden, WorkshopMascot } from '@/components/mascot/workshop-mascot';
 import { lockedAddonOf, requiredPermissionFor } from '@/components/layout/nav-config';
 import { NoAccess } from '@/components/layout/no-access';
 import { SectionTabs } from '@/components/layout/section-tabs';
@@ -15,6 +16,9 @@ import { Topbar } from '@/components/layout/topbar';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useRealtime } from '@/lib/realtime';
 import { useSession } from '@/stores/session';
+
+/** pages that fill the viewport themselves */
+const FULL_HEIGHT = new Set(['/hr/galaxy']);
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -28,6 +32,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const permissions = useSession((s) => s.permissions);
   const pathname = usePathname();
   const [paletteOpen, setPaletteOpen] = useState(false);
+  const mascotHidden = useMascotHidden();
   useRealtime();
 
   useEffect(() => {
@@ -85,11 +90,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <LicenseBanner />
         <Topbar onOpenPalette={() => setPaletteOpen(true)} />
         {!lockedAddon && <SectionTabs />}
-        <main id="main-content" tabIndex={-1} className="min-w-0 focus:outline-none flex-1 overflow-y-auto bg-background bg-[radial-gradient(120%_80%_at_100%_0%,color-mix(in_oklab,var(--primary)_9%,transparent),transparent_55%),radial-gradient(100%_70%_at_0%_0%,color-mix(in_oklab,var(--chart-2)_8%,transparent),transparent_50%)]">
+        <main id="main-content" tabIndex={-1} className="min-w-0 flex-1 overflow-y-auto bg-background focus:outline-none">
           {lockedAddon ? <AddonLocked addon={lockedAddon} /> : forbidden ? <NoAccess /> : children}
+          {/* floor space for Gus so he never parks on a page's last row (full-height canvases excepted) */}
+          {!mascotHidden && !FULL_HEIGHT.has(pathname) && <div aria-hidden className="h-36" />}
         </main>
       </div>
       <CommandPalette open={paletteOpen} onOpenChange={setPaletteOpen} />
+      <WorkshopMascot />
     </div>
   );
 }

@@ -252,7 +252,7 @@ export default function MemberEffectiveAccessPage() {
                               <span className="text-[11px] text-muted-foreground">
                                 {label(`visibility.groups.${r.group}`, r.group)}
                                 {!r.canRead && (
-                                  <span className="ml-2 inline-flex items-center gap-1 text-warning-foreground dark:text-warning">
+                                  <span className="ml-2 inline-flex items-center gap-1 text-warning-ink">
                                     <Lock className="size-3" /> {tm('noRead')}
                                   </span>
                                 )}
@@ -262,7 +262,7 @@ export default function MemberEffectiveAccessPage() {
                           <TableCell className="text-sm">{label(`visibility.modes.${r.mode}`, r.mode)}</TableCell>
                           <TableCell>
                             {r.restricted ? (
-                              <Badge variant="outline" className="border-warning/50 text-warning-foreground dark:text-warning">{tm('restrictedYes')}</Badge>
+                              <Badge variant="outline" className="border-warning/50 text-warning-ink">{tm('restrictedYes')}</Badge>
                             ) : (
                               <Badge variant="outline" className="text-muted-foreground">{tm('restrictedNo')}</Badge>
                             )}

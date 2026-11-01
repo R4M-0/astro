@@ -51,7 +51,7 @@ export interface NavGroup {
 export const NAV_GROUPS: NavGroup[] = [
   {
     key: null,
-    color: 'oklch(0.62 0.21 275)', // indigo — home
+    color: 'oklch(0.93 0.006 250)', // enamel white — home
     items: [
       { key: 'dashboard', href: '/dashboard', icon: LayoutDashboard, permission: 'dashboard:read' },
       { key: 'hrMe', href: '/hr/me', icon: CircleUserRound },
@@ -60,7 +60,7 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     key: 'people',
     icon: Users,
-    color: 'oklch(0.6 0.14 165)', // emerald — people
+    color: 'oklch(0.74 0.15 155)', // safety green — people
     items: [
       { key: 'hrEmployees', href: '/hr/employees', icon: Users, permission: 'employees:read' },
       { key: 'galaxy', href: '/hr/galaxy', icon: Sparkles, permission: 'employees:read' },
@@ -73,7 +73,7 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     key: 'competencies',
     icon: Award,
-    color: 'oklch(0.63 0.2 300)', // violet
+    color: 'oklch(0.72 0.13 250)', // mandatory blue — competencies
     items: [
       { key: 'hrSkills', href: '/hr/skills', icon: Award, permission: 'skills:read' },
       { key: 'hrJobDescriptions', href: '/hr/job-descriptions', icon: ScrollText, permission: 'job-descriptions:read' },
@@ -85,7 +85,7 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     key: 'trainings',
     icon: GraduationCap,
-    color: 'oklch(0.72 0.18 70)', // amber
+    color: 'oklch(0.86 0.17 92)', // signal yellow — trainings
     items: [
       { key: 'hrTrainingPlan', href: '/hr/trainings', icon: GraduationCap, permission: 'hr-trainings:read' },
       { key: 'hrTrainingEvaluation', href: '/hr/trainings/evaluation', icon: Send, permission: 'hr-trainings:read' },
@@ -95,14 +95,14 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     key: 'recruiting',
     icon: Briefcase,
-    color: 'oklch(0.64 0.19 25)', // coral — recruiting
+    color: 'oklch(0.75 0.16 55)', // signal orange — recruiting
     items: [
       { key: 'recruitingOpenings', href: '/recruiting', icon: Briefcase, permission: 'recruiting:read' },
     ],
   },
   {
     key: null,
-    color: 'oklch(0.66 0.16 190)', // cyan — tools
+    color: 'oklch(0.78 0.02 250)', // aluminium — tools
     items: [
       { key: 'hrSurveys', href: '/hr/surveys', icon: MessageSquareText, permission: 'hr-surveys:read', openDetails: true },
       { key: 'admin', href: '/admin', icon: Building2, permission: ['organization:read', 'users:read', 'roles:read', 'audit-log:read'] },

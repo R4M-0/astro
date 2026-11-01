@@ -52,7 +52,7 @@ const CATEGORY_META: Record<Category, { icon: typeof Plus; cls: string }> = {
   update: { icon: PencilLine, cls: 'bg-info/15 text-info' },
   delete: { icon: Trash2, cls: 'bg-destructive/15 text-destructive' },
   workflow: { icon: ArrowRightLeft, cls: 'bg-chart-4/15 text-chart-4' },
-  export: { icon: Download, cls: 'bg-warning/20 text-warning-foreground dark:text-warning' },
+  export: { icon: Download, cls: 'bg-warning/20 text-warning-ink' },
   other: { icon: Activity, cls: 'bg-muted text-muted-foreground' },
 };
 

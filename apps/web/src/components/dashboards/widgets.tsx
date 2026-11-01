@@ -17,11 +17,11 @@ export function DistributionBars({
     <div className="flex flex-col gap-2">
       {rows.map((d) => (
         <div key={d.label} className="flex items-center gap-2">
-          <span className="w-36 shrink-0 truncate text-xs text-muted-foreground" title={d.label}>{d.label}</span>
-          <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
-            <div className={cn('h-full rounded-full transition-[width] duration-500', barClassName)} style={{ width: `${(d.count / max) * 100}%` }} />
+          <span className="w-36 shrink-0 truncate text-[13px] text-foreground/80" title={d.label}>{d.label}</span>
+          <div className="h-3 flex-1 overflow-hidden rounded-[2px] bg-muted">
+            <div className={cn('h-full transition-[width] duration-500 ease-out', barClassName)} style={{ width: `${(d.count / max) * 100}%` }} />
           </div>
-          <span className="w-6 shrink-0 text-right text-xs tabular-nums">{d.count}</span>
+          <span className="w-7 shrink-0 text-right text-[13px] font-bold tabular-nums">{d.count}</span>
         </div>
       ))}
     </div>
@@ -47,11 +47,11 @@ export function ListRow({
   return (
     <Link
       href={href}
-      className="group flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-accent/60"
+      className="group flex items-center gap-3 rounded-[3px] px-3 py-2 text-sm transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring"
     >
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          {reference && <span className="shrink-0 font-mono text-[11px] text-muted-foreground">{reference}</span>}
+          {reference && <span className="shrink-0 rounded-[2px] border border-border px-1 font-mono text-[11px] text-muted-foreground">{reference}</span>}
           <span className="truncate font-medium">{title}</span>
         </div>
         {children}
@@ -61,7 +61,7 @@ export function ListRow({
           className={cn(
             'shrink-0 text-xs tabular-nums text-muted-foreground',
             metaTone === 'destructive' && 'font-medium text-destructive',
-            metaTone === 'warn' && 'font-medium text-warning-foreground dark:text-warning',
+            metaTone === 'warn' && 'font-semibold text-warning-ink',
           )}
         >
           {meta}

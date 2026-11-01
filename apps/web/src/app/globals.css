@@ -3,114 +3,123 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* ── Astro design tokens — Refined enterprise ────────────────────────────
-   Crisp white cards on a subtly tinted canvas, hairline borders, layered
-   elevation, calm indigo identity. Neutrals carry a faint warm-slate tint. */
+/* ── Constella design tokens — Workshop signage ─────────────────────────
+   The visual language of a factory wall: brushed-aluminium ground, ink-black
+   type, enamel sign plates. ISO 7010 safety colours are reserved for state —
+   green = OK, signal yellow (+ hazard stripe) = attention, mandatory blue =
+   brand / to do, signal red = overdue. Never decoration. */
 
 :root {
-  --radius: 0.625rem;
+  --radius: 0.3rem;
 
-  /* canvas is very subtly tinted; cards are crisp white to lift off it */
-  --background: oklch(0.99 0.004 265);
-  --foreground: oklch(0.21 0.02 265);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.21 0.02 265);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.21 0.02 265);
+  --background: oklch(0.958 0.004 250);
+  --foreground: oklch(0.2 0.014 262);
+  --card: oklch(0.993 0.002 250);
+  --card-foreground: oklch(0.2 0.014 262);
+  --popover: oklch(0.993 0.002 250);
+  --popover-foreground: oklch(0.2 0.014 262);
 
-  --primary: oklch(0.54 0.23 274);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.965 0.012 270);
-  --secondary-foreground: oklch(0.33 0.06 274);
-  --muted: oklch(0.968 0.008 265);
-  --muted-foreground: oklch(0.53 0.028 268);
-  --accent: oklch(0.955 0.028 285);
-  --accent-foreground: oklch(0.35 0.11 285);
-  --destructive: oklch(0.585 0.22 25);
+  /* mandatory blue (RAL 5005 family) */
+  --primary: oklch(0.47 0.16 257);
+  --primary-foreground: oklch(0.99 0.003 250);
+  --secondary: oklch(0.925 0.006 250);
+  --secondary-foreground: oklch(0.24 0.02 260);
+  --muted: oklch(0.928 0.005 250);
+  --muted-foreground: oklch(0.45 0.014 258);
+  --accent: oklch(0.92 0.018 252);
+  --accent-foreground: oklch(0.26 0.05 258);
+  /* signal red (RAL 3001 family) */
+  --destructive: oklch(0.54 0.2 27);
   --destructive-foreground: oklch(0.99 0 0);
 
-  --border: oklch(0.855 0.012 268);
-  --input: oklch(0.84 0.014 268);
-  --ring: oklch(0.54 0.23 274);
+  --border: oklch(0.84 0.007 252);
+  --input: oklch(0.8 0.009 252);
+  --ring: oklch(0.47 0.16 257);
+  /* the 2px enamel keyline around sign plates */
+  --keyline: oklch(0.2 0.014 262);
 
-  --chart-1: oklch(0.54 0.23 274);
-  --chart-2: oklch(0.66 0.15 205);
-  --chart-3: oklch(0.74 0.16 65);
-  --chart-4: oklch(0.62 0.24 330);
-  --chart-5: oklch(0.68 0.17 150);
+  --chart-1: oklch(0.47 0.16 257);
+  --chart-2: oklch(0.56 0.13 155);
+  --chart-3: oklch(0.8 0.16 85);
+  --chart-4: oklch(0.54 0.2 27);
+  --chart-5: oklch(0.45 0.014 258);
 
-  --sidebar: oklch(0.978 0.006 268);
-  --sidebar-foreground: oklch(0.36 0.03 268);
-  --sidebar-primary: oklch(0.54 0.23 274);
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.945 0.03 285);
-  --sidebar-accent-foreground: oklch(0.32 0.11 285);
-  --sidebar-border: oklch(0.862 0.012 268);
-  --sidebar-ring: oklch(0.54 0.23 274);
+  /* the sidebar is an enamel panel: graphite in both themes */
+  --sidebar: oklch(0.215 0.012 262);
+  --sidebar-foreground: oklch(0.93 0.006 250);
+  --sidebar-primary: oklch(0.86 0.17 92);
+  --sidebar-primary-foreground: oklch(0.2 0.014 262);
+  --sidebar-accent: oklch(0.29 0.014 262);
+  --sidebar-accent-foreground: oklch(0.98 0.004 250);
+  --sidebar-border: oklch(0.32 0.012 262);
+  --sidebar-ring: oklch(0.86 0.17 92);
 
-  /* status palette (AA-tuned) */
-  --success: oklch(0.62 0.15 152);
+  /* safety green (RAL 6032 family) */
+  --success: oklch(0.52 0.13 155);
   --success-foreground: oklch(0.99 0 0);
-  --warning: oklch(0.75 0.16 72);
-  --warning-foreground: oklch(0.28 0.06 72);
-  --info: oklch(0.6 0.16 240);
+  /* signal yellow (RAL 1003 family) — always carries ink, never white */
+  --warning: oklch(0.86 0.17 92);
+  --warning-foreground: oklch(0.2 0.014 262);
+  /* ink-safe yellow for text on light grounds */
+  --warning-ink: oklch(0.5 0.11 75);
+  --info: oklch(0.47 0.16 257);
   --info-foreground: oklch(0.99 0 0);
 
-  /* layered elevation — tinted, low-opacity; drives Tailwind shadow-* */
-  --shadow-color: 268 48% 16%;
+  --hazard-ink: oklch(0.2 0.014 262);
 
-  /* motion */
+  --shadow-color: 258 30% 18%;
+
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
+/* night shift: graphite panels, the same signals */
 .dark {
-  --background: oklch(0.17 0.02 268);
-  --foreground: oklch(0.93 0.01 268);
-  --card: oklch(0.208 0.024 268);
-  --card-foreground: oklch(0.93 0.01 268);
-  --popover: oklch(0.212 0.024 268);
-  --popover-foreground: oklch(0.93 0.01 268);
+  --background: oklch(0.165 0.008 262);
+  --foreground: oklch(0.95 0.004 250);
+  --card: oklch(0.212 0.01 262);
+  --card-foreground: oklch(0.95 0.004 250);
+  --popover: oklch(0.232 0.011 262);
+  --popover-foreground: oklch(0.95 0.004 250);
 
-  --primary: oklch(0.7 0.19 274);
-  --primary-foreground: oklch(0.15 0.02 274);
-  --secondary: oklch(0.278 0.028 270);
-  --secondary-foreground: oklch(0.93 0.01 268);
-  --muted: oklch(0.262 0.024 270);
-  --muted-foreground: oklch(0.71 0.028 272);
-  --accent: oklch(0.33 0.06 285);
-  --accent-foreground: oklch(0.93 0.03 285);
-  --destructive: oklch(0.68 0.2 27);
-  --destructive-foreground: oklch(0.98 0 0);
+  --primary: oklch(0.68 0.14 252);
+  --primary-foreground: oklch(0.16 0.02 262);
+  --secondary: oklch(0.27 0.011 262);
+  --secondary-foreground: oklch(0.94 0.004 250);
+  --muted: oklch(0.255 0.01 262);
+  --muted-foreground: oklch(0.72 0.012 255);
+  --accent: oklch(0.29 0.03 255);
+  --accent-foreground: oklch(0.95 0.01 250);
+  --destructive: oklch(0.66 0.19 27);
+  --destructive-foreground: oklch(0.16 0.02 262);
 
-  --border: oklch(0.295 0.02 270);
-  --input: oklch(0.32 0.024 270);
-  --ring: oklch(0.7 0.19 274);
+  --border: oklch(0.32 0.011 262);
+  --input: oklch(0.36 0.012 262);
+  --ring: oklch(0.68 0.14 252);
+  --keyline: oklch(0.42 0.012 262);
 
-  --chart-1: oklch(0.7 0.19 274);
-  --chart-2: oklch(0.72 0.14 200);
-  --chart-3: oklch(0.79 0.15 68);
-  --chart-4: oklch(0.7 0.21 330);
-  --chart-5: oklch(0.74 0.16 150);
+  --chart-1: oklch(0.68 0.14 252);
+  --chart-2: oklch(0.7 0.14 155);
+  --chart-3: oklch(0.86 0.17 92);
+  --chart-4: oklch(0.66 0.19 27);
+  --chart-5: oklch(0.72 0.012 255);
 
-  --sidebar: oklch(0.198 0.022 270);
-  --sidebar-foreground: oklch(0.86 0.018 270);
-  --sidebar-primary: oklch(0.7 0.19 274);
-  --sidebar-primary-foreground: oklch(0.15 0.02 274);
-  --sidebar-accent: oklch(0.33 0.055 285);
-  --sidebar-accent-foreground: oklch(0.93 0.03 285);
-  --sidebar-border: oklch(0.285 0.02 270);
-  --sidebar-ring: oklch(0.7 0.19 274);
+  --sidebar: oklch(0.135 0.007 262);
+  --sidebar-foreground: oklch(0.9 0.006 250);
+  --sidebar-accent: oklch(0.22 0.01 262);
+  --sidebar-border: oklch(0.25 0.01 262);
 
-  --success: oklch(0.72 0.15 152);
-  --success-foreground: oklch(0.15 0.02 268);
-  --warning: oklch(0.82 0.15 78);
-  --warning-foreground: oklch(0.22 0.06 78);
-  --info: oklch(0.72 0.14 238);
-  --info-foreground: oklch(0.15 0.02 268);
+  --success: oklch(0.72 0.15 155);
+  --success-foreground: oklch(0.16 0.02 262);
+  --warning: oklch(0.86 0.17 92);
+  --warning-foreground: oklch(0.18 0.014 262);
+  --warning-ink: oklch(0.86 0.17 92);
+  --info: oklch(0.68 0.14 252);
+  --info-foreground: oklch(0.16 0.02 262);
 
-  /* shadows read stronger against dark surfaces */
-  --shadow-color: 268 60% 4%;
+  --hazard-ink: oklch(0.13 0.008 262);
+
+  --shadow-color: 262 40% 3%;
 }
 
 @theme inline {
@@ -158,6 +167,8 @@
   --color-warning-foreground: var(--warning-foreground);
   --color-info: var(--info);
   --color-info-foreground: var(--info-foreground);
+  --color-warning-ink: var(--warning-ink);
+  --color-keyline: var(--keyline);
 
   /* refined 2-layer elevation scale (overrides Tailwind defaults) */
   --shadow-2xs: 0 1px 2px 0 hsl(var(--shadow-color) / 0.04);
@@ -168,7 +179,7 @@
   --shadow-xl: 0 8px 16px -6px hsl(var(--shadow-color) / 0.12), 0 24px 48px -12px hsl(var(--shadow-color) / 0.14);
   --shadow-2xl: 0 32px 64px -16px hsl(var(--shadow-color) / 0.22);
 
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
   --animate-shimmer: shimmer 1.6s ease-in-out infinite;
@@ -189,7 +200,7 @@
   body {
     @apply bg-background text-foreground antialiased;
     text-rendering: optimizeLegibility;
-    font-feature-settings: "cv11", "ss01";
+    font-feature-settings: "ss01";
   }
   /* tabular figures wherever numeric data is emphasised */
   .tabular-nums {
@@ -218,7 +229,29 @@
     scrollbar-color: color-mix(in oklab, var(--muted-foreground) 28%, transparent) transparent;
   }
   ::selection {
-    background: color-mix(in oklab, var(--primary) 22%, transparent);
+    background: var(--warning);
+    color: var(--warning-foreground);
+  }
+  input, textarea, [contenteditable] {
+    caret-color: var(--primary);
+  }
+  :focus-visible {
+    outline-offset: 2px;
+  }
+  /* big tabular figures: the numerals of a sign, not of a spreadsheet */
+  .figure {
+    font-variant-numeric: tabular-nums lining-nums;
+    font-stretch: 112%;
+    font-weight: 750;
+    letter-spacing: -0.035em;
+    line-height: 0.9;
+  }
+  /* condensed caps label — the lettering on a plate */
+  .plate-label {
+    font-stretch: 78%;
+    font-weight: 650;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
 }
 
@@ -246,6 +279,86 @@
   }
 }
 
+@layer components {
+  /* ISO 7010 hazard stripe: signal yellow and ink at 45° */
+  .hazard {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      var(--warning) 0 9px,
+      var(--hazard-ink) 9px 18px
+    );
+  }
+  .hazard-thin {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      var(--warning) 0 5px,
+      var(--hazard-ink) 5px 10px
+    );
+  }
+  /* an enamel sign plate: card ground, 2px ink keyline, squared corners */
+  .sign-plate {
+    background: var(--card);
+    color: var(--card-foreground);
+    border: 2px solid var(--keyline);
+    border-radius: calc(var(--radius) + 1px);
+    box-shadow: 0 1px 0 0 color-mix(in oklab, var(--keyline) 25%, transparent),
+      0 6px 16px -10px hsl(var(--shadow-color) / 0.35);
+  }
+  /* interactive plate: presses in instead of floating */
+  .plate-press {
+    transition: transform 0.16s var(--ease-out), box-shadow 0.16s var(--ease-out),
+      background-color 0.16s var(--ease-out);
+  }
+  .plate-press:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 0 0 var(--keyline), 0 12px 22px -14px hsl(var(--shadow-color) / 0.5);
+  }
+  .plate-press:active {
+    transform: translateY(0);
+  }
+  /* yellow/black floor marking tape the mascot walks along */
+  .floor-tape {
+    background-image: repeating-linear-gradient(
+      90deg,
+      var(--warning) 0 14px,
+      var(--hazard-ink) 14px 28px
+    );
+  }
+  /* "lit until seen" lamp on attention rows */
+  .lamp-lit {
+    animation: lamp 2.4s var(--ease-in-out) infinite;
+  }
+  @keyframes lamp {
+    0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--warning) 0%, transparent); }
+    50% { box-shadow: 0 0 0 4px color-mix(in oklab, var(--warning) 45%, transparent); }
+  }
+}
+
+/* Gus's bubbles: pop in on whole-pixel steps, thought dots tick, z's drift */
+.mascot-pop { animation: mascot-pop 0.28s steps(4, end) both; transform-origin: 50% 100%; }
+@keyframes mascot-pop {
+  0% { opacity: 0; transform: scale(0.6) translateY(8px); }
+  100% { opacity: 1; transform: none; }
+}
+.mascot-dots i { animation: mascot-dot 1.05s steps(1, end) infinite; opacity: 0.2; }
+.mascot-dots i:nth-child(2) { animation-delay: 0.35s; }
+.mascot-dots i:nth-child(3) { animation-delay: 0.7s; }
+@keyframes mascot-dot { 0%, 66% { opacity: 1; } 67%, 100% { opacity: 0.2; } }
+.mascot-zzz span { animation: mascot-z 2.4s steps(6, end) infinite; }
+.mascot-zzz span:nth-child(2) { animation-delay: 0.4s; }
+.mascot-zzz span:nth-child(3) { animation-delay: 0.8s; }
+@keyframes mascot-z {
+  0% { opacity: 0; transform: translateY(8px); }
+  30% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-18px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mascot-pop, .mascot-dots i, .mascot-zzz span { animation: none; opacity: 1; }
+  .lamp-lit { animation: none; }
+  .plate-press:hover { transform: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .skeleton-shimmer {
     animation: none;
@@ -253,53 +366,6 @@
   .hover-lift:hover {
     transform: none;
   }
-}
-
-/* Marketing lifecycle: each step reveals and its node briefly takes the brand
-   ring; per-step delay makes the sweep move 1 → N. Pure CSS so every step
-   behaves identically. */
-@keyframes lifecycle-in {
-  0% { opacity: 0; transform: translateY(10px); }
-  100% { opacity: 1; transform: translateY(0); }
-}
-@keyframes lifecycle-node {
-  0% { border-color: var(--border); box-shadow: none; }
-  50% { border-color: var(--primary); box-shadow: 0 0 0 4px color-mix(in oklab, var(--primary) 22%, transparent); }
-  100% { border-color: var(--primary); box-shadow: none; }
-}
-.lifecycle-card { opacity: 0; }
-.lifecycle-shown .lifecycle-card { animation: lifecycle-in 0.5s var(--ease-out) both; }
-.lifecycle-shown .lifecycle-card > span { animation: lifecycle-node 0.9s var(--ease-out) both; animation-delay: inherit; }
-@media (prefers-reduced-motion: reduce) {
-  .lifecycle-card { opacity: 1; }
-  .lifecycle-shown .lifecycle-card,
-  .lifecycle-shown .lifecycle-card > span { animation: none; }
-  .lifecycle-shown .lifecycle-card > span { border-color: var(--primary); }
-}
-
-/* Marketing hero product shot: window rises in, KPI line draws, ring fills,
-   floating events drift in. Everything is static under reduced motion. */
-@keyframes hero-rise {
-  0% { opacity: 0; transform: translateY(14px); }
-  100% { opacity: 1; transform: translateY(0); }
-}
-@keyframes hero-fade { 0% { opacity: 0; } 100% { opacity: 1; } }
-@keyframes hero-draw { 0% { stroke-dashoffset: 1; } 100% { stroke-dashoffset: 0; } }
-@keyframes hero-ring { 0% { stroke-dashoffset: var(--ring-len); } 100% { stroke-dashoffset: var(--ring-off); } }
-@keyframes hero-float {
-  0% { opacity: 0; transform: translateY(10px) scale(0.98); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
-}
-@keyframes hero-ping { 0%, 70%, 100% { transform: scale(1); } 35% { transform: scale(1.35); } }
-.hero-rise { animation: hero-rise 0.7s var(--ease-out, ease-out) both; }
-.hero-fade { animation: hero-fade 0.8s ease-out 0.9s both; }
-.hero-draw { stroke-dasharray: 1; animation: hero-draw 1.4s var(--ease-out, ease-out) 0.35s both; }
-.hero-ring { animation: hero-ring 1.2s var(--ease-out, ease-out) 0.3s both; }
-.hero-float { animation: hero-float 0.6s var(--ease-out, ease-out) both; }
-.hero-ping { animation: hero-ping 2.4s ease-in-out 1.6s infinite; }
-@media (prefers-reduced-motion: reduce) {
-  .hero-rise, .hero-fade, .hero-draw, .hero-ring, .hero-float, .hero-ping { animation: none; }
-  .hero-draw { stroke-dasharray: none; }
 }
 
 /* ── Organigramme (org chart) — connector-line tree ─────────────────────── */
@@ -365,38 +431,7 @@
 /* stem enters each child from its top (only-child case) */
 .org-tree li:only-child::after { display: block; width: 0; border-top: 0; border-left: var(--oc-w) solid var(--oc-line); }
 
-/* Éco-carte: theme-aware React Flow chrome */
-.eco-map .react-flow__controls { overflow: hidden; border: 1px solid var(--border); border-radius: 0.5rem; box-shadow: 0 1px 2px rgb(0 0 0 / 0.06); }
-.eco-map .react-flow__controls-button { background: var(--card); border-bottom-color: var(--border); color: var(--foreground); width: 30px; height: 30px; }
-.eco-map .react-flow__controls-button:hover { background: var(--accent); }
-.eco-map .react-flow__controls-button svg { fill: currentColor; }
-.eco-map .react-flow__minimap { overflow: hidden; border: 1px solid var(--border); border-radius: 0.5rem; background: var(--card); }
-.eco-map .react-flow__node.selected, .eco-map .react-flow__node:focus { outline: none; }
-.eco-map:fullscreen { background: var(--background); }
-
-/* Public marketing site: dark-blue brand instead of the app's indigo (set on the (marketing) layout root + its portaled mobile menu). */
-.marketing-theme {
-  --primary: oklch(0.4 0.13 258);
-  --primary-foreground: oklch(0.99 0 0);
-  --ring: oklch(0.4 0.13 258);
-  --secondary: oklch(0.965 0.012 255);
-  --secondary-foreground: oklch(0.3 0.08 258);
-  --accent: oklch(0.955 0.02 255);
-  --accent-foreground: oklch(0.32 0.1 258);
-}
-.dark .marketing-theme,
-.dark.marketing-theme {
-  --primary: oklch(0.66 0.15 252);
-  --primary-foreground: oklch(0.16 0.03 258);
-  --ring: oklch(0.66 0.15 252);
-  --secondary: oklch(0.27 0.03 258);
-  --secondary-foreground: oklch(0.92 0.02 255);
-  --accent: oklch(0.28 0.04 258);
-  --accent-foreground: oklch(0.92 0.02 255);
-}
-
 /* Deep-navy surface for marketing bands (used with the `dark` class so dark: variants apply). */
-.marketing-theme .marketing-navy,
 .marketing-navy {
   --background: oklch(0.2 0.055 260);
   --foreground: oklch(0.97 0.01 250);
@@ -418,8 +453,3 @@
   --sidebar: oklch(0.23 0.058 260);
 }
 /* light page: softly blue-tinted neutrals instead of flat grey */
-:where(html:not(.dark)) .marketing-theme {
-  --muted: oklch(0.962 0.018 248);
-  --border: oklch(0.905 0.02 252);
-  --background: oklch(0.992 0.004 248);
-}

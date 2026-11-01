@@ -95,21 +95,12 @@ function NavRow({
 
   const body = (
     <>
-      {/* active accent bar */}
-      <span
-        className={cn(
-          'absolute inset-y-2 left-0 w-0.5 rounded-full bg-[var(--grp)] transition-opacity duration-150',
-          active && !editing ? 'opacity-100' : 'opacity-0',
-        )}
-      />
-      {/* tinted icon tile in the group colour — gives each row presence and fills the rail */}
+      {/* zone marker: a small square in the group's signage colour */}
       <span
         aria-hidden
         className={cn(
-          'flex size-8 shrink-0 items-center justify-center rounded-lg transition-colors duration-150',
-          active
-            ? 'bg-[var(--grp)] text-white shadow-sm'
-            : 'bg-[color-mix(in_oklab,var(--grp)_13%,transparent)] text-[var(--grp)] group-hover/item:bg-[color-mix(in_oklab,var(--grp)_22%,transparent)]',
+          'flex size-8 shrink-0 items-center justify-center rounded-[3px] transition-colors duration-150',
+          active ? 'text-sidebar-primary-foreground' : 'text-[var(--grp)]',
         )}
       >
         <Icon className="size-[18px]" />
@@ -166,11 +157,12 @@ function NavRow({
       aria-current={active ? 'page' : undefined}
       style={{ '--grp': group.color } as React.CSSProperties}
       className={cn(
-        'group/item relative flex min-h-11 items-center gap-3 rounded-lg px-2 py-1.5 text-sm transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring',
+        'group/item relative flex min-h-11 items-center gap-2.5 rounded-[3px] px-1.5 py-1 text-sm transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring',
         collapsed && 'justify-center px-0',
+        // active page = an enamel plate in its zone colour, ink lettering
         active
-          ? 'bg-[color-mix(in_oklab,var(--grp)_18%,transparent)] font-medium text-sidebar-accent-foreground'
-          : 'text-sidebar-foreground/75 hover:bg-[color-mix(in_oklab,var(--grp)_10%,transparent)] hover:text-sidebar-accent-foreground',
+          ? 'bg-[var(--grp)] font-semibold text-sidebar-primary-foreground shadow-[inset_0_-2px_0_0_rgb(0_0_0/0.25)]'
+          : 'text-sidebar-foreground/78 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
       )}
     >
       {body}
@@ -258,7 +250,7 @@ function GroupBlock({
             style={{ '--grp': group.color } as React.CSSProperties}
             className={cn(
               'flex flex-col gap-0.5 py-px',
-              group.key && 'ml-3 border-l border-[color-mix(in_oklab,var(--grp)_35%,var(--sidebar-border))] pl-2',
+              group.key && 'ml-3 border-l border-sidebar-border pl-2',
             )}
           >
             {editing ? (
@@ -409,7 +401,7 @@ export function Sidebar() {
         const divider = addonStart ? (
           <div key={`sep:${g.key}`} className={cn('mt-2 border-t border-sidebar-border', collapsed ? 'mx-1 mb-1.5' : 'pt-2')}>
             {!collapsed && (
-              <div className="px-2 pb-1 text-[11px] font-medium uppercase tracking-wider text-sidebar-foreground/50">{tc('addonModules')}</div>
+              <div className="plate-label px-2 pb-1 text-[11px] text-sidebar-foreground/55">{tc('addonModules')}</div>
             )}
           </div>
         ) : boundary ? (
@@ -475,7 +467,7 @@ export function Sidebar() {
   return (
     <aside
       className={cn(
-        'sticky top-0 hidden h-svh shrink-0 flex-col border-r bg-sidebar text-sidebar-foreground transition-[width] duration-200 ease-out md:flex',
+        'sticky top-0 hidden h-svh shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground transition-[width] duration-200 ease-out md:flex [color-scheme:dark]',
         collapsed && !editing ? 'w-16' : 'w-64',
       )}
     >
@@ -483,7 +475,7 @@ export function Sidebar() {
       <div
         className={cn(
           // same height + border as the topbar so both form one continuous line
-          'flex h-14 shrink-0 items-center border-b border-border/70',
+          'relative flex h-14 shrink-0 items-center border-b border-sidebar-border',
           collapsed && !editing ? 'justify-center px-2' : 'gap-2 px-3',
         )}
       >
@@ -517,7 +509,7 @@ export function Sidebar() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/constella.svg" alt="" className="size-9 object-contain" />
             </span>
-            <span className={cn('flex-1 font-semibold tracking-tight', editing ? 'text-sm' : 'text-lg')}>
+            <span className={cn('flex-1 leading-none', editing ? 'text-sm font-semibold' : 'plate-label text-[1.35rem] font-extrabold tracking-[0.06em]')}>
               {editing ? tc('customizeMenu') : 'Constella'}
             </span>
             {!editing && (
@@ -601,8 +593,8 @@ export function Sidebar() {
                   <>
                     <div className="flex flex-col gap-0.5">
                       {!collapsed && (
-                        <div className="flex items-center gap-1.5 px-2 py-1.5 text-[11px] font-medium uppercase tracking-wider text-sidebar-foreground/50">
-                          <Star className="size-3 fill-current text-amber-500" />
+                        <div className="plate-label flex items-center gap-1.5 px-2 py-1.5 text-[11px] text-sidebar-foreground/55">
+                          <Star className="size-3 fill-current text-sidebar-primary" />
                           {tc('favorites')}
                         </div>
                       )}
@@ -625,7 +617,7 @@ export function Sidebar() {
             type="button"
             onClick={reset}
             disabled={isDefault}
-            className="flex flex-1 items-center justify-center gap-1.5 rounded-md border border-border px-2 py-1.5 text-[12px] font-medium text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent disabled:cursor-not-allowed disabled:opacity-40"
+            className="flex flex-1 items-center justify-center gap-1.5 rounded-sm border border-sidebar-border px-2 py-1.5 text-[12px] font-medium text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent disabled:cursor-not-allowed disabled:opacity-40"
           >
             <RotateCcw className="size-3.5" />
             {tc('resetToDefault')}
@@ -633,7 +625,7 @@ export function Sidebar() {
           <button
             type="button"
             onClick={() => setEditing(false)}
-            className="flex flex-1 items-center justify-center gap-1.5 rounded-md bg-primary px-2 py-1.5 text-[12px] font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="flex flex-1 items-center justify-center gap-1.5 rounded-sm bg-sidebar-primary px-2 py-1.5 text-[12px] font-semibold text-sidebar-primary-foreground transition-colors hover:bg-sidebar-primary/90"
           >
             <Check className="size-3.5" />
             {tc('done')}
