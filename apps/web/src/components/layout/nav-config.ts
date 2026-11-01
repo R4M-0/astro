@@ -8,6 +8,7 @@ import {
   ClipboardCheck,
   FileUp,
   GraduationCap,
+  Inbox,
   LayoutDashboard,
   LayoutGrid,
   ListChecks,
@@ -17,6 +18,7 @@ import {
   ScrollText,
   Send,
   Settings2,
+  Sparkles,
   ShieldHalf,
   Users,
 } from 'lucide-react';
@@ -59,6 +61,8 @@ export const NAV_GROUPS: NavGroup[] = [
     color: 'oklch(0.6 0.14 165)', // emerald — people
     items: [
       { key: 'hrEmployees', href: '/hr/employees', icon: Users, permission: 'employees:read' },
+      { key: 'galaxy', href: '/hr/galaxy', icon: Sparkles, permission: 'employees:read' },
+      { key: 'hrInbox', href: '/hr/inbox', icon: Inbox, permission: 'audit-log:read' },
       { key: 'orgChart', href: '/hr/org-chart', icon: Network, permission: 'employees:read' },
       { key: 'hrJourneys', href: '/hr/journeys', icon: Route, permission: 'employees:read' },
       { key: 'hrImport', href: '/hr/import', icon: FileUp, permission: ['employees:create', 'competency-evaluations:update'] },
