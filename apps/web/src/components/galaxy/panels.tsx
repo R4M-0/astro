@@ -69,7 +69,7 @@ export function EmployeePanel({ refId, onClose, onFly, onAsk, onDrafted, inGroup
       ) : (
         <div className="flex-1 space-y-4 overflow-y-auto p-4 text-sm">
           <div className="flex gap-2">
-            <Link href={`/hr/employees/${e.id}`} className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-xs hover:bg-white/10"><ExternalLink className="size-3.5" />Astro record</Link>
+            <Link href={`/hr/employees/${e.id}`} className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-xs hover:bg-white/10"><ExternalLink className="size-3.5" />Constella record</Link>
             <button onClick={() => onAsk(e.ref)} className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-indigo-300/30 bg-indigo-500/15 px-2 py-1.5 text-xs text-indigo-100 hover:bg-indigo-500/25"><Sparkles className="size-3.5" />Ask about {e.name.split(' ')[0]}</button>
             <button onClick={() => onToggleGroup(e.ref)} title="Add to the group (or shift-click stars)" className={cn('inline-flex items-center justify-center gap-1 rounded-lg border px-2 py-1.5 text-xs', inGroup ? 'border-amber-300/40 bg-amber-400/15 text-amber-100' : 'border-white/10 bg-white/5 hover:bg-white/10')}>{inGroup ? <Check className="size-3.5" /> : '+'} Group</button>
           </div>

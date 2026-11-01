@@ -499,7 +499,7 @@ export function Sidebar() {
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/favicon.ico"
+                  src="/constella.svg"
                   alt=""
                   className="size-9 object-contain transition-opacity duration-150 group-hover/logo:opacity-0 group-focus-visible/logo:opacity-0"
                 />
@@ -515,10 +515,10 @@ export function Sidebar() {
           <>
             <span className="flex size-9 shrink-0 items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/favicon.ico" alt="" className="size-9 object-contain" />
+              <img src="/constella.svg" alt="" className="size-9 object-contain" />
             </span>
             <span className={cn('flex-1 font-semibold tracking-tight', editing ? 'text-sm' : 'text-lg')}>
-              {editing ? tc('customizeMenu') : 'Astro'}
+              {editing ? tc('customizeMenu') : 'Constella'}
             </span>
             {!editing && (
               <Tooltip>

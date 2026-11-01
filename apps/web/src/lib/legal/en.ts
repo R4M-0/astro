@@ -37,7 +37,7 @@ export function legalEn(L: LegalIdentity): Record<LegalDocKey, LegalDoc> {
           title: 'Intellectual property',
           blocks: [
             `All elements of the website and of the ${L.brand} software (texts, interfaces, graphics, logos, code, databases) are protected by intellectual property law and belong to ${L.entity} or are used under license. Any reproduction, representation or adaptation, in whole or in part, without prior written permission is prohibited.`,
-            'ISO 9001, ISO 14001, ISO 45001 and ISO 22000 are standards published by the International Organization for Standardization (ISO). Astro is not affiliated with ISO or with any certification body; using the software does not constitute certification.',
+            'ISO 9001, ISO 14001, ISO 45001 and ISO 22000 are standards published by the International Organization for Standardization (ISO). Constella is not affiliated with ISO or with any certification body; using the software does not constitute certification.',
           ],
         },
         {

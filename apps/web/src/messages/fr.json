@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Astro",
+    "appName": "Constella",
     "loading": "Chargement…",
     "save": "Enregistrer",
     "cancel": "Annuler",
@@ -98,13 +98,13 @@
     "recruitingOpenings": "Offres & candidatures"
   },
   "auth": {
-    "loginTitle": "Connexion à Astro",
+    "loginTitle": "Connexion à Constella",
     "loginSubtitle": "Pilotez vos ressources humaines",
     "email": "Adresse email",
     "password": "Mot de passe",
     "login": "Se connecter",
     "register": "Créer un compte",
-    "registerTitle": "Créer votre espace Astro",
+    "registerTitle": "Créer votre espace Constella",
     "firstName": "Prénom",
     "lastName": "Nom",
     "organizationName": "Nom de votre organisme",
@@ -1231,7 +1231,7 @@
         "title": "Transfert des dossiers en cours",
         "desc": "{count, plural, one {# élément ouvert est attribué à ce collaborateur.} other {# éléments ouverts sont attribués à ce collaborateur.}} Choisissez à qui les transférer.",
         "nothing": "Aucun élément ouvert n’est attribué à ce collaborateur.",
-        "noAccount": "Ce collaborateur n’a pas de compte Astro : rien à transférer ni à désactiver.",
+        "noAccount": "Ce collaborateur n’a pas de compte Constella : rien à transférer ni à désactiver.",
         "to": "Transférer à",
         "choose": "Choisir la personne qui reprend",
         "submit": "Transférer",
@@ -1244,7 +1244,7 @@
         }
       },
       "account": {
-        "title": "Compte Astro",
+        "title": "Compte Constella",
         "desc": "Désactivez l’accès du collaborateur à la date de sortie : ses sessions sont fermées, son historique reste disponible sous forme d’information documentée.",
         "deactivate": "Désactiver le compte",
         "confirm": "Désactiver le compte de ce collaborateur ? Il ne pourra plus se connecter.",
@@ -1276,7 +1276,7 @@
       "hello": "Bonjour {name}",
       "desc": "Votre poste, vos compétences, vos formations et votre parcours d’intégration.",
       "notLinked": "Aucune fiche collaborateur liée à votre compte",
-      "notLinkedDesc": "Demandez au service RH de relier votre compte Astro à votre fiche collaborateur.",
+      "notLinkedDesc": "Demandez au service RH de relier votre compte Constella à votre fiche collaborateur.",
       "tiles": {
         "skillsMet": "Compétences requises atteintes",
         "toImprove": "{count} à développer",
@@ -1409,7 +1409,7 @@
     "status": "Statut",
     "date": "Date",
     "amount": "Montant",
-    "requestSent": "Demande envoyée à Astro."
+    "requestSent": "Demande envoyée à Constella."
   },
   "history": {
     "title": "Historique",
@@ -1538,7 +1538,7 @@
       "draftExplain": "L'enquête est en brouillon. La publication génère un lien public unique à partager avec les collaborateurs.",
       "closedExplain": "L'enquête est clôturée : le lien affiche un message de clôture et n'accepte plus de réponses. Rouvrez-la pour réactiver la collecte.",
       "expiredExplain": "La date de clôture est passée : le lien n'accepte plus de réponses. Reportez la date dans les paramètres pour prolonger la collecte.",
-      "publishedExplain": "L'enquête est publiée : toute personne disposant de ce lien peut y répondre, sans compte Astro.",
+      "publishedExplain": "L'enquête est publiée : toute personne disposant de ce lien peut y répondre, sans compte Constella.",
       "linkLabel": "Lien public",
       "copied": "Lien copié",
       "copyFailed": "Copie impossible — sélectionnez le lien manuellement",
@@ -1604,7 +1604,7 @@
       "notFoundBody": "Ce lien n'est pas valide ou l'enquête n'est plus disponible.",
       "errorTitle": "Chargement impossible",
       "retry": "Réessayer",
-      "poweredBy": "Propulsé par Astro"
+      "poweredBy": "Propulsé par Constella"
     },
     "answer": {
       "unavailable": "Cette enquête n'est pas ouverte aux réponses."
@@ -1663,7 +1663,7 @@
     "askAdmin": "Demandez à l'administrateur de votre organisation de l'activer.",
     "request": "Demander l'activation",
     "requestBundle": "Demander le Pack QSE",
-    "requested": "Demande envoyée à Astro — nous revenons vers vous rapidement.",
+    "requested": "Demande envoyée à Constella — nous revenons vers vous rapidement.",
     "seeBilling": "Voir l'abonnement",
     "open": "Ouvrir le module",
     "active": "Activé",
@@ -1706,7 +1706,7 @@
       ]
     },
     "lockedBodyLicense": "Ce module complémentaire n'est pas inclus dans la licence de cette installation.",
-    "licenseHint": "Contactez Astro pour l'ajouter à votre licence, puis importez la nouvelle licence.",
+    "licenseHint": "Contactez Constella pour l'ajouter à votre licence, puis importez la nouvelle licence.",
     "seeLicense": "Voir la licence"
   },
   "esign": {
@@ -1775,17 +1775,17 @@
     "copy": "Copier",
     "copied": "Identifiant copié",
     "copyFailed": "Copie impossible — sélectionnez le texte",
-    "instanceHint": "Communiquez-le à Astro pour obtenir une licence liée à ce serveur.",
+    "instanceHint": "Communiquez-le à Constella pour obtenir une licence liée à ce serveur.",
     "bound": "La licence est liée à cette installation.",
     "installTitle": "Installer une licence",
-    "installBody": "Collez la clé de licence fournie par Astro (QLIC1.…) ou choisissez le fichier .lic. Un renouvellement peut être installé à l’avance : il prend le relais à sa date de début.",
+    "installBody": "Collez la clé de licence fournie par Constella (QLIC1.…) ou choisissez le fichier .lic. Un renouvellement peut être installé à l’avance : il prend le relais à sa date de début.",
     "chooseFile": "Choisir un fichier",
     "install": "Installer",
     "installed": "Licence {reference} installée",
     "banner": {
-      "expiring": "La licence Astro expire dans {days, plural, =0 {moins d’un jour} one {# jour} other {# jours}} ({date}).",
-      "grace": "La licence Astro a expiré. L’application passera en lecture seule le {date}.",
-      "expired": "La licence Astro a expiré : l’application est en lecture seule.",
+      "expiring": "La licence Constella expire dans {days, plural, =0 {moins d’un jour} one {# jour} other {# jours}} ({date}).",
+      "grace": "La licence Constella a expiré. L’application passera en lecture seule le {date}.",
+      "expired": "La licence Constella a expiré : l’application est en lecture seule.",
       "missing": "Aucune licence n’est installée : l’application est en lecture seule.",
       "invalid": "La licence installée n’est pas valide : l’application est en lecture seule.",
       "clock_tampered": "L’horloge du serveur est incohérente : l’application est en lecture seule.",
@@ -1802,7 +1802,7 @@
   },
   "notificationsPage": {
     "title": "Notifications",
-    "desc": "Tout ce qui vous a été signalé dans Astro : affectations, échéances, validations.",
+    "desc": "Tout ce qui vous a été signalé dans Constella : affectations, échéances, validations.",
     "status": {
       "all": "Toutes",
       "unread": "Non lues",
@@ -1842,7 +1842,7 @@
       "dpa": "Accord de sous-traitance (DPA)",
       "subprocessors": "Sous-traitants"
     },
-    "hubSubtitle": "Les documents qui encadrent l’utilisation de Astro et le traitement de vos données.",
+    "hubSubtitle": "Les documents qui encadrent l’utilisation de Constella et le traitement de vos données.",
     "hubDesc": {
       "notice": "Éditeur, hébergeur et propriété intellectuelle.",
       "privacy": "Quelles données nous traitons, pourquoi, combien de temps, et vos droits.",

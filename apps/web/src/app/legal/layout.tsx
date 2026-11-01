@@ -7,7 +7,7 @@ export default function LegalLayout({ children }: { children: ReactNode }) {
     <div className="flex min-h-screen flex-col bg-background">
       <header className="border-b">
         <div className="mx-auto flex h-14 max-w-6xl items-center px-4 sm:px-6">
-          <Link href="/login" aria-label="Astro">
+          <Link href="/login" aria-label="Constella">
             <Logo />
           </Link>
         </div>

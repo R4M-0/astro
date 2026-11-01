@@ -37,7 +37,7 @@ export default function PlatformOverview() {
     <div className="mx-auto max-w-6xl space-y-6">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Overview</h1>
-        <p className="text-sm text-muted-foreground">Platform-wide health across all Astro organizations.</p>
+        <p className="text-sm text-muted-foreground">Platform-wide health across all Constella organizations.</p>
       </div>
 
       {isLoading || !data ? (
