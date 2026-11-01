@@ -963,3 +963,74 @@ model EmployeeJourneyItem {
   @@index([journeyId])
 }
 
+
+// ─────────────────────────── Recruiting: pipeline 1 (screening & ranking) ───────────────────────────
+// docs/recruiting/README.md. Candidates are the indexed items (XQdrant point id = Candidate.id),
+// the job opening is the query. HR decides; the pipeline only ranks.
+
+model JobOpening {
+  id             String    @id @default(cuid())
+  organizationId String
+  title          String
+  description    String
+  criteria       Json      @default("[]") // [{ id, label, weight 1-5, mustHave, kind: SKILL|LANGUAGE|YEARS|OTHER, value? }]
+  retrievalSize  Int       @default(50) // top-N from XQdrant
+  shortlistSize  Int       @default(10) // top-K kept by the business rules
+  status         String    @default("OPEN") // OPEN | CLOSED
+  rankingStatus  String    @default("IDLE") // IDLE | RUNNING | DONE | FAILED
+  rankingError   String?
+  rankedAt       DateTime?
+  createdById    String?
+  updatedById    String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
+
+  candidates Candidate[]
+
+  @@index([organizationId, deletedAt])
+}
+
+model Candidate {
+  id             String     @id @default(uuid()) // uuid: doubles as the XQdrant point id
+  organizationId String
+  jobOpeningId   String
+  jobOpening     JobOpening @relation(fields: [jobOpeningId], references: [id])
+  fullName       String? // from the extractor, display only (redacted from cvText)
+  email          String?
+  fileKey        String
+  fileName       String
+  mimeType       String
+  fileSize       Int
+
+  // stage 1 — candidate tower
+  status     String  @default("RECEIVED") // RECEIVED | PROCESSING | READY | FAILED
+  error      String?
+  cvText     String? // sanitized text: the only CV text models see
+  guardFlags Json    @default("[]") // what the security guard removed
+  profile    Json? // extractor output (skills, years, education, languages…)
+
+  // stages 2-4 — last ranking run (null = not in the top-N)
+  retrievalScore Float?
+  dimsExplained  Json? // XQdrant score_explanation.top_dimensions
+  filterReasons  Json? // missing must-haves; [] = passed
+  criteriaScores Json? // [{ id, label, score 0-3, evidence, verified }]
+  justification  String?
+  score          Float? // 0-100
+  rank           Int?
+  shortlisted    Boolean @default(false)
+
+  // human in the loop
+  decision       String    @default("PENDING") // PENDING | APPROVED | REJECTED
+  decisionReason String?
+  decidedById    String?
+  decidedAt      DateTime?
+
+  createdById String?
+  updatedById String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  @@index([organizationId, jobOpeningId, deletedAt])
+}
