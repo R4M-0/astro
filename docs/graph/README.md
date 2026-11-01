@@ -1,6 +1,6 @@
 # Workforce Galaxy: architecture
 
-The graph service (`apps/graph`) and its web views (Galaxie RH, Ask HR, Boîte RH), by Moetez Fradi.
+The graph service (`apps/graph`) and its web views (Galaxie RH, Ask HR, Boîte RH).
 Golden rule: *the agent executes, the human decides about people.*
 
 | Diagram | File |

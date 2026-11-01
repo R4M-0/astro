@@ -368,10 +368,10 @@ aside.notes{display:none}
 
 <section data-f="layers" data-side="center" data-sec="Technical" data-dim="0.22">
   <div class="panel wide">
-    <div class="kick r" style="--d:0"><span class="tag">Tech</span>Workforce Galaxy · by Moetez Fradi · architecture</div>
+    <div class="kick r" style="--d:0"><span class="tag">Tech</span>Workforce Galaxy · architecture</div>
     <figure class="fig r" style="--d:1"><img src="img/galaxy-1-architecture.png" alt="Workforce Galaxy architecture"></figure>
   </div>
-  <aside class="notes">Moetez built the graph service. Company mail comes in through the mail server, gets polled every 4 seconds, passes the injection guard and the Gemini Flash Lite tagger, and lands in XQdrant. The same service runs the graph analysis, Ask, the inbox digest and the approval queue. It uses the same JWT, tenant and roles as Constella. Approved mail is the only thing that goes back out (the orange dashed line).</aside>
+  <aside class="notes">The graph service at a glance. Company mail comes in through the mail server, gets polled every 4 seconds, passes the injection guard and the Gemini Flash Lite tagger, and lands in XQdrant. The same service runs the graph analysis, Ask, the inbox digest and the approval queue. It uses the same JWT, tenant and roles as Constella. Approved mail is the only thing that goes back out (the orange dashed line).</aside>
 </section>
 
 
@@ -405,7 +405,7 @@ aside.notes{display:none}
 
 <section data-f="galaxySignal" data-side="center" data-sec="Technical" data-dim="0.22">
   <div class="panel wide">
-    <div class="kick r" style="--d:0"><span class="tag">Tech</span>Workforce Galaxy · by Moetez Fradi · signals and digest</div>
+    <div class="kick r" style="--d:0"><span class="tag">Tech</span>Workforce Galaxy · signals and digest</div>
     <figure class="fig r" style="--d:1"><img src="img/galaxy-4-signals-digest.png" alt="Signals, inbox digest and human in the loop"></figure>
   </div>
   <aside class="notes">Left: the 7 signals the graph computes. Middle: the inbox digest. Urgency comes from explicit rules, and the AI only writes the overview. Right: the human loop. Gemini drafts, HR edits, then approves or rejects, and approved mail flows back into the graph. HR sits in the middle: the system suggests, HR decides.</aside>
@@ -461,7 +461,7 @@ aside.notes{display:none}
 
 <section data-f="concept" data-side="center" data-sec="Technical" data-dim="0.22">
   <div class="panel wide">
-    <div class="kick r" style="--d:0"><span class="tag">Tech</span>Workforce Galaxy · by Moetez Fradi · Ask, explained</div>
+    <div class="kick r" style="--d:0"><span class="tag">Tech</span>Workforce Galaxy · Ask, explained</div>
     <figure class="fig r" style="--d:1"><img src="img/galaxy-3-ask.png" alt="Ask the galaxy, explained"></figure>
   </div>
   <aside class="notes">Scope comes first: the model never sees people outside the asker's rights. The question is embedded, mail and handbook are searched, people are ranked by their mail, and XQdrant explains each match on the 32 topic axes. One Gemini call writes the answer with citations, and every question is audited.</aside>
@@ -485,7 +485,7 @@ aside.notes{display:none}
 
 <section data-f="stream" data-side="center" data-sec="Technical" data-dim="0.22">
   <div class="panel wide">
-    <div class="kick r" style="--d:0"><span class="tag">Tech</span>Workforce Galaxy · by Moetez Fradi · live mail ingest</div>
+    <div class="kick r" style="--d:0"><span class="tag">Tech</span>Workforce Galaxy · live mail ingest</div>
     <figure class="fig r" style="--d:1"><img src="img/galaxy-2-live-ingest.png" alt="Live mail ingest pipeline"></figure>
   </div>
   <aside class="notes">One email end to end. Regex patterns run before any model reads the body. Then a single Gemini call tags it and checks whether it gives instructions to an AI. A flagged body is withheld and never embedded, and it increments the security signal. Everything else is embedded, saved into its thread and pushed live to the galaxy.</aside>
