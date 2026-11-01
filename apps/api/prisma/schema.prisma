@@ -980,6 +980,9 @@ model JobOpening {
   rankingStatus  String    @default("IDLE") // IDLE | RUNNING | DONE | FAILED
   rankingError   String?
   rankedAt       DateTime?
+  // pipeline 2 follow-ups: D1 drafts a reminder, D2 closes the invitation as no-response
+  reminderDays   Int       @default(3)
+  closeDays      Int       @default(7)
   createdById    String?
   updatedById    String?
   createdAt      DateTime  @default(now())
@@ -987,6 +990,7 @@ model JobOpening {
   deletedAt      DateTime?
 
   candidates Candidate[]
+  slots      InterviewSlot[]
 
   @@index([organizationId, deletedAt])
 }
@@ -1026,6 +1030,15 @@ model Candidate {
   decidedById    String?
   decidedAt      DateTime?
 
+  // pipeline 2 — invitation & booking
+  inviteToken  String?   @unique // booking-link bearer token, live while INVITED / BOOKED
+  inviteStatus String    @default("NONE") // NONE | INVITED | BOOKED | DECLINED | NO_RESPONSE
+  invitedAt    DateTime? // invitation actually sent (D1 / D2 count from here)
+  remindedAt   DateTime?
+
+  slot     InterviewSlot?
+  messages CandidateMessage[]
+
   createdById String?
   updatedById String?
   createdAt   DateTime  @default(now())
@@ -1033,4 +1046,52 @@ model Candidate {
   deletedAt   DateTime?
 
   @@index([organizationId, jobOpeningId, deletedAt])
+}
+
+/// Interviewer availability for one opening. `candidateId` is the slot lock: unique, set by a conditional update.
+model InterviewSlot {
+  id              String     @id @default(cuid())
+  organizationId  String
+  jobOpeningId    String
+  jobOpening      JobOpening @relation(fields: [jobOpeningId], references: [id])
+  startsAt        DateTime
+  durationMinutes Int        @default(45)
+  location        String? // room, address or video link
+  interviewer     String?
+  candidateId     String?    @unique
+  candidate       Candidate? @relation(fields: [candidateId], references: [id])
+  bookedAt        DateTime?
+  createdById     String?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  deletedAt       DateTime?
+
+  @@index([organizationId, jobOpeningId, deletedAt])
+}
+
+/// Pipeline 2 mail log. Outbound: agent DRAFT → HR APPROVED (gate 2) → SENDING → SENT (or DISCARDED). Inbound: RECEIVED + triage.
+model CandidateMessage {
+  id             String    @id @default(cuid())
+  organizationId String
+  candidateId    String
+  candidate      Candidate @relation(fields: [candidateId], references: [id])
+  direction      String // OUT | IN
+  kind           String // INVITATION | REMINDER | REJECTION | REPLY | INBOUND
+  status         String // DRAFT | APPROVED | SENDING | SENT | DISCARDED | RECEIVED
+  subject        String
+  body           String
+  intent         String? // inbound triage: CONFIRM | QUESTION | RESCHEDULE | DECLINE | NONE_FIT | OTHER
+  needsHuman     Boolean   @default(false)
+  summary        String? // inbound triage: one line for HR
+  flags          Json      @default("[]") // guard findings on inbound text
+  inReplyToId    String? // REPLY drafts: the inbound message answered
+  approvedById   String?
+  approvedAt     DateTime?
+  sentAt         DateTime?
+  error          String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([organizationId, candidateId])
+  @@index([status])
 }
