@@ -1,11 +1,10 @@
 import Link from 'next/link';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
 /**
- * Shared dashboard building blocks for the refined-enterprise system.
+ * Shared dashboard building blocks for the workshop-signage system.
  * Extracted from the main dashboard so every analytics surface renders the
- * same premium stat tiles, radial gauges and section panels.
+ * same sign-plate stat tiles, gauges and section panels.
  */
 
 export function toneVar(score: number | null): string {
@@ -32,15 +31,15 @@ export function Gauge({
   return (
     <div className="relative grid place-items-center" style={{ width: size, height: size }}>
       <svg viewBox="0 0 44 44" className="-rotate-90" style={{ width: size, height: size }}>
-        <circle cx="22" cy="22" r={r} fill="none" stroke="var(--muted)" strokeWidth="5" />
+        <circle cx="22" cy="22" r={r} fill="none" stroke="var(--muted)" strokeWidth="6" />
         <circle
           cx="22"
           cy="22"
           r={r}
           fill="none"
           stroke={stroke}
-          strokeWidth="5"
-          strokeLinecap="round"
+          strokeWidth="6"
+          strokeLinecap="butt"
           strokeDasharray={circ}
           strokeDashoffset={circ * (1 - v / 100)}
           style={{ transition: 'stroke-dashoffset 0.6s var(--ease-out)' }}
@@ -69,7 +68,7 @@ export interface StatDef {
 }
 
 const HINT_TONE: Record<NonNullable<StatDef['hintTone']>, string> = {
-  warn: 'text-warning-foreground dark:text-warning',
+  warn: 'text-warning-ink',
   muted: 'text-muted-foreground',
   success: 'text-success',
   destructive: 'text-destructive',
@@ -79,35 +78,28 @@ export function StatTile({ s, className }: { s: StatDef; className?: string }) {
   const accent = s.accent ?? 'var(--primary)';
   const Icon = s.icon;
   const inner = (
-    <Card
-      className={cn('hover-lift relative gap-0 overflow-hidden py-0', className)}
+    <div
+      className={cn('sign-plate relative flex h-full flex-col gap-3 p-4', s.href && 'plate-press', className)}
       style={{ '--accent': accent } as React.CSSProperties}
     >
-      <span className="absolute inset-y-0 left-0 w-1 bg-[var(--accent)] opacity-70" />
-      <CardContent className="flex items-start justify-between gap-3 p-5 pl-6">
-        <div className="min-w-0">
-          <p className="truncate text-sm font-medium text-muted-foreground">{s.label}</p>
-          <p className="mt-1.5 text-[2rem] font-semibold leading-none tracking-tight tabular-nums">
-            {s.value}
-          </p>
-          {s.hint != null && s.hint !== '' && (
-            <p className={cn('mt-2 text-xs font-medium', HINT_TONE[s.hintTone ?? 'muted'])}>
-              {s.hint}
-            </p>
-          )}
-        </div>
+      <div className="flex items-start justify-between gap-3">
+        <p className="plate-label min-w-0 text-[13px] leading-tight text-muted-foreground">{s.label}</p>
         {s.gauge !== undefined ? (
-          <Gauge value={s.gauge} />
+          <Gauge value={s.gauge} size={40} showValue={false} />
         ) : Icon ? (
-          <div className="rounded-xl bg-[color-mix(in_oklab,var(--accent)_14%,transparent)] p-2.5 text-[var(--accent)] ring-1 ring-[color-mix(in_oklab,var(--accent)_22%,transparent)] ring-inset transition-transform duration-200 group-hover:scale-105">
-            <Icon className="size-5" />
-          </div>
+          <span aria-hidden className="grid size-8 shrink-0 place-items-center rounded-[3px] bg-[var(--accent)] text-primary-foreground">
+            <Icon className="size-[18px]" />
+          </span>
         ) : null}
-      </CardContent>
-    </Card>
+      </div>
+      <p className="figure mt-auto text-[2.6rem]">{s.value}</p>
+      {s.hint != null && s.hint !== '' && (
+        <p className={cn('-mt-1 text-xs font-semibold', HINT_TONE[s.hintTone ?? 'muted'])}>{s.hint}</p>
+      )}
+    </div>
   );
   return s.href ? (
-    <Link href={s.href} className="group block h-full">
+    <Link href={s.href} className="group block h-full rounded-[5px] focus-visible:outline-2 focus-visible:outline-ring">
       {inner}
     </Link>
   ) : (
@@ -115,7 +107,7 @@ export function StatTile({ s, className }: { s: StatDef; className?: string }) {
   );
 }
 
-/** Section card with a consistent, quiet uppercase header + divider. */
+/** Section plate with a condensed caps header strip. */
 export function Panel({
   title,
   icon: Icon,
@@ -132,15 +124,15 @@ export function Panel({
   children: React.ReactNode;
 }) {
   return (
-    <Card className={cn('gap-0 py-0', className)}>
-      <CardHeader className="flex flex-row items-center justify-between gap-2 border-b px-5 py-3.5">
-        <CardTitle className="flex items-center gap-2 text-[13px] font-semibold uppercase tracking-wide text-muted-foreground">
-          {Icon && <Icon className="size-4 text-muted-foreground/80" />}
+    <section className={cn('sign-plate flex flex-col overflow-hidden', className)}>
+      <header className="flex items-center justify-between gap-2 border-b-2 border-keyline px-4 py-2.5">
+        <h2 className="plate-label flex items-center gap-2 text-[14px] text-foreground">
+          {Icon && <Icon aria-hidden className="size-4" />}
           {title}
-        </CardTitle>
+        </h2>
         {action}
-      </CardHeader>
-      <CardContent className={cn('p-5', bodyClassName)}>{children}</CardContent>
-    </Card>
+      </header>
+      <div className={cn('flex-1 p-4', bodyClassName)}>{children}</div>
+    </section>
   );
 }

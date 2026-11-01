@@ -343,7 +343,7 @@ export function AdminMembers({ roles, sites }: { roles: AdminRole[]; sites: Site
                               {m.user.emailVerifiedAt ? (
                                 <MailCheck className="size-3 text-success" />
                               ) : (
-                                <MailQuestion className="size-3 text-warning-foreground dark:text-warning" />
+                                <MailQuestion className="size-3 text-warning-ink" />
                               )}
                             </TooltipTrigger>
                             <TooltipContent>
@@ -410,7 +410,7 @@ export function AdminMembers({ roles, sites }: { roles: AdminRole[]; sites: Site
                         />
                       )}
                       {m.role.departmentScoped && !m.departmentId && (
-                        <span className="text-[11px] text-warning-foreground dark:text-warning">{tdep('noneScoped')}</span>
+                        <span className="text-[11px] text-warning-ink">{tdep('noneScoped')}</span>
                       )}
                     </div>
                   </TableCell>

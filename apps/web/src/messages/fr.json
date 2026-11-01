@@ -200,7 +200,28 @@
     "satisfaction": "Satisfaction formations",
     "feedbackCount": "{count, plural, =0 {Aucune évaluation} one {# évaluation} other {# évaluations}}",
     "openSurveys": "Enquêtes ouvertes",
-    "surveyResponses": "{count, plural, =0 {Aucune réponse} one {# réponse} other {# réponses}}"
+    "surveyResponses": "{count, plural, =0 {Aucune réponse} one {# réponse} other {# réponses}}",
+    "attentionTitle": "À traiter",
+    "attentionCount": "{count, plural, one {# point} other {# points}}",
+    "allClear": "Rien à signaler aujourd’hui.",
+    "allClearHint": "Aucune échéance proche, aucun écart à combler.",
+    "trialOverdue": "Période d’essai échue — {name}",
+    "trialEnds": "Fin de période d’essai — {name}",
+    "gapsTitle": "{count, plural, one {# évaluation} other {# évaluations}} sous le niveau attendu",
+    "gapsMeta": "surtout {skill}",
+    "trainingSoon": "Formation : {theme}",
+    "onboardingRow": "{count, plural, one {# intégration} other {# intégrations}} en cours",
+    "offboardingRow": "{count, plural, one {# départ} other {# départs}} à accompagner",
+    "unseen": "Nouveau",
+    "inactive": "{count, plural, =0 {aucun inactif} one {# inactif} other {# inactifs}}",
+    "hiresPlate": "arrivées sur 90 jours",
+    "severity": {
+      "alert": "En retard",
+      "warn": "Attention",
+      "todo": "À faire",
+      "info": "Information",
+      "ok": "Conforme"
+    }
   },
   "settings": {
     "title": "Paramètres",
@@ -2131,5 +2152,37 @@
       "medium": "Moyenne",
       "low": "Basse"
     }
+  },
+  "mascot": {
+    "name": "Gus",
+    "role": "chef d’atelier RH",
+    "label": "Gus, votre chef d’atelier RH. Activer pour le conseil suivant.",
+    "next": "Conseil suivant",
+    "prev": "Conseil précédent",
+    "close": "Fermer la bulle",
+    "hide": "Ranger Gus",
+    "show": "Rappeler Gus",
+    "open": "Voir",
+    "tipCounter": "{index} sur {total}",
+    "greetMorning": "Bonjour {name} ! Le café est chaud, on fait le tour ?",
+    "greetAfternoon": "Rebonjour {name} ! Petit point de l’après-midi ?",
+    "greetEvening": "Encore là, {name} ? Je vous montre l’essentiel et on ferme l’atelier.",
+    "trialOverdue": "Alerte ! La période d’essai de {name} est échue depuis le {date}. Il faut statuer.",
+    "trialSoon": "La période d’essai de {name} se termine le {date}. Un entretien est prévu ?",
+    "gaps": "{count, plural, one {# évaluation est} other {# évaluations sont}} sous le niveau attendu. La plus fréquente : {skill}.",
+    "training": "Formation « {theme} » le {date}, {count, plural, =0 {sans participant pour l’instant} one {# participant} other {# participants}}.",
+    "onboarding": "{count, plural, one {# nouvel arrivant est} other {# nouveaux arrivants sont}} en intégration. Je surveille leurs étapes.",
+    "hires": "{count, plural, one {# arrivée} other {# arrivées}} en 90 jours ! L’équipe grandit.",
+    "coverage": "Couverture des compétences : {pct} %. On vise les 100 !",
+    "surveys": "{count, plural, one {# enquête ouverte} other {# enquêtes ouvertes}}, {responses, plural, =0 {aucune réponse encore} one {# réponse} other {# réponses}}.",
+    "allClear": "Tout est en ordre. Rien d’urgent aujourd’hui, bonne journée !",
+    "laugh": "Ha ha ! Ça chatouille !",
+    "wake": "Hein ? Je ne dormais pas, je réfléchissais…",
+    "quips": [
+      "Casque, gilet, café : je suis prêt.",
+      "Une fiche de poste à jour, c’est une équipe qui respire.",
+      "Je compte les compétences, pas les moutons.",
+      "Une matrice de polyvalence bien remplie, c’est beau."
+    ]
   }
 }

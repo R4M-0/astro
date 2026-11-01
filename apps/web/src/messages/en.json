@@ -200,7 +200,28 @@
     "satisfaction": "Training satisfaction",
     "feedbackCount": "{count, plural, =0 {No evaluations} one {# evaluation} other {# evaluations}}",
     "openSurveys": "Open surveys",
-    "surveyResponses": "{count, plural, =0 {No responses} one {# response} other {# responses}}"
+    "surveyResponses": "{count, plural, =0 {No responses} one {# response} other {# responses}}",
+    "attentionTitle": "Needs attention",
+    "attentionCount": "{count, plural, one {# item} other {# items}}",
+    "allClear": "Nothing to report today.",
+    "allClearHint": "No deadline coming up, no gap to close.",
+    "trialOverdue": "Trial period overdue — {name}",
+    "trialEnds": "Trial period ends — {name}",
+    "gapsTitle": "{count, plural, one {# evaluation} other {# evaluations}} below the expected level",
+    "gapsMeta": "mostly {skill}",
+    "trainingSoon": "Training: {theme}",
+    "onboardingRow": "{count, plural, one {# onboarding} other {# onboardings}} in progress",
+    "offboardingRow": "{count, plural, one {# departure} other {# departures}} to handle",
+    "unseen": "New",
+    "inactive": "{count, plural, =0 {no inactive} one {# inactive} other {# inactive}}",
+    "hiresPlate": "hires in 90 days",
+    "severity": {
+      "alert": "Overdue",
+      "warn": "Attention",
+      "todo": "To do",
+      "info": "Information",
+      "ok": "Compliant"
+    }
   },
   "settings": {
     "title": "Settings",
@@ -2131,5 +2152,37 @@
       "medium": "Medium",
       "low": "Low"
     }
+  },
+  "mascot": {
+    "name": "Gus",
+    "role": "HR shop foreman",
+    "label": "Gus, your HR shop foreman. Activate for the next tip.",
+    "next": "Next tip",
+    "prev": "Previous tip",
+    "close": "Close bubble",
+    "hide": "Put Gus away",
+    "show": "Call Gus back",
+    "open": "Open",
+    "tipCounter": "{index} of {total}",
+    "greetMorning": "Morning {name}! Coffee’s hot — shall we do the rounds?",
+    "greetAfternoon": "Hello again {name}! Quick afternoon check?",
+    "greetEvening": "Still here, {name}? Let me show you the essentials and we close up shop.",
+    "trialOverdue": "Alert! {name}’s trial period ended on {date}. A decision is needed.",
+    "trialSoon": "{name}’s trial period ends on {date}. Is a review meeting planned?",
+    "gaps": "{count, plural, one {# evaluation is} other {# evaluations are}} below the expected level. Most common: {skill}.",
+    "training": "Training “{theme}” on {date}, {count, plural, =0 {no participants yet} one {# participant} other {# participants}}.",
+    "onboarding": "{count, plural, one {# newcomer is} other {# newcomers are}} onboarding. I’m keeping an eye on their steps.",
+    "hires": "{count, plural, one {# hire} other {# hires}} in 90 days! The team is growing.",
+    "coverage": "Competency coverage: {pct}%. Let’s aim for 100!",
+    "surveys": "{count, plural, one {# open survey} other {# open surveys}}, {responses, plural, =0 {no responses yet} one {# response} other {# responses}}.",
+    "allClear": "All in order. Nothing urgent today — have a good one!",
+    "laugh": "Ha ha! That tickles!",
+    "wake": "Huh? I wasn’t sleeping, I was thinking…",
+    "quips": [
+      "Hard hat, vest, coffee: ready.",
+      "An up-to-date job description keeps a team breathing.",
+      "I count skills, not sheep.",
+      "A well-filled skills matrix is a thing of beauty."
+    ]
   }
 }

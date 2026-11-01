@@ -102,17 +102,17 @@ export function Topbar({ onOpenPalette }: { onOpenPalette: () => void }) {
   const dateLocale = locale === 'fr' ? frLocale : enUS;
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-2 border-b border-border/70 bg-background/80 px-4 backdrop-blur-md supports-[backdrop-filter]:bg-background/65">
+    <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-2 border-b bg-card px-4">
       <MobileNav />
       <Button
         variant="outline"
         size="sm"
         onClick={onOpenPalette}
-        className="group w-72 justify-start gap-2 text-muted-foreground shadow-none hover:text-foreground max-md:w-auto"
+        className="group w-80 justify-start gap-2 bg-background font-normal text-muted-foreground shadow-none hover:text-foreground max-md:w-auto"
       >
         <Search className="size-4 transition-colors group-hover:text-foreground" />
         <span className="max-md:hidden">{t('searchShortcut')}</span>
-        <kbd className="ml-auto hidden rounded border border-border/60 bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground md:inline-block">
+        <kbd className="ml-auto hidden rounded-[3px] border border-keyline/40 bg-card px-1.5 font-mono text-[10px] font-semibold text-foreground/70 md:inline-block">
           ⌘K
         </kbd>
       </Button>
@@ -234,8 +234,8 @@ export function Topbar({ onOpenPalette }: { onOpenPalette: () => void }) {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="gap-2 px-2">
-            <Avatar className="size-7">
-              <AvatarFallback className="bg-primary/10 text-xs font-semibold text-primary">
+            <Avatar className="size-7 rounded-[3px]">
+              <AvatarFallback className="rounded-[3px] bg-foreground text-xs font-bold text-background">
                 {initials}
               </AvatarFallback>
             </Avatar>

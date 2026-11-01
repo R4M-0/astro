@@ -85,7 +85,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <LicenseBanner />
         <Topbar onOpenPalette={() => setPaletteOpen(true)} />
         {!lockedAddon && <SectionTabs />}
-        <main id="main-content" tabIndex={-1} className="min-w-0 focus:outline-none flex-1 overflow-y-auto bg-background bg-[radial-gradient(120%_80%_at_100%_0%,color-mix(in_oklab,var(--primary)_9%,transparent),transparent_55%),radial-gradient(100%_70%_at_0%_0%,color-mix(in_oklab,var(--chart-2)_8%,transparent),transparent_50%)]">
+        <main id="main-content" tabIndex={-1} className="min-w-0 flex-1 overflow-y-auto bg-background focus:outline-none">
           {lockedAddon ? <AddonLocked addon={lockedAddon} /> : forbidden ? <NoAccess /> : children}
         </main>
       </div>

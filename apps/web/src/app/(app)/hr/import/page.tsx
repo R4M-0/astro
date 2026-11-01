@@ -36,7 +36,7 @@ function Issues({ issues }: { issues: Issue[] }) {
       {issues.map((i, k) => {
         const Icon = i.severity === 'error' ? AlertCircle : TriangleAlert;
         return (
-          <li key={k} className={cn('flex items-start gap-1.5 text-xs', i.severity === 'error' ? 'text-destructive' : 'text-warning-foreground dark:text-warning')}>
+          <li key={k} className={cn('flex items-start gap-1.5 text-xs', i.severity === 'error' ? 'text-destructive' : 'text-warning-ink')}>
             <Icon className="mt-0.5 size-3 shrink-0" /> {i.message}
           </li>
         );

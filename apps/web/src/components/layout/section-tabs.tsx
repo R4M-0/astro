@@ -59,10 +59,14 @@ export function SectionTabs() {
     <nav
       aria-label={t(group.key)}
       style={{ '--grp': group.color } as React.CSSProperties}
-      className="sticky top-14 z-20 flex shrink-0 items-stretch gap-1 overflow-x-auto border-b border-border/70 bg-background/80 px-4 backdrop-blur-md supports-[backdrop-filter]:bg-background/65 [scrollbar-width:none]"
+      className="sticky top-14 z-20 flex shrink-0 items-stretch gap-1 overflow-x-auto border-b bg-card px-4 [scrollbar-width:none]"
     >
-      <span className="mr-2 flex shrink-0 items-center gap-2 border-r pr-4 text-sm font-semibold text-foreground/80">
-        {GroupIcon && <GroupIcon className="size-[18px] text-[var(--grp)]" />}
+      <span className="plate-label mr-2 flex shrink-0 items-center gap-2 border-r pr-4 text-[13px] text-foreground">
+        {GroupIcon && (
+          <span aria-hidden className="grid size-6 place-items-center rounded-[3px] bg-[var(--grp)] text-[oklch(0.2_0.014_262)]">
+            <GroupIcon className="size-3.5" />
+          </span>
+        )}
         {t(group.key)}
       </span>
       {items.map((item) => {
@@ -76,15 +80,15 @@ export function SectionTabs() {
             aria-current={active ? 'page' : undefined}
             className={cn(
               'relative flex shrink-0 items-center gap-2 px-3 py-3 text-sm whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-              active ? 'font-medium text-foreground' : 'text-muted-foreground hover:text-foreground',
+              active ? 'font-semibold text-foreground' : 'text-muted-foreground hover:text-foreground',
             )}
           >
-            <Icon aria-hidden className={cn('size-4', active ? 'text-[var(--grp)]' : 'opacity-70')} />
+            <Icon aria-hidden className={cn('size-4', active ? 'text-foreground' : 'opacity-70')} />
             {t(item.key)}
             <span
               aria-hidden
               className={cn(
-                'absolute inset-x-2 bottom-0 h-0.5 rounded-full bg-[var(--grp)] transition-opacity',
+                'absolute inset-x-1 bottom-0 h-[3px] bg-[var(--keyline)] transition-opacity',
                 active ? 'opacity-100' : 'opacity-0',
               )}
             />

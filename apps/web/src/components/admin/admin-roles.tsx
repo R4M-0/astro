@@ -276,7 +276,7 @@ export function AdminRoles({ roles: rawRoles }: { roles: AdminRole[] }) {
             )}
             <div className="ml-auto flex flex-wrap items-center gap-2">
               {dirty ? (
-                <span className="rounded bg-warning/15 px-1.5 py-0.5 text-xs font-medium text-warning-foreground dark:text-warning">
+                <span className="rounded bg-warning/15 px-1.5 py-0.5 text-xs font-medium text-warning-ink">
                   {t('roles.unsaved', { count: diffCount })}
                 </span>
               ) : (
