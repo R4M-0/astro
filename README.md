@@ -26,6 +26,8 @@
   <img alt="XQdrant" src="https://img.shields.io/badge/XQdrant-explainable_vectors-dc244c">
   <img alt="Evaluation" src="https://img.shields.io/badge/release_gates-24%2F24_passing-2f9e44">
   <img alt="Human in the loop" src="https://img.shields.io/badge/unapproved_sends-0-2f9e44">
+  <img alt="Audit trail" src="https://img.shields.io/badge/audit_trail-hash--chained-2f9e44">
+  <img alt="Compliance gates" src="https://img.shields.io/badge/compliance_gates-10%2F10_passing-2f9e44">
 </p>
 
 <p align="center">
@@ -37,6 +39,7 @@
   <a href="#recruiting-agent-1">Recruiting agent</a> ·
   <a href="#explainability-with-xqdrant">XQdrant</a> ·
   <a href="#trust-by-design">Trust</a> ·
+  <a href="#data-compliance--audit">Compliance</a> ·
   <a href="#evaluation-measured-not-promised">Evaluation</a> ·
   <a href="#run-it">Run it</a> ·
   <a href="#pitch-deck">Pitch deck</a> ·
@@ -54,6 +57,7 @@
 | **What we built** | A complete multi-tenant HR platform (employees, competencies, training, onboarding, surveys, e-signatures) plus two AI systems: the **Workforce Galaxy** (mail → explainable, cited insights) and the **Recruiting agent** (CV ranking by evidence, outreach, scheduling). |
 | **Why it's different** | The AI is designed around its failure modes: **prompt injection** (two-layer defense), **bias** (protected attributes removed before any model reads a CV), **hallucination** (every claim must quote its source), **autonomy** (the agent has no send button). |
 | **Proof** | **24/24 automated checks pass**: 16/16 injections caught, 0 false alarms, 15/15 personal details redacted, 14/14 counterfactual CVs identical, 0 unapproved sends, 0 double bookings, 0 duplicate emails. |
+| **Compliance** | A **hash-chained, append-only audit trail** (computed by Postgres, verified independently, sealed), access logging on personal data, **GDPR requests** with a one-month clock, **retention** with dry run and legal holds, an Art. 30 **record of processing**. |
 | **Golden rule** | ***The agent executes. The human decides about people.*** |
 
 > **Pitch deck:** [constealla.vercel.app](https://constealla.vercel.app): 57 slides rendered live in three.js.
@@ -132,6 +136,7 @@ From CV pile to booked interview:
 - **Mon espace** (`/hr/me`): the member's own record, job description, competencies, training, onboarding, and the *Ask HR* panel.
 - **Recrutement** (`/recruiting`): openings, criteria rubric, ranked candidates with evidence, interview slots, messages, approvals.
 - **Galaxie RH** (`/hr/galaxy`) and **Boîte RH** (`/hr/inbox`).
+- **Conformité** (`/compliance`): audit chain integrity and sealed export, GDPR access / erasure requests, retention policies, legal holds, record of processing.
 - **Administration**: members, roles & permissions, departments & members, groups, visibility, organization, audit log, billing / license.
 
 </details>
@@ -203,9 +208,9 @@ flowchart LR
 | **Web** | Next.js 16 (App Router), React 19, Tailwind v4, shadcn/ui, TanStack Query, Zustand, next-intl (FR default, EN), three.js / react-force-graph-3d |
 | **API** | NestJS 11, Prisma 6, global guard chain, BullMQ workers, Socket.IO (`/ws`), throttling |
 | **Graph service** | Express 5 + TypeScript, `pg`, Qdrant/XQdrant REST, Mailpit poller, Google AI Studio |
-| **Data** | PostgreSQL 16 (47 Prisma models), Redis 7 (cache, pub/sub, queues), MinIO (S3 files), XQdrant (vectors + explanations) |
+| **Data** | PostgreSQL 16 (52 Prisma models, audit chain triggers), Redis 7 (cache, pub/sub, queues), MinIO (S3 files), XQdrant (vectors + explanations) |
 | **AI** | Claude Opus 5.5 with structured outputs (CV extraction, LLM judge, drafts, triage) · Gemini Flash Lite (mail tagging, answers, digest) · `gemini-embedding-001` / `text-embedding-3-small` |
-| **Shared** | `@astro/shared`: permission catalogue (13 resources), 5 system roles, enums |
+| **Shared** | `@astro/shared`: permission catalogue (14 resources), 5 system roles, enums |
 | **Ops** | Docker Compose (Caddy edge, N API replicas + worker, nightly encrypted backups), self-hosted bundle with offline license keys |
 
 <details>
@@ -215,10 +220,10 @@ flowchart LR
 .
 ├── apps/
 │   ├── api/                 NestJS API (:3011)
-│   │   ├── prisma/          schema (47 models), migrations, seed
+│   │   ├── prisma/          schema (52 models), migrations, seed
 │   │   └── src/
 │   │       ├── core/        tenancy, auth, rbac, department scope, history, audit log,
-│   │       │                signatures, notifications, files, jobs, license …
+│   │       │                compliance, signatures, notifications, files, jobs, license …
 │   │       └── modules/
 │   │           ├── hr/          HR registers
 │   │           ├── recruiting/  pipelines 1 & 2, guard, rules, outreach, eval/
@@ -227,6 +232,7 @@ flowchart LR
 │   └── web/                 Next.js app (:3010)
 ├── packages/shared/         permissions, roles, enums (built TS package)
 ├── docs/
+│   ├── compliance/          data, compliance & audit: gap analysis and design
 │   ├── graph/               Workforce Galaxy diagrams (.excalidraw + .png)
 │   └── recruiting/          recruiting, XQdrant and evaluation diagrams
 ├── pitch/                   three.js pitch deck (static, no build)
@@ -243,9 +249,9 @@ Constella was built on a mature, audit-ready platform layer from day one:
 | Capability | How |
 |---|---|
 | **Multi-tenancy** | every tenant table carries `organizationId`, tenant picked with `X-Organization-Id`, explicit `deletedAt: null` filters |
-| **RBAC** | `@RequirePermissions('resource:action')`, global guards JWT → Tenant → Permissions, 13 resources, 5 system roles + custom roles |
+| **RBAC** | `@RequirePermissions('resource:action')`, global guards JWT → Tenant → Permissions, 14 resources, 5 system roles + custom roles |
 | **Department-scoped visibility** | managers see only their departments' employees, evaluations, journeys, job descriptions and trainings |
-| **History & audit** | per-record modification history (with redaction) and an organization audit log |
+| **History & audit** | per-record modification history (with redaction) and a **tamper-evident** organization audit log: hash chain, seals, reads of personal data logged ([below](#data-compliance--audit)) |
 | **E-signatures** | trial-period sign-off on onboarding journeys |
 | **Notifications** | in-app + WebSocket (Socket.IO over Redis pub/sub) |
 | **Billing & licensing** | plans, seats, invoices, super-admin console, self-hosted offline license keys |
@@ -373,6 +379,53 @@ Raw embedding dimensions mean nothing to a person. Constella pairs every dense v
 
 ---
 
+## Data, compliance & audit
+
+> Code: [`apps/api/src/core/compliance`](apps/api/src/core/compliance), [`core/audit-log`](apps/api/src/core/audit-log) · Docs and diagrams: [`docs/compliance`](docs/compliance/README.md)
+
+An HR platform holds a company's most sensitive personal data. The platform layer had a history and an audit log, but it could not **prove** anything to an auditor, a regulator or an employee. We reviewed it and fixed what was missing.
+
+![Gap analysis](docs/compliance/compliance-0-gaps.png)
+
+| Gap we found | What Constella does now |
+|---|---|
+| Audit rows were ordinary rows: any `UPDATE` / `DELETE` rewrote the past | **Hash chain computed by Postgres** (`seq`, `prevHash`, `hash`, `bodyDigest` in a `BEFORE INSERT` trigger); `UPDATE`, `DELETE`, `TRUNCATE` refused by triggers |
+| Audit writes were fire-and-forget (`.catch(() => undefined)`) | awaited write, one retry, then `AUDIT_WRITE_FAILED` logged and **counted**: a lost entry is never silent |
+| Reads of personal data were never logged | `@AuditAccess`: employee file, candidate, CV download, pre-filled matrix, subject and audit exports |
+| The Galaxy's audit was a local JSONL file | it inserts into the same chained table |
+| Nothing to hand an auditor | verification endpoint (first break: link, gap, hash, body, seal), **daily seals** and a **sealed CSV / JSON export** with a manifest |
+| No retention: CVs and former employees kept forever | retention policies per category (CNIL defaults), **disabled until an admin enables them**, dry run first, nightly job |
+| Soft delete is not erasure; history kept full copies | **anonymization** of the record, its history snapshots and diffs, its audit bodies, CV file and vector, without breaking the chain |
+| No answer to « send me / delete my data » | **GDPR requests** `DSR-0001`, due in one month, JSON access export including *who opened the file*, erasure executed by a human |
+| Nothing stopped deletion under litigation | **legal holds** block erasure and retention |
+| No record of processing | **Art. 30 register** of the 9 processing activities (AI ones flagged), linked to the live policies |
+
+<details open>
+<summary><b>Tamper-evident audit trail</b></summary>
+
+![Audit chain](docs/compliance/compliance-2-audit-chain.png)
+
+- The chain is computed **in the database**, so every writer (API, worker, Galaxy service, raw SQL) is chained the same way; verification recomputes it **in Node**, independently of the SQL function.
+- Erasure empties a body without breaking the chain: the hash covers the body's **digest**, not the body.
+- Retention purges old rows behind an **anchor seal**; the next row still links to something verifiable.
+- **Honest limit:** a database superuser can disable triggers and recompute every hash. A seal kept *outside* the database (the export manifest, the `AUDIT_SEAL` log line) is what gives that away.
+
+</details>
+
+<details>
+<summary><b>Architecture and personal data lifecycle</b></summary>
+
+![Architecture](docs/compliance/compliance-1-architecture.png)
+![Lifecycle](docs/compliance/compliance-3-data-lifecycle.png)
+
+</details>
+
+**Who can do what.** New resource `compliance`: `read` (overview, register, requests), `update` (policies, holds, requests), `export` (subject and audit exports), `approve` (execute an erasure, run retention now). `org_admin` has all four; `hr_manager` has everything but `approve`: **erasure stays with the organization admin**, behind a typed confirmation. Erasure is refused while the employment contract still runs (legal basis) or a legal hold is active.
+
+**Measured** (`compliance.db-spec.ts`, real Postgres, 10/10): the DB-computed chain verifies in Node; 20 concurrent writers give a gap-free sequence; `UPDATE` / `DELETE` / `TRUNCATE` refused from the app; owner-level edits detected (`hash`), a deleted row (`gap`), a cut tail (`seal`); after an erasure **no personal value is left** in the record, its history or its audit bodies and the chain still verifies; a candidate's CV file and vector are removed; retention only touches enabled categories and skips held subjects; an audit purge keeps the chain verifiable. Plus 9 offline verifier checks (`audit-chain.spec.ts`), including a fully re-hashed forgery caught only by a seal.
+
+---
+
 ## Trust by design
 
 | Risk | What Constella does | Where |
@@ -382,7 +435,7 @@ Raw embedding dimensions mean nothing to a person. Constella pairs every dense v
 | **Hallucination** | answers only from context, inline citations (`[m00123]`, `[policy:…]`); every judge claim must quote the CV | `ask.ts`, `rules.ts` |
 | **Autonomy** | the agent drafts, HR approves. No send tool, gates checked again at send time, approval can't cross tenants | `outreach.service.ts`, `/actions/*` |
 | **Over-exposure** | the graph service reuses Constella's JWT, tenant and roles: HR sees bodies, managers subjects in their departments, employees only themselves. Scope is applied **before** retrieval | `graph/src/auth.ts` |
-| **Accountability** | every view, question and decision goes to the audit log; per-user rate limits; parameterized SQL; CORS locked to the web origin | `audit`, `server.ts` |
+| **Accountability** | every view, question and decision goes to the hash-chained audit log (the Galaxy included); per-user rate limits; parameterized SQL; CORS locked to the web origin | `audit`, `server.ts` |
 
 ### Built for the EU AI Act
 
@@ -391,7 +444,7 @@ Recruitment AI is **high-risk** under Annex III, with obligations from **2 Decem
 | AI Act expectation | Constella |
 |---|---|
 | Human oversight | approval gates, HR edits criteria and weights, overrides, reruns |
-| Logging & traceability | audit log, history, cited sources, stored evidence quotes |
+| Logging & traceability | tamper-evident audit log (hash chain, seals, verification), access logging, history, cited sources, stored evidence quotes |
 | Transparency | per-dimension explanations, reason-bearing signals and urgency |
 | Accuracy, robustness, cybersecurity | 5-level evaluation, release gates, injection defense |
 | Data governance & non-discrimination | redaction before models, counterfactual tests, adverse-impact ratio gate |
@@ -444,7 +497,7 @@ Recruitment AI is **high-risk** under Annex III, with obligations from **2 Decem
 | Command (`pnpm --filter @astro/api …`) | Mode | Needs |
 |---|---|---|
 | `test` | offline checks, CI gate | nothing |
-| `eval:gates` | release gates on a real database | Postgres (creates and deletes its own org) |
+| `eval:gates` | recruiting release gates + compliance gates on a real database | Postgres (creates and deletes its own orgs) |
 | `eval:live` | real models, ~120 calls, writes `eval-report-live.json` | `ANTHROPIC_API_KEY`, `OPENAI_API_KEY` |
 | `eval:online` | production metrics from HR decisions | the database |
 
@@ -516,8 +569,8 @@ Super admin (dev only): `superadmin@astro.app` / `Astro-Super-2026!` (override w
 
 | Role | Grants |
 |---|---|
-| `org_admin` | everything, incl. organization / users / roles admin |
-| `hr_manager` | full HR (create/update/delete/approve/export), read users & roles, audit log, galaxy with mail bodies |
+| `org_admin` | everything, incl. organization / users / roles admin and GDPR erasure (`compliance:approve`) |
+| `hr_manager` | full HR (create/update/delete/approve/export), read users & roles, audit log, compliance (requests, retention, holds, exports; no erasure), galaxy with mail bodies |
 | `manager` | read everything, CRUD on HR registers, limited to their department(s); galaxy subjects only |
 | `employee` | dashboard, skills and training read, own space, Ask HR on their own file |
 | `viewer` | read-only |
@@ -526,7 +579,7 @@ Super admin (dev only): `superadmin@astro.app` / `Astro-Super-2026!` (override w
 
 ```bash
 pnpm --filter @astro/api test          # unit + offline evaluation
-pnpm --filter @astro/api eval:gates    # release gates (needs Postgres)
+pnpm --filter @astro/api eval:gates    # recruiting + compliance gates (needs Postgres)
 pnpm --filter @astro/api build
 pnpm --filter @astro/web build
 ```
@@ -545,6 +598,7 @@ pnpm --filter @astro/web build
 | Recruiting · outreach | `GET/POST /recruiting/openings/:id/slots` · `POST …/:id/drafts` · `GET …/:id/messages` · `POST /recruiting/messages/approve` · `PATCH /recruiting/messages/:id` |
 | Recruiting · public | `GET /recruiting/public/:token` · `POST …/book` · `POST …/decline` · `POST …/messages` |
 | Graph service | `GET /galaxy` · `GET /employees/:ref` · `GET /signals` · `GET /bridges` · `POST /ask` · `GET /digest` · `GET /digest/overview` · `GET /actions` · `POST /actions/draft` · `POST /actions/:id/:decision` · `GET /mail/events` · `POST /mail/send` · `GET /audit` |
+| Compliance | `GET /compliance/overview` · `GET /compliance/audit/verify` · `GET /compliance/audit/export?format=csv\|json` · `GET/PATCH /compliance/retention` · `POST …/retention/preview\|run` · `GET/POST /compliance/requests` · `GET …/:id/export` · `POST …/:id/complete\|reject\|execute` · `GET/POST /compliance/legal-holds` · `GET /compliance/processing-register` |
 | HR | `GET /hr/dashboard`, employees, job descriptions, skills, competency evaluations, trainings, surveys, journeys, imports… all behind `@RequirePermissions` |
 
 </details>
@@ -558,7 +612,7 @@ pnpm --filter @astro/web build
 | | |
 |---|---|
 | **Deck** | 57 slides around one live three.js particle scene that reshapes itself for each part of the story: the problem in sourced numbers, the architecture, the Workforce Galaxy, the recruiting agent, explainability, trust, measured results and the business model. Keys: `←` `→` navigate · `S` sources · `F` fullscreen. The source is in [`pitch/`](pitch/index.html). |
-| **Diagrams** | [`docs/graph`](docs/graph) (Workforce Galaxy) · [`docs/recruiting`](docs/recruiting/README.md) (pipelines, XQdrant, evaluation). Every `.png` has an editable `.excalidraw` next to it. |
+| **Diagrams** | [`docs/graph`](docs/graph) (Workforce Galaxy) · [`docs/recruiting`](docs/recruiting/README.md) (pipelines, XQdrant, evaluation) · [`docs/compliance`](docs/compliance/README.md) (data, compliance & audit). Every `.png` has an editable `.excalidraw` next to it. |
 
 ---
 
