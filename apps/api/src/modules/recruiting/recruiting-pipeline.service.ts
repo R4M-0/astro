@@ -216,10 +216,9 @@ export class RecruitingPipelineService {
         hit: hitById.get(c.id)!,
         reasons: hardFilter(criteria, c.profile as unknown as CandidateProfile, c.cvText ?? ''),
       }));
-      const passed = filtered.filter((f) => !f.reasons.length);
-
-      // stage 3: LLM judge on the job rubric (features come from Postgres: the sanitized CV)
-      const judged = await mapLimit(passed, JUDGE_CONCURRENCY, async ({ c, hit }) => {
+      // stage 3: LLM judge on the job rubric (features come from Postgres: the sanitized CV).
+      // Filtered-out candidates are scored too, so HR sees how close they came, but never ranked.
+      const judged = await mapLimit(filtered, JUDGE_CONCURRENCY, async ({ c, hit }) => {
         if (!criteria.length) return { id: c.id, retrievalScore: hit.score, score: 0, scores: [], justification: null };
         const out = await this.ai.structured<{ criteria: { id: string; score: number; evidence: string }[]; justification: string }>(
           JUDGE_SYSTEM,
@@ -240,7 +239,12 @@ export class RecruitingPipelineService {
         );
         return { id: c.id, retrievalScore: hit.score, score: weightedScore(criteria, scores), scores, justification: out.justification };
       });
-      const ranked = rankAndCut(judged, opening.shortlistSize);
+      const failed = new Set(filtered.filter((f) => f.reasons.length).map((f) => f.c.id));
+      const ranked = rankAndCut(
+        judged.filter((j) => !failed.has(j.id)),
+        opening.shortlistSize,
+      );
+      const unranked = judged.filter((j) => failed.has(j.id));
 
       await this.prisma.$transaction([
         this.prisma.candidate.updateMany({
@@ -272,6 +276,12 @@ export class RecruitingPipelineService {
               rank: r.rank,
               shortlisted: r.shortlisted,
             },
+          }),
+        ),
+        ...unranked.map((r) =>
+          this.prisma.candidate.update({
+            where: { id: r.id },
+            data: { criteriaScores: r.scores as unknown as Prisma.InputJsonValue, justification: r.justification, score: r.score },
           }),
         ),
         this.prisma.jobOpening.update({ where: { id: opening.id }, data: { rankingStatus: 'DONE', rankedAt: new Date(), rankingError: null } }),

@@ -93,9 +93,9 @@ export default function OpeningPage() {
   const onError = (err: unknown) => toast.error(err instanceof ApiError ? err.message : tc('error'));
 
   const upload = useMutation({
-    mutationFn: (files: FileList) => {
+    mutationFn: (files: File[]) => {
       const form = new FormData();
-      Array.from(files).forEach((f) => form.append('files', f));
+      files.forEach((f) => form.append('files', f));
       return apiUpload<CandidateRow[]>(`/recruiting/openings/${id}/candidates`, form);
     },
     onSuccess: (rows) => {
@@ -185,8 +185,10 @@ export default function OpeningPage() {
                   hidden
                   accept=".pdf,.docx,.txt"
                   onChange={(e) => {
-                    if (e.target.files?.length) upload.mutate(e.target.files);
+                    // copy first: clearing the input empties the live FileList before mutationFn runs
+                    const files = Array.from(e.target.files ?? []);
                     e.target.value = '';
+                    if (files.length) upload.mutate(files);
                   }}
                 />
                 <Button size="sm" disabled={upload.isPending} onClick={() => fileInput.current?.click()} title={t('uploadHint')}>
@@ -280,7 +282,7 @@ export default function OpeningPage() {
                                 : ''}
                           </p>
                         </TableCell>
-                        <TableCell className="text-center tabular-nums">{c.score ?? '—'}</TableCell>
+                        <TableCell className={cn('text-center tabular-nums', c.filterReasons?.length && 'text-muted-foreground')}>{c.score ?? '—'}</TableCell>
                         <TableCell className="text-center text-xs tabular-nums text-muted-foreground">
                           {c.retrievalScore != null ? c.retrievalScore.toFixed(3) : c.status === 'READY' && opening.rankedAt ? t('notRetrieved') : '—'}
                         </TableCell>
