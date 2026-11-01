@@ -1,6 +1,6 @@
 # @astro/graph — Workforce Galaxy
 
-Our hackathon module (Secure AI HR System, axis **Employee Questions**, extended to full employee management).
+Our hackathon module (Secure AI HR System): axes **Employee Questions** (extended to full employee management) and **Email Summary**.
 The whole workforce of the organization is rendered as a 3D galaxy in Astro (`/hr/galaxy`): each **star** is an
 employee, each **cluster** a department, and every email between HR and employees, or between employees, is a **beam**
 that connects them. You can fly through it, open anyone's file, and ask questions about a person, a selection,
@@ -26,6 +26,7 @@ a department or the whole company. Every answer cites its sources and explains *
 | F11 | Bridges: betweenness centrality on work mail (HR excluded) and departments connected | `src/graph.ts` |
 | F12 | Search-to-fly: `/` to focus, Enter flies to the star | `galaxy-view.tsx` |
 | F13 | Live mail ingest: Mailpit acts as the company mail server. New mail is tagged by Gemini Flash Lite (topics, sentiment, summary, needs-a-reply, AI-instruction check), embedded into XQdrant, and shows up live as a beam and a toast. A composer in the galaxy sends demo mail through the same path | `src/ingest.ts` · `live-mail.tsx` · `GET /mail/events`, `POST /mail/send` |
+| F14 | **Email Summary (spec axis 2):** HR inbox digest (`/hr/inbox`, « Boîte RH ») for today or the last 7 days, grouped by type, with rule-based urgency that states its reason. Emails needing a human answer come first, older unanswered requests included. A Gemini overview cites its source emails, and Draft reply → edit → approve sends a handbook-grounded answer through the approval flow | `src/digest.ts` · `components/digest/inbox-digest.tsx` · `GET /digest`, `GET /digest/overview` |
 
 ## How explanations work (XQdrant)
 

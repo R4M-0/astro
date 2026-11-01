@@ -7,6 +7,7 @@ import cors from "cors";
 import { ask, draft } from "./ask.js";
 import { auth, canAct, canReadMail, canSeeGalaxy, limit, visibleTo, type Ctx } from "./auth.js";
 import { DATA_DIR, type Email, type Employee, getDataset, isHrMail, participants, saveEmail } from "./data.js";
+import { buildDigest, overview } from "./digest.js";
 import { events, sendViaMailpit, startMailPoller } from "./ingest.js";
 import { analyse, bridges, galaxy, signals, topTopics } from "./graph.js";
 import { isXQdrant, ready } from "./vectors.js";
@@ -108,6 +109,21 @@ api.post("/actions/:id/:decision", need(canAct), async (req, res) => {
   a.status = decision === "approve" ? "approved" : "rejected"; a.decidedBy = req.ctx.userId; a.decidedAt = new Date().toISOString();
   persist(); audit(req.ctx, `action.${a.status}`, a.ref, { action: a.id });
   res.json(a);
+});
+
+// ---------- Email Summary: HR inbox digest (HR only: it shows mail content) ----------
+api.get("/digest", need(canAct), async (req, res) => {
+  const days = req.query.days === "1" ? 1 : 7;
+  const ds = await getDataset(req.ctx.orgId);
+  const d = buildDigest(ds, days);
+  audit(req.ctx, "digest.view", undefined, { days });
+  res.json(d);
+});
+api.get("/digest/overview", need(canAct), limit(10), async (req, res) => {
+  const days = req.query.days === "1" ? 1 : 7;
+  const ds = await getDataset(req.ctx.orgId);
+  try { res.json(await overview(ds, buildDigest(ds, days), req.query.fresh === "1")); }
+  catch (e: any) { res.status(502).json({ message: e?.message ?? "Summary unavailable" }); }
 });
 
 // ---------- Live mail: events feed + demo compose (goes through Mailpit like any real mail) ----------

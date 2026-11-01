@@ -67,7 +67,7 @@ export async function ingest(ds: Dataset, raw: { from: string; to: string[]; sub
   const email: Email = {
     id, thread_id: parent?.thread_id ?? "t" + id.slice(1), from: from.ref, to: to.map(x => x.ref), cc: [],
     date: raw.date ?? new Date().toISOString(), subject: raw.subject, body: raw.body, kind: kindOf(from, to),
-    topics, sentiment: Math.max(-1, Math.min(1, t.sentiment)), flagged,
+    topics, sentiment: Math.max(-1, Math.min(1, t.sentiment)), flagged, summary: t.summary, needsReply: t.needsHumanReply,
   };
 
   // flagged bodies are never embedded (same rule as the batch index)

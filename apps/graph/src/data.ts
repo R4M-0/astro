@@ -14,6 +14,8 @@ export interface Email {
   id: string; thread_id: string; from: string; to: string[]; cc: string[]; date: string;
   subject: string; body: string; kind: string; topics: Partial<Record<Concept, number>>; sentiment: number;
   flagged?: string | null;
+  // set by live ingest (Gemini): one-line summary and whether HR must answer
+  summary?: string; needsReply?: boolean;
 }
 export interface Employee {
   id: string; ref: string; name: string; firstName: string; email: string | null; title: string | null;
@@ -58,7 +60,8 @@ export async function getDataset(orgId: string): Promise<Dataset> {
   const byRef = new Map(employees.map(e => [e.ref, e]));
   // Mail only exists for employees that are in this org (the demo dataset); plus approved actions saved later
   const emails = [...json<Email[]>("emails.json"), ...readSaved()].filter(m => byRef.has(m.from) && m.to.every(t => byRef.has(t)));
-  for (const m of emails) m.flagged = detectInjection(m.body);
+  // keep a flag set at live ingest (AI classifier), otherwise run the pattern check
+  for (const m of emails) m.flagged = m.flagged ?? detectInjection(m.body);
   const known = new Map(workforce.departments.map(d => [d.name, d.color]));
   const palette = ["#5b8cff", "#2fd6c3", "#ff6fa8", "#ffb347", "#a98bff", "#8be06b", "#4dd2ff", "#ffe066"];
   const departments = [...new Set(employees.map(e => e.department))].map((name, i) => ({ name, color: known.get(name) ?? palette[i % palette.length] }));
