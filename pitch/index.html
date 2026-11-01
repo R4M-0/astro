@@ -131,6 +131,17 @@ section[data-side="center"] .lead{color:#eef1ff;text-shadow:0 2px 16px rgba(4,5,
 #nav{position:fixed;bottom:22px;right:6vw;z-index:4;display:flex;gap:8px;align-items:center;font:500 12px 'JetBrains Mono';color:var(--dim)}
 #nav button{all:unset;cursor:pointer;width:34px;height:34px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;color:#fff;background:var(--card)}
 #nav button:hover{border-color:var(--cyan)}
+/* Gus, the stagehand: walks the progress bar, stays clear of the nav */
+#gus{position:fixed;left:0;right:0;bottom:2px;height:0;z-index:5;pointer-events:none}
+#gus.off{display:none}
+#gus button{all:unset;position:absolute;left:0;bottom:0;cursor:pointer;pointer-events:auto;will-change:transform;filter:drop-shadow(0 0 6px rgba(110,231,255,.25))}
+#gus button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:4px}
+#gus canvas{display:block;width:100%;height:100%;image-rendering:pixelated}
+#gus .gus-bubble{position:absolute;left:0;bottom:112px;max-width:min(300px,80vw);padding:9px 12px;font:500 12px/1.4 'JetBrains Mono',monospace;color:var(--ink);
+  background:rgba(6,8,20,.92);border:2px solid #c9d1ff;border-radius:4px;opacity:0;transition:opacity .25s steps(3)}
+#gus .gus-bubble.on{opacity:1}
+#gus .gus-bubble::after{content:'';position:absolute;left:var(--tail,24px);top:100%;width:8px;height:8px;background:rgba(6,8,20,.92);border:2px solid #c9d1ff;border-top:none;border-left:none;transform:translateY(-4px) rotate(45deg)}
+@media (prefers-reduced-motion: reduce){#gus .gus-bubble{transition:none}}
 #hint{position:fixed;bottom:30px;left:6vw;z-index:4;font:400 11px 'JetBrains Mono';color:var(--faint);transition:opacity 1s}
 #notes{position:fixed;left:50%;bottom:70px;transform:translateX(-50%);z-index:6;width:min(820px,90vw);background:rgba(6,8,20,.94);border:1px solid var(--line);border-radius:12px;padding:16px 20px;font-size:14.5px;line-height:1.6;color:#dfe3ff;display:none}
 #notes.on{display:block}#notes h4{font:500 11px 'JetBrains Mono';color:var(--gold);letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px}
@@ -163,9 +174,10 @@ aside.notes{display:none}
   Constella
 </div>
 <div id="meta"><span id="section">Story</span><span class="mix" title="Deck mix: 70% technical, 30% business"><i style="width:49px;background:var(--cyan)"></i><i style="width:21px;background:var(--gold)"></i></span><span id="count">01 / 20</span></div>
-<div id="hint">← → navigate · N notes · S sources · F fullscreen</div>
+<div id="hint">← → navigate · N notes · S sources · F fullscreen · G Gus</div>
 <div id="nav"><button id="prev" aria-label="Previous">‹</button><button id="next" aria-label="Next">›</button></div>
 <div id="bar"></div>
+<div id="gus" aria-label="Gus, the Constella mascot"><div class="gus-bubble" role="status" aria-live="polite"></div><button type="button" aria-label="Gus — click to make him laugh"><canvas width="16" height="24"></canvas></button></div>
 <div id="sources"><h4>Sources</h4><ul class="srclist">
       <li><b>Gallup</b>, State of the Global Workplace 2026: 20% engaged, ~$10T lost · <a href="https://www.gallup.com/workplace/349484/state-of-the-global-workplace.aspx">gallup.com</a></li>
       <li><b>Gallup</b>: replacement costs 0.5–2× salary · <a href="https://www.gallup.com/workplace/247391/fixable-problem-costs-businesses-trillion.aspx">gallup.com</a></li>
@@ -1330,6 +1342,7 @@ function go(n, initial = false) {
   countUp(s);
   history.replaceState(null, '', '#' + (idx + 1));
   if (idx > 0) document.getElementById('hint').style.opacity = 0;
+  dispatchEvent(new CustomEvent('deck:slide', { detail: { idx, total: slides.length, sec: s.dataset.sec } }));
 }
 addEventListener('keydown', e => {
   if (['ArrowRight', 'PageDown', ' ', 'Enter'].includes(e.key)) { e.preventDefault(); go(idx + 1); }
@@ -1351,6 +1364,448 @@ idx = Number.isFinite(start) && start > 0 ? clamp(start, 0, slides.length - 1) :
 go(idx, true);
 tick();
 const ld = document.getElementById('loader'); ld.style.opacity = 0; setTimeout(() => ld.remove(), 1000);
+</script>
+<script type="module">
+/* ---------- Gus sprite (generated from apps/web/src/components/mascot/sprite.ts) ---------- */
+/**
+ * Gus — the Constella workshop mascot, drawn as 16×24 pixel art.
+ *
+ * Frames are composed procedurally from parts (hat, face, eyes, mouth, arms, legs) so a handful of
+ * poses combine into many animations without hand-drawing every frame. Everything is authored
+ * here, pixel by pixel: no external sprite sheet.
+ */
+
+const SPRITE_W = 16;
+const SPRITE_H = 24;
+
+const PALETTE = {
+  k: '#1b1e25', // ink outline
+  y: '#f5cb1f', // hard hat — signal yellow
+  Y: '#c99812', // hat shade / brim
+  h: '#fff3a6', // hat highlight
+  s: '#f3c29c', // skin
+  S: '#d99b73', // skin shade
+  c: '#ee8b80', // cheeks
+  b: '#2f5ec0', // "bleu de travail" jacket
+  B: '#1f3f88', // jacket shade
+  r: '#e8ebf1', // reflective stripe
+  w: '#ffffff',
+  m: '#9b2f2f', // mouth inside
+  p: '#2a3247', // trousers
+  o: '#5b3b22', // boots
+  O: '#3a2514', // soles
+}         ;
+
+                                
+
+                                                               
+                                                                
+                                                                                     
+                                                                   
+
+                       
+             
+               
+             
+             
+                                            
+                
+                   
+                                                                                                 
+                                     
+ 
+
+                                                  
+
+function rect(put     , x        , y        , w        , h        , c     ) {
+  for (let i = 0; i < w; i++) for (let j = 0; j < h; j++) put(x + i, y + j, c);
+}
+
+function drawHat(put     , dy        ) {
+  rect(put, 5, 1 + dy, 6, 1, 'k');
+  put(4, 2 + dy, 'k');
+  put(11, 2 + dy, 'k');
+  rect(put, 5, 2 + dy, 6, 1, 'y');
+  put(6, 2 + dy, 'h');
+  put(7, 2 + dy, 'h');
+  put(3, 3 + dy, 'k');
+  put(12, 3 + dy, 'k');
+  rect(put, 4, 3 + dy, 8, 1, 'y');
+  put(5, 3 + dy, 'h');
+  put(2, 4 + dy, 'k');
+  put(13, 4 + dy, 'k');
+  rect(put, 3, 4 + dy, 10, 1, 'y');
+  // the little white star on the front of the helmet — Constella's mark
+  put(8, 3 + dy, 'w');
+  rect(put, 7, 4 + dy, 3, 1, 'w');
+  // brim
+  put(1, 5 + dy, 'k');
+  put(14, 5 + dy, 'k');
+  rect(put, 2, 5 + dy, 12, 1, 'Y');
+}
+
+function drawFace(put     , dy        , pose      ) {
+  for (let y = 6; y <= 10; y++) {
+    put(2, y + dy, 'k');
+    put(13, y + dy, 'k');
+    rect(put, 3, y + dy, 10, 1, 's');
+  }
+  put(3, 11 + dy, 'k');
+  put(12, 11 + dy, 'k');
+  rect(put, 4, 11 + dy, 8, 1, 'S');
+  rect(put, 4, 12 + dy, 8, 1, 'k');
+
+  const look = pose.look ?? 0;
+  const lx = 5 + look;
+  const rx = 10 + look;
+  for (const ex of [lx, rx]) {
+    switch (pose.eyes) {
+      case 'open':
+        rect(put, ex, 7 + dy, 1, 2, 'k');
+        break;
+      case 'up':
+        rect(put, ex, 6 + dy, 1, 2, 'k');
+        break;
+      case 'closed':
+        rect(put, ex - 1, 8 + dy, 3, 1, 'k');
+        break;
+      case 'happy':
+        put(ex - 1, 8 + dy, 'k');
+        put(ex, 7 + dy, 'k');
+        put(ex + 1, 8 + dy, 'k');
+        break;
+      case 'wide':
+        rect(put, ex, 7 + dy, 2, 2, 'k');
+        put(ex, 7 + dy, 'w');
+        break;
+    }
+  }
+
+  if (pose.cheeks) {
+    put(3, 9 + dy, 'c');
+    put(12, 9 + dy, 'c');
+  }
+
+  const mx = 7 + look;
+  switch (pose.mouth) {
+    case 'neutral':
+      rect(put, mx, 10 + dy, 2, 1, 'k');
+      break;
+    case 'flat':
+      rect(put, mx - 1, 10 + dy, 4, 1, 'k');
+      break;
+    case 'smile':
+      put(mx - 1, 9 + dy, 'k');
+      rect(put, mx, 10 + dy, 2, 1, 'k');
+      put(mx + 2, 9 + dy, 'k');
+      break;
+    case 'open':
+      rect(put, mx - 1, 9 + dy, 4, 2, 'k');
+      rect(put, mx, 10 + dy, 2, 1, 'm');
+      break;
+    case 'o':
+      rect(put, mx, 9 + dy, 2, 2, 'k');
+      break;
+  }
+}
+
+function drawBody(put     , dy        ) {
+  put(3, 13 + dy, 'k');
+  rect(put, 4, 13 + dy, 3, 1, 'b');
+  rect(put, 7, 13 + dy, 2, 1, 'w');
+  rect(put, 9, 13 + dy, 3, 1, 'b');
+  put(12, 13 + dy, 'k');
+  for (const y of [14, 15, 17]) {
+    put(3, y + dy, 'k');
+    put(12, y + dy, 'k');
+    rect(put, 4, y + dy, 8, 1, 'b');
+  }
+  put(3, 16 + dy, 'k');
+  put(12, 16 + dy, 'k');
+  rect(put, 4, 16 + dy, 8, 1, 'r');
+  put(3, 18 + dy, 'k');
+  put(12, 18 + dy, 'k');
+  rect(put, 4, 18 + dy, 8, 1, 'B');
+}
+
+/** one arm hanging down; side = -1 left, +1 right */
+function armDown(put     , dy        , side        , swing = 0) {
+  const x = side < 0 ? 2 : 13;
+  const ox = side < 0 ? 1 : 14;
+  const top = 14 + dy + swing;
+  rect(put, ox, top, 1, 4, 'k');
+  rect(put, x, top, 1, 3, 'b');
+  put(x, top + 3, 's');
+  put(x, top + 4, 'k');
+}
+
+/** one arm raised beside the head; tilt nudges the hand outward */
+function armUp(put     , dy        , side        , tilt = 0) {
+  const x = side < 0 ? 2 - tilt : 13 + tilt;
+  const ox = side < 0 ? x - 1 : x + 1;
+  rect(put, ox, 8 + dy, 1, 6, 'k');
+  rect(put, x, 9 + dy, 1, 5, 'b');
+  put(x, 8 + dy, 's');
+  put(x, 7 + dy, 'k');
+}
+
+function drawArms(put     , dy        , arms      ) {
+  switch (arms) {
+    case 'down':
+      armDown(put, dy, -1);
+      armDown(put, dy, 1);
+      break;
+    case 'swing1':
+      armDown(put, dy, -1, -1);
+      armDown(put, dy, 1, 0);
+      break;
+    case 'swing2':
+      armDown(put, dy, -1, 0);
+      armDown(put, dy, 1, -1);
+      break;
+    case 'wave1':
+      armDown(put, dy, -1);
+      armUp(put, dy, 1, 0);
+      break;
+    case 'wave2':
+      armDown(put, dy, -1);
+      armUp(put, dy, 1, 1);
+      break;
+    case 'up':
+      armUp(put, dy, -1, 1);
+      armUp(put, dy, 1, 1);
+      break;
+    case 'think':
+      armDown(put, dy, -1);
+      // forearm bent up, fist under the chin
+      rect(put, 14, 12 + dy, 1, 4, 'k');
+      rect(put, 13, 13 + dy, 1, 3, 'b');
+      put(12, 12 + dy, 'b');
+      rect(put, 10, 11 + dy, 2, 1, 's');
+      put(12, 11 + dy, 'k');
+      put(13, 12 + dy, 'k');
+      break;
+  }
+}
+
+function leg(put     , side        , lift        , short         ) {
+  // trouser leg 3px wide with outline, boot 4px, sole
+  const x0 = side < 0 ? 3 : 8;
+  const legRows = short ? 0 : 1;
+  const bootY = 21 - lift - (short ? 1 : 0);
+  for (let i = 0; i < legRows; i++) {
+    put(x0, 21 + i - lift, 'k');
+    rect(put, x0 + 1, 21 + i - lift, 3, 1, 'p');
+    put(x0 + 4, 21 + i - lift, 'k');
+  }
+  const bx = side < 0 ? x0 - 1 : x0;
+  put(bx, bootY + 1, 'k');
+  rect(put, bx + 1, bootY + 1, 4, 1, 'o');
+  put(bx + 5, bootY + 1, 'k');
+  rect(put, bx, bootY + 2, 6, 1, 'O');
+}
+
+function drawLegs(put     , dy        , legs      ) {
+  // hips
+  put(3, 19 + dy, 'k');
+  rect(put, 4, 19 + dy, 8, 1, 'p');
+  put(12, 19 + dy, 'k');
+  put(3, 20 + dy, 'k');
+  rect(put, 4, 20 + dy, 3, 1, 'p');
+  rect(put, 7, 20 + dy, 2, 1, 'k');
+  rect(put, 9, 20 + dy, 3, 1, 'p');
+  put(12, 20 + dy, 'k');
+  switch (legs) {
+    case 'stand':
+      leg(put, -1, 0, false);
+      leg(put, 1, 0, false);
+      break;
+    case 'stepL':
+      leg(put, -1, 1, false);
+      leg(put, 1, 0, false);
+      break;
+    case 'stepR':
+      leg(put, -1, 0, false);
+      leg(put, 1, 1, false);
+      break;
+    case 'crouch':
+      leg(put, -1, 0, true);
+      leg(put, 1, 0, true);
+      break;
+    case 'tuck':
+      leg(put, -1, 2, true);
+      leg(put, 1, 2, true);
+      break;
+  }
+}
+
+function drawHeld(put     , dy        , item                              ) {
+  if (item === 'clipboard') {
+    rect(put, 4, 13 + dy, 7, 6, 'k');
+    rect(put, 5, 14 + dy, 5, 4, 'w');
+    rect(put, 6, 13 + dy, 3, 1, 'r'); // the clip
+    rect(put, 6, 15 + dy, 3, 1, 'B'); // ruled lines
+    rect(put, 6, 17 + dy, 2, 1, 'B');
+    put(4, 16 + dy, 's');
+    put(10, 16 + dy, 's');
+  } else {
+    rect(put, 4, 14 + dy, 8, 5, 'k');
+    rect(put, 5, 15 + dy, 6, 3, 'w');
+    put(5, 15 + dy, 'k'); // the flap's V
+    put(6, 16 + dy, 'k');
+    put(7, 17 + dy, 'y'); // yellow seal
+    put(8, 17 + dy, 'y');
+    put(9, 16 + dy, 'k');
+    put(10, 15 + dy, 'k');
+    put(4, 16 + dy, 's');
+    put(11, 16 + dy, 's');
+  }
+}
+
+/** Paint one frame onto a 2D context sized SPRITE_W × SPRITE_H (scale with CSS / setTransform). */
+function paintFrame(ctx                          , pose      , facing        ) {
+  ctx.clearRect(0, 0, SPRITE_W, SPRITE_H);
+  const put      = (x, y, c) => {
+    if (x < 0 || y < 0 || x >= SPRITE_W || y >= SPRITE_H) return;
+    const px = facing === 1 ? x : SPRITE_W - 1 - x;
+    ctx.fillStyle = PALETTE[c];
+    ctx.fillRect(px, y, 1, 1);
+  };
+  // crouching drops the whole upper body by one pixel
+  const dy = pose.legs === 'crouch' ? 1 : 0;
+  drawLegs(put, 0, pose.legs);
+  drawBody(put, dy);
+  drawArms(put, dy, pose.arms);
+  if (pose.holding) drawHeld(put, dy, pose.holding);
+  drawHat(put, dy);
+  drawFace(put, dy, pose);
+}
+
+/* ---------- Gus, the deck's stagehand ----------
+   The Constella mascot walks the progress bar to its tip on every slide, and reacts once per
+   section. Pixel art is the app's own sprite code (apps/web/src/components/mascot/sprite.ts).
+   G toggles him; clicking him never changes slides. */
+(() => {
+  const SCALE = 4, W = SPRITE_W * SCALE, H = SPRITE_H * SCALE;
+  const LINES = {
+    Story: "Hi! I'm Gus. I walk the progress bar so you always know where we are.",
+    Problem: 'Uh-oh. Here come the problems.',
+    Solution: 'Ooh, this is the good part.',
+    Technical: 'Hard hat on: technical section!',
+    Business: "Let's talk numbers.",
+    Demo: 'Demo time! Fingers crossed.',
+  };
+  const ENDING = 'And that’s how Lucas got his evenings back.';
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const root = document.getElementById('gus');
+  const btn = root.querySelector('button');
+  const canvas = root.querySelector('canvas');
+  const bubble = root.querySelector('.gus-bubble');
+  const ctx = canvas.getContext('2d');
+  btn.style.width = W + 'px'; btn.style.height = H + 'px';
+
+  let hidden = false;
+  try { hidden = localStorage.getItem('constella.deck.gus') === 'off'; } catch {}
+  const setHidden = v => { hidden = v; root.classList.toggle('off', v); try { localStorage.setItem('constella.deck.gus', v ? 'off' : 'on'); } catch {} };
+  setHidden(hidden);
+  addEventListener('keydown', e => { if (e.key === 'g' || e.key === 'G') setHidden(!hidden); });
+
+  const e = { x: 24, y: 0, target: 24, facing: 1, mode: 'idle', t: 0, until: 1500, blink: 2600, blinking: 0, shake: 0, then: null, holding: undefined };
+  const setMode = (mode, until, then = null) => { e.mode = mode; e.t = 0; e.until = until; e.then = then; };
+
+  /* the walkable track: from the left margin to just before the nav buttons */
+  const trackMax = () => innerWidth - innerWidth * 0.06 - 96 - W;
+  const tipX = (i, n) => Math.max(8, Math.min(trackMax(), innerWidth * (i + 1) / n - W / 2));
+
+  let bubbleTimer = 0;
+  const say = (text, ms = 3800) => {
+    bubble.textContent = text;
+    bubble.classList.add('on');
+    clearTimeout(bubbleTimer);
+    bubbleTimer = setTimeout(() => bubble.classList.remove('on'), ms);
+  };
+
+  /* react to slides: walk to the bar's tip; new section → a line and a matching reaction */
+  let lastSec = null, firstEnding = true;
+  const onSlide = ({ idx, total, sec }) => {
+    e.target = tipX(idx, total);
+    e.holding = sec === 'Technical' ? 'clipboard' : undefined;
+    const isLast = idx === total - 1;
+    const newSec = sec !== lastSec;
+    const ending = sec === 'Story' && lastSec && lastSec !== 'Story';
+    lastSec = sec;
+    if (reduced) e.x = e.target;
+    const react = () => {
+      if (isLast) { setMode('celebrate', 2600); say(LINES.Demo); return; }
+      if (!newSec) return;
+      if (ending && firstEnding) { firstEnding = false; setMode('wave', 1600); say(ENDING); return; }
+      if (sec === 'Problem') setMode('surprised', 600);
+      else if (sec === 'Solution' || sec === 'Business') setMode('jump', 650);
+      else if (sec === 'Technical') setMode('think', 1600);
+      else setMode('wave', 1600);
+      if (LINES[sec] && !(ending && !firstEnding)) say(LINES[sec]);
+    };
+    if (Math.abs(e.target - e.x) > 2 && !reduced) setMode('walk', Infinity, react);
+    else react();
+  };
+  addEventListener('deck:slide', ev => onSlide(ev.detail));
+
+  btn.addEventListener('click', ev => { ev.stopPropagation(); setMode('laugh', 1400); say('Ha ha! That tickles!', 2000); });
+  btn.addEventListener('pointerenter', () => { if (e.mode === 'idle') setMode('wave', 1200); });
+  /* keep swipes and clicks on Gus from reaching the deck */
+  ['touchstart', 'touchend'].forEach(t => btn.addEventListener(t, ev => ev.stopPropagation(), { passive: true }));
+
+  const pose = () => {
+    const p = { eyes: 'open', mouth: 'smile', arms: 'down', legs: 'stand', look: 0, holding: e.holding }, k = e.t;
+    switch (e.mode) {
+      case 'walk': { const f = Math.floor(k / 90) % 4; p.legs = f === 1 ? 'stepL' : f === 3 ? 'stepR' : 'stand'; p.arms = e.holding ? 'down' : f === 1 ? 'swing1' : f === 3 ? 'swing2' : 'down'; p.mouth = 'neutral'; p.look = 1; break; }
+      case 'jump': { const r = k / e.until; p.legs = r < .14 || r > .88 ? 'crouch' : 'tuck'; p.arms = r < .14 || r > .88 ? 'down' : 'up'; p.eyes = 'happy'; p.mouth = 'open'; break; }
+      case 'surprised': p.eyes = 'wide'; p.mouth = 'o'; p.arms = 'up'; p.legs = k < 90 ? 'crouch' : 'tuck'; break;
+      case 'laugh': p.eyes = 'happy'; p.cheeks = true; p.mouth = Math.floor(k / 120) % 2 ? 'open' : 'smile'; p.arms = Math.floor(k / 160) % 2 ? 'swing1' : 'swing2'; p.holding = undefined; break;
+      case 'celebrate': p.eyes = 'happy'; p.mouth = 'open'; p.cheeks = true; p.arms = 'up'; p.legs = Math.floor(k / 325) % 2 ? 'tuck' : 'stand'; break;
+      case 'wave': p.arms = Math.floor(k / 220) % 2 ? 'wave2' : 'wave1'; p.cheeks = true; break;
+      case 'think': p.eyes = 'up'; p.mouth = Math.floor(k / 700) % 2 ? 'flat' : 'o'; p.arms = 'think'; p.look = -1; break;
+    }
+    if (p.arms === 'up' || p.arms.startsWith('wave') || p.arms === 'think') p.holding = undefined;
+    if (e.blinking > 0 && p.eyes === 'open') p.eyes = 'closed';
+    return p;
+  };
+
+  let last = performance.now(), key = '';
+  const step = now => {
+    const dt = Math.min(64, now - last); last = now; e.t += dt;
+    if (e.blinking > 0) e.blinking -= dt; else if ((e.blink -= dt) <= 0) { e.blinking = 130; e.blink = 2200 + Math.random() * 3400; }
+    if (e.mode === 'walk') {
+      const d = e.target - e.x;
+      if (Math.abs(d) < 1) { e.x = e.target; const then = e.then; setMode('idle', 1500); then?.(); }
+      else { e.facing = d > 0 ? 1 : -1; e.x += Math.sign(d) * Math.min(Math.abs(d), Math.max(260, Math.abs(d) * 2.2) * dt / 1000); }
+    } else if (!reduced && (e.mode === 'jump' || e.mode === 'surprised')) {
+      const r = Math.min(1, e.t / e.until), h = e.mode === 'jump' ? 34 : 18;
+      e.y = r > .14 && r < .88 ? -Math.sin((r - .14) / .74 * Math.PI) * h : 0;
+    } else if (!reduced && e.mode === 'celebrate') {
+      const ph = (e.t % 650) / 650; e.y = ph > .5 ? -Math.sin((ph - .5) / .5 * Math.PI) * 14 : 0;
+    } else if (!reduced && e.mode === 'laugh') e.shake = Math.floor(e.t / 70) % 2 ? 2 : -2;
+    if (e.mode !== 'walk' && e.mode !== 'idle' && e.t >= e.until) { e.y = 0; e.shake = 0; setMode('idle', 1500); }
+    const p = pose(), k = JSON.stringify(p) + e.facing;
+    if (k !== key) { paintFrame(ctx, p, e.facing); key = k; }
+    const sx = Math.round(e.x + e.shake), sy = Math.round(e.y);
+    btn.style.transform = `translate3d(${sx}px,${sy}px,0)`;
+    const bw = bubble.offsetWidth;
+    const left = Math.max(12, Math.min(innerWidth - bw - 12, sx + W / 2 - bw / 2));
+    bubble.style.transform = `translate3d(${Math.round(left)}px,${Math.min(0, sy)}px,0)`;
+    bubble.style.setProperty('--tail', `${Math.round(Math.max(12, Math.min(bw - 24, sx + W / 2 - left - 6)))}px`);
+    requestAnimationFrame(step);
+  };
+
+  /* pick up the slide the deck opened on */
+  const slides = [...document.querySelectorAll('section')];
+  const i0 = Math.max(0, slides.findIndex(s => s.classList.contains('active')));
+  e.x = e.target = tipX(i0, slides.length);
+  setTimeout(() => onSlide({ idx: i0, total: slides.length, sec: slides[i0].dataset.sec }), 1400);
+  addEventListener('resize', () => { const i = slides.findIndex(s => s.classList.contains('active')); e.target = tipX(Math.max(0, i), slides.length); e.x = Math.min(e.x, trackMax()); });
+  requestAnimationFrame(step);
+})();
 </script>
 </body>
 </html>
