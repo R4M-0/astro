@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: { default: 'Constella', template: '%s · Constella' },
-  description: 'ISO 9001:2026 Quality Management SaaS',
+  description: 'HR management SaaS — people, competencies, trainings',
 };
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

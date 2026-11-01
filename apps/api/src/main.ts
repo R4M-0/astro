@@ -58,7 +58,7 @@ async function bootstrap() {
   if (swaggerEnabled()) {
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Astro API')
-    .setDescription('ISO 9001:2026 Quality Management SaaS — REST API')
+    .setDescription('HR management SaaS — REST API')
     .setVersion('1.0')
     .addBearerAuth()
     .addGlobalParameters({

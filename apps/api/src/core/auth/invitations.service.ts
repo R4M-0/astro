@@ -90,10 +90,10 @@ export class InvitationsService {
            <p>Vous avez été invité(e) à rejoindre <b>${org}</b> sur Astro.</p>
            <p><a href="${href}">Accepter l'invitation</a> (lien valable 7 jours).</p>
            <p>If you did not expect this, ignore this email. / Si vous n'attendiez pas cette invitation, ignorez cet e-mail.</p>`
-        : `<p>You've been invited to <b>${org}</b>'s quality management system on Astro.</p>
+        : `<p>You've been invited to join <b>${org}</b> on Astro.</p>
            <p><a href="${href}">Choose your password</a> to access it (link valid for 72 hours).</p>
            <hr/>
-           <p>Vous avez été invité(e) au système de management de la qualité de <b>${org}</b> sur Astro.</p>
+           <p>Vous avez été invité(e) à rejoindre <b>${org}</b> sur Astro.</p>
            <p><a href="${href}">Choisissez votre mot de passe</a> pour y accéder (lien valable 72 heures).</p>`,
     });
   }
