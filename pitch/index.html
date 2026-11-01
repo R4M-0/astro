@@ -93,7 +93,7 @@ table.price{width:100%;border-collapse:collapse;margin:6px 0 14px;font-size:14px
 h2.big{font-size:clamp(40px,4.6vw,72px);line-height:1.04;font-weight:600}
 section[data-side="center"] h2.big{max-width:900px;margin-left:auto;margin-right:auto}
 .mega{font:700 clamp(84px,10vw,168px)/.95 'Space Grotesk',sans-serif;letter-spacing:-.05em;margin-bottom:10px}
-.mega.c{color:var(--cyan)}.mega.g{color:var(--gold)}.mega.rd{color:var(--red)}.mega.vi{color:var(--violet)}
+.mega.c{color:var(--cyan)}.mega.gr{color:var(--green)}.mega.g{color:var(--gold)}.mega.rd{color:var(--red)}.mega.vi{color:var(--violet)}
 .duo{display:flex;gap:48px}.duo p{font:500 20px 'Space Grotesk';color:var(--dim)}
 .duo .mega{font-size:clamp(72px,8vw,132px)}
 .big-list{list-style:none;display:grid;gap:18px}
@@ -177,7 +177,8 @@ aside.notes{display:none}
       <li><b>EchoLeak</b> CVE-2025-32711 · <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-32711">nvd.nist.gov</a></li>
       <li><b>Reuters</b> (Oct 2018): Amazon scraps its biased recruiting AI</li>
       <li><b>EU AI Act</b> Annex III, Digital Omnibus: 2 Dec 2027 · <a href="https://www.gibsondunn.com/eu-ai-act-omnibus-agreement-postponed-high-risk-deadlines-and-other-key-changes/">gibsondunn.com</a></li>
-      <li><b>Product</b>: demo dataset (142 people, ~3.5k emails), repository metrics, seed pricing</li>
+      <li><b>Product</b>: demo dataset (142 people, ~3.5k emails), repository metrics (~49k lines of TypeScript), seed pricing</li>
+      <li><b>Evaluation results</b>: <code>offline.spec.ts</code> 12/12 and <code>gates.db-spec.ts</code> 12/12, run 1 Nov 2026 on a seed set of 2 jobs, 14 CVs, 16 injections, 15 personal-data samples</li>
     </ul></div>
 <div id="notes"><h4>Speaker notes</h4><div id="notesBody"></div></div>
 
@@ -356,13 +357,21 @@ aside.notes{display:none}
     <div class="kick r" style="--d:0"><span class="tag">Tech</span>Architecture</div>
     <h2 class="r" style="--d:1">A full product, not a prompt in a wrapper.</h2>
     <div class="stats three r" style="--d:2">
-      <div class="stat"><div class="v c">~<span class="num" data-to="47">0</span>k</div><div class="k">lines of TypeScript</div></div>
+      <div class="stat"><div class="v c">~<span class="num" data-to="49">0</span>k</div><div class="k">lines of TypeScript</div></div>
       <div class="stat"><div class="v vi"><span class="num" data-to="47">0</span></div><div class="k">data models</div></div>
       <div class="stat"><div class="v g"><span class="num" data-to="3">0</span></div><div class="k">AI providers</div></div>
     </div>
     <p class="small r" style="--d:3;margin-top:18px">4 layers · 13 services · the lines are real dependencies, and the moving dots are requests.</p>
   </div>
   <aside class="notes">The labels in 3D are the real services. Web: Next.js 16 and React 19, with the galaxy in three.js. API: NestJS 11, BullMQ workers, Socket.IO, plus the Express graph service. Data: PostgreSQL 16, Redis 7, MinIO and XQdrant, our Qdrant fork. AI: Claude Opus 5.5 for CV extraction and judging, Gemini Flash Lite for live tagging and answers, plus embeddings. Heavy AI work runs once in background workers. It deploys with Docker behind Caddy, or as a self-hosted bundle with offline license keys.</aside>
+</section>
+
+<section data-f="layers" data-side="center" data-sec="Technical" data-dim="0.22">
+  <div class="panel wide">
+    <div class="kick r" style="--d:0"><span class="tag">Tech</span>Workforce Galaxy · by Moetez Fradi · architecture</div>
+    <figure class="fig r" style="--d:1"><img src="img/galaxy-1-architecture.png" alt="Workforce Galaxy architecture"></figure>
+  </div>
+  <aside class="notes">Moetez built the graph service. Company mail comes in through the mail server, gets polled every 4 seconds, passes the injection guard and the Gemini Flash Lite tagger, and lands in XQdrant. The same service runs the graph analysis, Ask, the inbox digest and the approval queue. It uses the same JWT, tenant and roles as Constella. Approved mail is the only thing that goes back out (the orange dashed line).</aside>
 </section>
 
 
@@ -394,6 +403,14 @@ aside.notes{display:none}
   <aside class="notes">The daily digest sorts email into 9 types and puts the ones needing a human answer first. The AI writes a short summary that cites every email, but urgency comes from fixed rules, each one showing its reason. That makes it predictable and easy to audit.</aside>
 </section>
 
+<section data-f="galaxySignal" data-side="center" data-sec="Technical" data-dim="0.22">
+  <div class="panel wide">
+    <div class="kick r" style="--d:0"><span class="tag">Tech</span>Workforce Galaxy · by Moetez Fradi · signals and digest</div>
+    <figure class="fig r" style="--d:1"><img src="img/galaxy-4-signals-digest.png" alt="Signals, inbox digest and human in the loop"></figure>
+  </div>
+  <aside class="notes">Left: the 7 signals the graph computes. Middle: the inbox digest. Urgency comes from explicit rules, and the AI only writes the overview. Right: the human loop. Gemini drafts, HR edits, then approves or rejects, and approved mail flows back into the graph. HR sits in the middle: the system suggests, HR decides.</aside>
+</section>
+
 <section data-f="concept" data-side="left" data-sec="Technical">
   <div class="panel">
     <div class="kick r" style="--d:0"><span class="tag">Tech</span>Explainable search · XQdrant</div>
@@ -409,6 +426,14 @@ aside.notes{display:none}
     <figure class="fig r" style="--d:1"><img src="img/xqdrant-2-decomposition.png" alt="Score decomposition: dims_explained names the biggest steps"></figure>
   </div>
   <aside class="notes">A match score is a dot product, a walk over every dimension. XQdrant's dims_explained returns the biggest steps, either way. With named topic axes, those steps become "Workload +0.41". Grey steps still count toward the score; they just aren't returned.</aside>
+</section>
+
+<section data-f="concept" data-side="center" data-sec="Technical" data-dim="0.22">
+  <div class="panel wide">
+    <div class="kick r" style="--d:0"><span class="tag">Tech</span>XQdrant · focus on a sub-space</div>
+    <figure class="fig r" style="--d:1"><img src="img/xqdrant-3-focus.png" alt="Focus: rank inside a sub-space"></figure>
+  </div>
+  <aside class="notes">Focus mode: a nearest search on all dimensions picks candidates, then re-scores them only on the chosen dimensions, for example only Workload and Overtime. Points that were never candidates can be missed, which is why candidates_limit is tunable.</aside>
 </section>
 
 <section data-f="concept" data-side="center" data-sec="Technical" data-dim="0.22">
@@ -434,12 +459,36 @@ aside.notes{display:none}
   <aside class="notes">The Gemini embedding finds the matches. The question is projected onto the 32 topics, and XQdrant's with_dims_explained returns the contributions. If asked: the XQdrant image we run predates the native feature, so the service computes the same math itself, and it works on plain Qdrant too.</aside>
 </section>
 
+<section data-f="concept" data-side="center" data-sec="Technical" data-dim="0.22">
+  <div class="panel wide">
+    <div class="kick r" style="--d:0"><span class="tag">Tech</span>Workforce Galaxy · by Moetez Fradi · Ask, explained</div>
+    <figure class="fig r" style="--d:1"><img src="img/galaxy-3-ask.png" alt="Ask the galaxy, explained"></figure>
+  </div>
+  <aside class="notes">Scope comes first: the model never sees people outside the asker's rights. The question is embedded, mail and handbook are searched, people are ranked by their mail, and XQdrant explains each match on the 32 topic axes. One Gemini call writes the answer with citations, and every question is audited.</aside>
+</section>
+
+<section data-f="concept" data-side="center" data-sec="Technical" data-dim="0.22">
+  <div class="panel wide">
+    <div class="kick r" style="--d:0"><span class="tag">Tech</span>XQdrant · the geometry of a match</div>
+    <figure class="fig r" style="--d:1"><img src="img/xqdrant-1-geometry.png" alt="What a per-dimension term means geometrically"></figure>
+  </div>
+  <aside class="notes">For each distance (dot, cosine, Euclid, Manhattan), the match score is a sum of per-dimension terms, and each term has a geometric meaning. That's what makes a score explainable: you can point at the dimension that pushed two vectors together or apart.</aside>
+</section>
+
 <section data-f="stream" data-side="center" data-sec="Technical">
   <div class="panel" style="margin-top:44vh">
     <div class="kick r" style="--d:0"><span class="tag">Tech</span>Live ingest</div>
     <h2 class="r big" style="--d:1">New email reaches the galaxy within seconds.</h2>
   </div>
   <aside class="notes">The mail server is polled every 4 seconds. Each email passes the regex guard, then Gemini Flash Lite tags it with topics, sentiment, a neutral summary, whether it needs a reply, and whether it's giving instructions to an AI. It's embedded into XQdrant and appears as a new beam. The red particles falling off are blocked emails. The expensive work happens once, when the email arrives, which is why every later question is cheap.</aside>
+</section>
+
+<section data-f="stream" data-side="center" data-sec="Technical" data-dim="0.22">
+  <div class="panel wide">
+    <div class="kick r" style="--d:0"><span class="tag">Tech</span>Workforce Galaxy · by Moetez Fradi · live mail ingest</div>
+    <figure class="fig r" style="--d:1"><img src="img/galaxy-2-live-ingest.png" alt="Live mail ingest pipeline"></figure>
+  </div>
+  <aside class="notes">One email end to end. Regex patterns run before any model reads the body. Then a single Gemini call tags it and checks whether it gives instructions to an AI. A flagged body is withheld and never embedded, and it increments the security signal. Everything else is embedded, saved into its thread and pushed live to the galaxy.</aside>
 </section>
 
 <section data-f="shield" data-side="right" data-sec="Technical">
@@ -515,7 +564,7 @@ aside.notes{display:none}
     <div class="gates r" style="--d:1">
       <div><b>0</b><span>unapproved sends</span></div><div><b>0</b><span>data leaks</span></div><div><b>0</b><span>double bookings</span></div><div><b>0</b><span>duplicate emails</span></div>
     </div>
-    <p class="small r" style="--d:2">Anything above zero blocks the release.</p>
+    <p class="small r" style="--d:2">Anything above zero blocks the release. <b style="color:var(--green)">All four pass today.</b></p>
   </div>
   <aside class="notes">Tested in a sandbox mailbox with planted facts that reveal any leak, and a mocked clock that jumps straight to D1 and D2.</aside>
 </section>
@@ -525,7 +574,7 @@ aside.notes{display:none}
     <div class="kick r" style="--d:0"><span class="tag">Tech</span>Evaluation</div>
     <h2 class="r big" style="--d:1">5 levels of tests. One failure blocks the release.</h2>
   </div>
-  <aside class="notes">L1: Pipeline 1 parts, with field F1 ≥ 0.9, a Recall@N goal of 0.95, under 5% wrongly rejected, and nDCG@K beating the previous model. L2: Pipeline 2 parts. L3: attacks and fairness. L4: end to end at full volume. L5: the CI gate. Be precise if asked: these are the thresholds we hold ourselves to, not benchmark results. They're also the documentation the AI Act expects.</aside>
+  <aside class="notes">L1: Pipeline 1 parts, with field F1 ≥ 0.9, a Recall@N goal of 0.95, under 5% wrongly rejected, and nDCG@K beating the previous model. L2: Pipeline 2 parts. L3: attacks and fairness. L4: end to end at full volume. L5: the CI gate. Be precise if asked: the offline checks and the database gates run and pass (next slides). The live-model thresholds (Recall@N, nDCG@K) are enforced by eval:live against a stored baseline. All of this is also the documentation the AI Act expects.</aside>
 </section>
 
 <section data-f="gates" data-side="center" data-sec="Technical" data-dim="0.22">
@@ -534,6 +583,83 @@ aside.notes{display:none}
     <figure class="fig r" style="--d:1"><img src="img/eval-0-overview.png" alt="Evaluation levels 1 to 5 and the CI gate"></figure>
   </div>
   <aside class="notes">Test sets feed every level. Level 3 attacks levels 1 and 2. Level 4 runs both pipelines end to end. The CI gate collects every metric, and one failed hard gate blocks the release. In production, HR decisions become new labels: the dashed purple loop.</aside>
+</section>
+
+<section data-f="gates" data-side="center" data-sec="Technical" data-dim="0.22">
+  <div class="panel wide">
+    <div class="kick r" style="--d:0"><span class="tag">Tech</span>Level 1 · Pipeline 1 components</div>
+    <figure class="fig r" style="--d:1"><img src="img/eval-1-pipeline1-components.png" alt="Level 1 · Pipeline 1 components"></figure>
+  </div>
+  <aside class="notes">Each stage of Pipeline 1 is scored on its own: field F1 for the extractor, Recall@N for XQdrant, false rejections for the hard filters, nDCG@K for the ranking, faithfulness for the justifications. The red lines are the thresholds.</aside>
+</section>
+
+<section data-f="gates" data-side="center" data-sec="Technical" data-dim="0.22">
+  <div class="panel wide">
+    <div class="kick r" style="--d:0"><span class="tag">Tech</span>Level 2 · Pipeline 2 components</div>
+    <figure class="fig r" style="--d:1"><img src="img/eval-2-pipeline2-components.png" alt="Level 2 · Pipeline 2 components"></figure>
+  </div>
+  <aside class="notes">Draft quality (approve without edit), and four hard gates at zero: unapproved sends, leaks, double bookings and duplicate emails. A mocked clock jumps to D1 and D2.</aside>
+</section>
+
+<section data-f="gates" data-side="center" data-sec="Technical" data-dim="0.22">
+  <div class="panel wide">
+    <div class="kick r" style="--d:0"><span class="tag">Tech</span>Level 3 · security and fairness</div>
+    <figure class="fig r" style="--d:1"><img src="img/eval-3-security-fairness.png" alt="Level 3 · security and fairness"></figure>
+  </div>
+  <aside class="notes">The adversarial level attacks levels 1 and 2: poisoned CVs, hostile replies, counterfactual twins that change only the name, gender, age or nationality. The target is an attack success rate of about zero, no rank gain, and an adverse impact ratio of at least 0.8.</aside>
+</section>
+
+<section data-f="gates" data-side="center" data-sec="Technical" data-dim="0.22">
+  <div class="panel wide">
+    <div class="kick r" style="--d:0"><span class="tag">Tech</span>Level 4 · end to end and system</div>
+    <figure class="fig r" style="--d:1"><img src="img/eval-4-end-to-end.png" alt="Level 4 · end to end and system"></figure>
+  </div>
+  <aside class="notes">Both pipelines together at full volume with simulated candidates: task success, p95 latency, cost per scheduled interview.</aside>
+</section>
+
+<section data-f="gates" data-side="center" data-sec="Technical" data-dim="0.22">
+  <div class="panel wide">
+    <div class="kick r" style="--d:0"><span class="tag">Tech</span>Level 5 · human and release</div>
+    <figure class="fig r" style="--d:1"><img src="img/eval-5-human-release.png" alt="Level 5 · human and release"></figure>
+  </div>
+  <aside class="notes">The CI gate collects every metric, and one failed hard gate blocks the release. In production, HR decisions are logged and become new labels for the test sets.</aside>
+</section>
+
+<section data-f="gates" data-side="left" data-sec="Technical" data-cam="5,1,17">
+  <div class="panel">
+    <div class="kick r" style="--d:0"><span class="tag">Tech</span>Measured, not promised</div>
+    <div class="mega gr r" style="--d:1"><span class="num" data-to="24">0</span>/24</div>
+    <h2 class="r" style="--d:2">automated checks pass.</h2>
+    <p class="small r" style="--d:3">12 offline checks · 12 database release gates · run on every change</p>
+  </div>
+  <aside class="notes">This isn't a slide of intentions. The evaluation framework is code in the repo: offline.spec.ts runs with no keys and gates.db-spec.ts runs against a real Postgres. Both suites passed today, 24 out of 24. The live-model metrics (Recall@N, nDCG, triage F1) run with eval:live against the real models and fail the build if they drop more than 0.02 under the baseline.</aside>
+</section>
+
+<section data-f="shield" data-side="right" data-sec="Technical" data-cam="0,6,19">
+  <div class="panel">
+    <div class="kick r" style="--d:0"><span class="tag">Tech</span>Security and fairness · results</div>
+    <div class="stats r" style="--d:1">
+      <div class="stat"><div class="v gr">16/16</div><div class="k">prompt injections caught</div></div>
+      <div class="stat"><div class="v c">0/14</div><div class="k">false alarms on normal CV lines</div></div>
+      <div class="stat"><div class="v g">15/15</div><div class="k">personal details redacted</div></div>
+      <div class="stat"><div class="v vi">14/14</div><div class="k">CVs identical after changing name, gender, age or nationality</div></div>
+    </div>
+    <p class="small r" style="--d:2">And 224 poisoned CVs reach the model exactly as their clean twin, so injecting text gives no rank gain.</p>
+  </div>
+  <aside class="notes">The counterfactual test: we take the same CV and change only the name, gender, age or nationality. After the guard, all 14 reach the model as identical text, so the model cannot discriminate on what it never sees. 14 CVs × 16 injections = 224 poisoned versions, each identical to its clean twin after the guard. Be honest if asked: it's a seed set (2 jobs, 14 CVs, one annotator). The framework is built to grow it to 50–100 CVs per job with 2–3 annotators.</aside>
+</section>
+
+<section data-f="orbit" data-side="right" data-sec="Technical" data-cam="0,16,8">
+  <div class="panel">
+    <div class="kick r" style="--d:0"><span class="tag">Tech</span>Race test</div>
+    <h2 class="r big" style="--d:1">10 candidates. 1 last slot.</h2>
+    <div class="duo r" style="--d:2">
+      <div><div class="mega gr">1</div><p>booking</p></div>
+      <div><div class="mega rd">9</div><p>refused (409)</p></div>
+    </div>
+    <p class="small r" style="--d:3">8 send jobs fired at once → exactly 1 email. Cross-tenant approval → refused.</p>
+  </div>
+  <aside class="notes">These run against a real database, concurrently. Ten candidates hit the last interview slot at the same moment: one wins, nine get a conflict. Eight copies of the same send job: one email goes out. A failed delivery is retried and still sent once. Leakage canaries (a unique fake fact per candidate) never show up in another candidate's prompt. An injected reply like "cancel every interview" goes to a human and changes nothing.</aside>
 </section>
 
 <section data-f="gates" data-side="left" data-sec="Technical" data-cam="0,10,16">
