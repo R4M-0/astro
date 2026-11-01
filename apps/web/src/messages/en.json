@@ -93,7 +93,9 @@
     "hrImport": "Excel import",
     "people": "People",
     "competencies": "Competencies",
-    "trainings": "Training"
+    "trainings": "Training",
+    "recruiting": "Recruiting",
+    "recruitingOpenings": "Openings & candidates"
   },
   "auth": {
     "loginTitle": "Sign in to Astro",
@@ -380,7 +382,8 @@
         "competencies": "Competencies",
         "trainings": "Training",
         "tools": "Tools",
-        "other": "Other"
+        "other": "Other",
+        "recruiting": "Recruiting"
       },
       "systemEditable": "System role — editable, can be reset to defaults",
       "reset": "Reset to defaults",
@@ -537,7 +540,8 @@
       "ai": "AI assistant",
       "messages": "Messaging",
       "notifications": "Notifications",
-      "search": "Search"
+      "search": "Search",
+      "recruiting": "Recruiting (CVs & ranking)"
     },
     "visibility": {
       "saved": "Visibility updated",
@@ -1846,6 +1850,128 @@
       "cookies": "The cookies and trackers used on the website and the application.",
       "dpa": "Our commitments as processor for the data you entrust to us (GDPR art. 28).",
       "subprocessors": "The providers that process data on our behalf."
+    }
+  },
+  "recruiting": {
+    "title": "Openings & candidates",
+    "desc": "Drop the CVs for an opening: the agent parses and ranks them, you decide.",
+    "new": "New opening",
+    "empty": "No openings",
+    "emptyDesc": "Create an opening to upload and rank CVs.",
+    "cols": {
+      "title": "Opening",
+      "status": "Status",
+      "candidates": "CVs",
+      "shortlisted": "Shortlist",
+      "ranking": "Ranking",
+      "rank": "Rank",
+      "candidate": "Candidate",
+      "score": "Score",
+      "retrieval": "Similarity",
+      "pipeline": "Parsing",
+      "decision": "Decision"
+    },
+    "statuses": {
+      "OPEN": "Open",
+      "CLOSED": "Closed"
+    },
+    "rankingStatuses": {
+      "IDLE": "Not ranked",
+      "RUNNING": "Ranking…",
+      "DONE": "Ranked",
+      "FAILED": "Ranking failed"
+    },
+    "cvStatuses": {
+      "RECEIVED": "Queued",
+      "PROCESSING": "Parsing…",
+      "READY": "Parsed",
+      "FAILED": "Failed"
+    },
+    "decisions": {
+      "PENDING": "Pending",
+      "APPROVED": "Approved",
+      "REJECTED": "Rejected"
+    },
+    "fields": {
+      "title": "Job title",
+      "description": "Job offer text",
+      "retrievalSize": "Candidates retrieved (top-N)",
+      "shortlistSize": "Shortlist size (top-K)"
+    },
+    "created": "Opening created",
+    "saved": "Opening saved",
+    "deleted": "Opening deleted",
+    "deleteConfirm": "Delete the opening “{name}” and its applications?",
+    "tabs": {
+      "candidates": "Candidates",
+      "criteria": "Criteria"
+    },
+    "upload": "Upload CVs",
+    "uploadHint": "PDF, DOCX or TXT — 10 MB max. per file",
+    "uploaded": "{count, plural, one {# CV uploaded} other {# CVs uploaded}} — parsing",
+    "rerun": "Rerun ranking",
+    "rankQueued": "Ranking started",
+    "rankedAt": "Ranked on {date}",
+    "noCandidates": "No CVs uploaded for this opening yet.",
+    "filtered": "Removed by must-have criteria: {reasons}",
+    "notRetrieved": "Outside top-N",
+    "flagged": "Suspicious content removed by the security guard",
+    "criteria": {
+      "desc": "Ranking follows these weighted criteria. Must-have skill, language or years criteria filter before scoring; the judge scores the rest (0 to 3) with a quote from the CV.",
+      "suggest": "Suggest from the offer",
+      "suggested": "Criteria suggested — review them before saving",
+      "add": "Add a criterion",
+      "label": "Criterion",
+      "kind": "Type",
+      "value": "Value",
+      "weight": "Weight",
+      "mustHave": "Must-have",
+      "kinds": {
+        "SKILL": "Skill",
+        "LANGUAGE": "Language",
+        "YEARS": "Years of experience",
+        "OTHER": "Other"
+      },
+      "save": "Save",
+      "saveAndRerun": "Save and rerun",
+      "empty": "No criteria: ranking will use similarity to the offer only."
+    },
+    "candidate": {
+      "download": "View CV",
+      "retry": "Retry parsing",
+      "retried": "Parsing restarted",
+      "deleteConfirm": "Delete this application?",
+      "deleted": "Application deleted",
+      "unnamed": "Unnamed candidate",
+      "score": "Overall score",
+      "rank": "Rank",
+      "retrieval": "Similarity (XQdrant)",
+      "shortlisted": "Shortlisted",
+      "notShortlisted": "Not shortlisted",
+      "decide": "Decision",
+      "approve": "Approve",
+      "reject": "Reject",
+      "reset": "Back to pending",
+      "reason": "Reason",
+      "reasonHint": "Required when going against the ranking (approving outside the shortlist, rejecting a shortlisted candidate).",
+      "decided": "Decision saved",
+      "criteria": "Score per criterion",
+      "evidence": "Quoted evidence",
+      "unverified": "Quote not found in the CV — score set to 0",
+      "filterReasons": "Missing must-haves",
+      "guard": "Security guard",
+      "guardNone": "Nothing to report.",
+      "profile": "Extracted profile",
+      "skills": "Skills",
+      "languages": "Languages",
+      "years": "Years of experience",
+      "education": "Education",
+      "experiences": "Experience",
+      "summary": "Summary",
+      "dims": "Dimensions that drove the match",
+      "dimsHint": "Contribution of each embedding dimension to the similarity score (XQdrant explainability).",
+      "cvText": "Anonymized text seen by the models",
+      "notRanked": "Not ranked yet (outside top-N, or ranking to rerun)."
     }
   }
 }

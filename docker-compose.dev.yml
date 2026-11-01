@@ -22,6 +22,14 @@ services:
   mailpit:
     image: axllent/mailpit:latest
     ports: ["127.0.0.1:1026:1025", "127.0.0.1:8026:8025"]
+  xqdrant:
+    image: golden5ragon/xqdrant:latest # Qdrant fork: with_explanation → score_explanation.top_dimensions
+    ports: ["127.0.0.1:6343:6333"]
+    volumes: [xqdrantdata:/qdrant/storage]
+volumes:
+  pgdata:
+  miniodata:
+  xqdrantdata:
   # Vector DB for the graph service: XQdrant, our Qdrant fork with dims_explained (per-dimension score explanations).
   # Plain Qdrant also works (explanations are then computed in the graph service): ASTRO_QDRANT_IMAGE=qdrant/qdrant:latest
   qdrant:

@@ -93,7 +93,9 @@
     "hrImport": "Import Excel",
     "people": "Collaborateurs",
     "competencies": "Compétences",
-    "trainings": "Formations"
+    "trainings": "Formations",
+    "recruiting": "Recrutement",
+    "recruitingOpenings": "Offres & candidatures"
   },
   "auth": {
     "loginTitle": "Connexion à Astro",
@@ -380,7 +382,8 @@
         "competencies": "Compétences",
         "trainings": "Formations",
         "tools": "Outils",
-        "other": "Autres"
+        "other": "Autres",
+        "recruiting": "Recrutement"
       },
       "systemEditable": "Rôle système — modifiable, rétablissable par défaut",
       "reset": "Rétablir par défaut",
@@ -537,7 +540,8 @@
       "ai": "Assistant IA",
       "messages": "Messagerie",
       "notifications": "Notifications",
-      "search": "Recherche"
+      "search": "Recherche",
+      "recruiting": "Recrutement (CV & classement)"
     },
     "visibility": {
       "saved": "Visibilité mise à jour",
@@ -1846,6 +1850,128 @@
       "cookies": "Les cookies et traceurs utilisés sur le site et l’application.",
       "dpa": "Nos engagements de sous-traitant pour les données que vous nous confiez (RGPD art. 28).",
       "subprocessors": "La liste des prestataires qui traitent des données pour notre compte."
+    }
+  },
+  "recruiting": {
+    "title": "Offres & candidatures",
+    "desc": "Déposez les CV d'une offre : l'agent les analyse et les classe, vous décidez.",
+    "new": "Nouvelle offre",
+    "empty": "Aucune offre",
+    "emptyDesc": "Créez une offre pour déposer et classer des CV.",
+    "cols": {
+      "title": "Offre",
+      "status": "Statut",
+      "candidates": "CV",
+      "shortlisted": "Présélection",
+      "ranking": "Classement",
+      "rank": "Rang",
+      "candidate": "Candidat",
+      "score": "Score",
+      "retrieval": "Similarité",
+      "pipeline": "Analyse",
+      "decision": "Décision"
+    },
+    "statuses": {
+      "OPEN": "Ouverte",
+      "CLOSED": "Clôturée"
+    },
+    "rankingStatuses": {
+      "IDLE": "Non classé",
+      "RUNNING": "Classement en cours…",
+      "DONE": "Classé",
+      "FAILED": "Échec du classement"
+    },
+    "cvStatuses": {
+      "RECEIVED": "En file",
+      "PROCESSING": "Analyse…",
+      "READY": "Analysé",
+      "FAILED": "Échec"
+    },
+    "decisions": {
+      "PENDING": "À décider",
+      "APPROVED": "Retenu",
+      "REJECTED": "Écarté"
+    },
+    "fields": {
+      "title": "Intitulé du poste",
+      "description": "Texte de l'offre",
+      "retrievalSize": "Candidats récupérés (top-N)",
+      "shortlistSize": "Taille de la présélection (top-K)"
+    },
+    "created": "Offre créée",
+    "saved": "Offre enregistrée",
+    "deleted": "Offre supprimée",
+    "deleteConfirm": "Supprimer l'offre « {name} » et ses candidatures ?",
+    "tabs": {
+      "candidates": "Candidats",
+      "criteria": "Critères"
+    },
+    "upload": "Déposer des CV",
+    "uploadHint": "PDF, DOCX ou TXT — 10 Mo max. par fichier",
+    "uploaded": "{count, plural, one {# CV déposé} other {# CV déposés}} — analyse en cours",
+    "rerun": "Relancer le classement",
+    "rankQueued": "Classement lancé",
+    "rankedAt": "Classé le {date}",
+    "noCandidates": "Aucun CV déposé pour cette offre.",
+    "filtered": "Écarté par les critères éliminatoires : {reasons}",
+    "notRetrieved": "Hors top-N",
+    "flagged": "Contenu suspect retiré par le garde de sécurité",
+    "criteria": {
+      "desc": "Le classement suit ces critères pondérés. Les critères éliminatoires de type compétence, langue ou années filtrent avant l'évaluation ; les autres sont notés par le juge (0 à 3) avec une citation du CV.",
+      "suggest": "Proposer depuis l'offre",
+      "suggested": "Critères proposés — vérifiez-les avant d’enregistrer",
+      "add": "Ajouter un critère",
+      "label": "Critère",
+      "kind": "Type",
+      "value": "Valeur",
+      "weight": "Poids",
+      "mustHave": "Éliminatoire",
+      "kinds": {
+        "SKILL": "Compétence",
+        "LANGUAGE": "Langue",
+        "YEARS": "Années d'expérience",
+        "OTHER": "Autre"
+      },
+      "save": "Enregistrer",
+      "saveAndRerun": "Enregistrer et relancer",
+      "empty": "Aucun critère : le classement se fera sur la seule similarité avec l'offre."
+    },
+    "candidate": {
+      "download": "Voir le CV",
+      "retry": "Relancer l'analyse",
+      "retried": "Analyse relancée",
+      "deleteConfirm": "Supprimer cette candidature ?",
+      "deleted": "Candidature supprimée",
+      "unnamed": "Candidat sans nom",
+      "score": "Score global",
+      "rank": "Rang",
+      "retrieval": "Similarité (XQdrant)",
+      "shortlisted": "Présélectionné",
+      "notShortlisted": "Hors présélection",
+      "decide": "Décision",
+      "approve": "Retenir",
+      "reject": "Écarter",
+      "reset": "Remettre à décider",
+      "reason": "Motif",
+      "reasonHint": "Obligatoire pour aller contre le classement (retenir hors présélection, écarter un présélectionné).",
+      "decided": "Décision enregistrée",
+      "criteria": "Évaluation par critère",
+      "evidence": "Preuve citée",
+      "unverified": "Citation introuvable dans le CV — score ramené à 0",
+      "filterReasons": "Critères éliminatoires manquants",
+      "guard": "Garde de sécurité",
+      "guardNone": "Rien à signaler.",
+      "profile": "Profil extrait",
+      "skills": "Compétences",
+      "languages": "Langues",
+      "years": "Années d'expérience",
+      "education": "Formation",
+      "experiences": "Expériences",
+      "summary": "Résumé",
+      "dims": "Dimensions dominantes du rapprochement",
+      "dimsHint": "Contribution de chaque dimension d'embedding au score de similarité (explicabilité XQdrant).",
+      "cvText": "Texte anonymisé vu par les modèles",
+      "notRanked": "Pas encore classé (hors top-N ou classement à relancer)."
     }
   }
 }

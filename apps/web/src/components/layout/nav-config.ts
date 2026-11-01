@@ -2,6 +2,7 @@ import {
   Activity,
   Award,
   BarChart3,
+  Briefcase,
   Building2,
   CircleUserRound,
   ClipboardCheck,
@@ -87,6 +88,14 @@ export const NAV_GROUPS: NavGroup[] = [
       { key: 'hrTrainingPlan', href: '/hr/trainings', icon: GraduationCap, permission: 'hr-trainings:read' },
       { key: 'hrTrainingEvaluation', href: '/hr/trainings/evaluation', icon: Send, permission: 'hr-trainings:read' },
       { key: 'hrTrainingDashboard', href: '/hr/trainings/dashboard', icon: BarChart3, permission: 'hr-trainings:read' },
+    ],
+  },
+  {
+    key: 'recruiting',
+    icon: Briefcase,
+    color: 'oklch(0.64 0.19 25)', // coral — recruiting
+    items: [
+      { key: 'recruitingOpenings', href: '/recruiting', icon: Briefcase, permission: 'recruiting:read' },
     ],
   },
   {
