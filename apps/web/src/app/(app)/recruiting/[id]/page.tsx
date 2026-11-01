@@ -282,7 +282,7 @@ export default function OpeningPage() {
                                 : ''}
                           </p>
                         </TableCell>
-                        <TableCell className="text-center tabular-nums">{c.score ?? '—'}</TableCell>
+                        <TableCell className={cn('text-center tabular-nums', c.filterReasons?.length && 'text-muted-foreground')}>{c.score ?? '—'}</TableCell>
                         <TableCell className="text-center text-xs tabular-nums text-muted-foreground">
                           {c.retrievalScore != null ? c.retrievalScore.toFixed(3) : c.status === 'READY' && opening.rankedAt ? t('notRetrieved') : '—'}
                         </TableCell>
